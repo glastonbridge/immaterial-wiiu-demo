@@ -1,7 +1,7 @@
 
 #include "SceneBase.h"
 
-#include "Object.h"
+#include "../graphics/SceneObject.h"
 
 struct TestScene: public SceneBase {
   void setup() override {

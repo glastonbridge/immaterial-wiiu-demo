@@ -13,7 +13,7 @@
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
 
-#include "scene/TestScene.h"
+#include "scenes/TestScene.h"
 #include "renderer/Renderer.h"
 
 

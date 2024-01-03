@@ -1,9 +1,11 @@
+#pragma once
+
 #include <vector>
 
-struct Object;
+#include "../graphics/SceneObject.h"
 
 struct SceneBase {
   virtual void setup()=0;
   virtual void update(double time)=0;
-  std::vector<Object*> objects;
+  std::vector<SceneObject*> objects;
 };

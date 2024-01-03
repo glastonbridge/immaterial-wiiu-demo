@@ -4,8 +4,9 @@ project(wiiu_demo CXX)
 add_executable(wiiu_demo
    main.cpp
    renderer/Renderer.cpp
-   scene/Material.cpp
-   scene/Object.cpp)
+   renderer/RenderObject.cpp
+   graphics/Material.cpp
+   graphics/SceneObject.cpp)
 
 wut_create_rpx(wiiu_demo)
 

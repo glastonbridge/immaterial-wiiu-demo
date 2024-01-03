@@ -20,8 +20,8 @@
 
 #include "CafeGLSLCompiler.h"
 
-#include "../scene/SceneBase.h"
-#include "../scene/Object.h"
+#include "../scenes/SceneBase.h"
+#include "RenderObject.h"
 
 Renderer::Renderer()
 {
@@ -63,7 +63,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
-      for (Object* object : scene.objects) {
+      for (RenderObject* object : scene.objects) {
          object->render();
       }
 
@@ -73,7 +73,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxBeginRenderDRC();
 
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      for (Object* object : scene.objects) {
+      for (RenderObject* object : scene.objects) {
          object->render();
       }
 
