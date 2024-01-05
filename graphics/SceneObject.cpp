@@ -1,12 +1,13 @@
 #include "SceneObject.h"
 #include "Material.h"
 #include <memory>
+#include "../math/projection.h"
 
 static const float sPositionData[] =
 {
-    1.0f, -1.0f,  0.0f, 1.0f,
-    0.0f,  1.0f,  0.0f, 1.0f,
-   -1.0f, -1.0f,  1.0f, 1.0f,
+    1.0f, -1.0f,  0.0f,
+    0.0f,  1.0f,  0.0f,
+   -1.0f, -1.0f,  1.0f,
 };
 
 static const float sColourData[] =
@@ -16,22 +17,23 @@ static const float sColourData[] =
    0.0f,  0.0f,  1.0f, 1.0f,
 };
 
-
-
-
 /**
  * Currently totally fake, but this should be an entry point to load
- * a 3D object from a path. Instead, it sets up the default billboard
- * from Vurpo's code.
+ * a 3D object from a path. Instead, it creates a cube
  */
-SceneObject* LoadObject(const char* path) {
+std::unique_ptr<SceneObject> LoadObject(const char* path) {
   // TODO: Construct the object from an object file (assimp?)
-  
-  SceneObject* _impl = new SceneObject();
-  Material* material = new Material();
-  material->attachShaders();
+  std::unique_ptr<SceneObject> _impl;
+  _impl.reset(new SceneObject());
+  Material* material(new Material());
+  material->attachPerspectiveShaders();
   _impl->setMaterial(material);
-  _impl->setPositionBuffer(sPositionData, 4*4, 3);
-  _impl->setColourBuffer(sPositionData, 4*4, 3);
+  _impl->setPositionBuffer(sPositionData, 4*3, 3);
+  _impl->setColourBuffer(sColourData, 4*4, 3);
+
+   float* projectionBuffer = (float*) malloc(sizeof(float)*16);
+
+   calculateProjectionMatrix(projectionBuffer, 0.6, 16.0f/9.0f, 0.1, 2000);
+   _impl->setProjectionBuffer(projectionBuffer);
   return _impl;
 }

@@ -37,33 +37,13 @@ Renderer::Renderer()
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
-   
-      // Animate colours...
-      /*
-      float *colours = (float *)GX2RLockBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
-      colours[0] = 1.0f;
-      colours[1] = colours[1] >= 1.0f ? 0.0f : (colours[1] + 0.01f);
-      colours[2] = colours[2] >= 1.0f ? 0.0f : (colours[2] + 0.01f);
-      colours[3] = 1.0f;
-
-      colours[4] = colours[4] >= 1.0f ? 0.0f : (colours[4] + 0.01f);
-      colours[5] = 1.0f;
-      colours[6] = colours[6] >= 1.0f ? 0.0f : (colours[6] + 0.01f);
-      colours[7] = 1.0f;
-
-      colours[8] = colours[8] >= 1.0f ? 0.0f : (colours[8] + 0.01f);
-      colours[9] = colours[9] >= 1.0f ? 0.0f : (colours[9] + 0.01f);
-      colours[10] = 1.0f;
-      colours[11] = 1.0f;
-      GX2RUnlockBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
-*/
-      // Render!
+         // Render!
       WHBGfxBeginRender();
 
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
-      for (RenderObject* object : scene.objects) {
+      for (auto& object : scene.objects) {
          object->render();
       }
 
@@ -73,7 +53,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxBeginRenderDRC();
 
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      for (RenderObject* object : scene.objects) {
+      for (auto& object : scene.objects) {
          object->render();
       }
 

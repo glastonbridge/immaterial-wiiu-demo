@@ -12,7 +12,8 @@ Version numbers and installation steps are just my notes about what worked for m
 
 Cemu is a Wii-U emulator
 
-Go here, install https://github.com/cemu-project/Cemu/releases/tag/v2.0-61
+1. Go here, install https://github.com/cemu-project/Cemu/releases/tag/v2.0-61
+2. Take a note of the path to the `sdcard/` directory, you will need it when you do the `cmake` step.
 
 If anyone figures out how to do debugging with this, please update this README
 
@@ -49,20 +50,15 @@ This isn't normal cmake, it's been blessed with the right compiler settings.
 2. (Optional) edit `CmakeLists.txt` to include your new files
 2. `mkdir build`
 3. `cd build`
-4. `/opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake ..`
+4. `/opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake .. -DCMAKE_INSTALL_DIR=[path to the sdcard]`
+
+Note that in step 4, the path must be posix, in the way that `msys2.exe` structures paths. That usually means that a path in your `C:\` filesystem is translated to `/c/` and you use forward slashes (as god intended).
 
 ### Building your code!
 
 1. `cd wiiu-demo/build`
 2. `make`
-
-### Rebuilding shaders (optional)
-
-Shaders get pulled in using `shaders.py`.
-
-1. `cd wiiu-demo/shaders`
-2. (Optional) Edit `shaders.py` to include any new shaders you have written.
-2. `python shaders.py`
+3. `make install` - install assets to the sd card
 
 ### Running
 

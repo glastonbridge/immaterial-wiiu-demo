@@ -1,11 +1,12 @@
 #pragma once
 
-#include <vector>
-
 #include "../graphics/SceneObject.h"
+
+#include <vector>
+#include <memory>
 
 struct SceneBase {
   virtual void setup()=0;
   virtual void update(double time)=0;
-  std::vector<SceneObject*> objects;
+  std::vector<std::unique_ptr<SceneObject>> objects;
 };

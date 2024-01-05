@@ -12,3 +12,5 @@ wut_create_rpx(wiiu_demo)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
         DESTINATION "${CMAKE_INSTALL_PREFIX}")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders"
+         DESTINATION "${CMAKE_INSTALL_PREFIX}/shaders")

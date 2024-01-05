@@ -15,6 +15,7 @@ struct RenderObjectImpl {
 
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
+  GX2RBuffer projectionBuffer = {};
 
   void setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
 
@@ -53,6 +54,23 @@ struct RenderObjectImpl {
 
   }
 
+  void setProjectionBuffer(const float* data) {
+    
+   void *buffer = NULL;
+   // Set vertex colour
+   projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+                        GX2R_RESOURCE_USAGE_CPU_READ |
+                        GX2R_RESOURCE_USAGE_CPU_WRITE |
+                        GX2R_RESOURCE_USAGE_GPU_READ;
+   projectionBuffer.elemSize = 4*4*4;
+   projectionBuffer.elemCount = 1;
+   GX2RCreateBuffer(&projectionBuffer);
+   buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
+   memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
+   GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
+
+  }
+
   void render() {
       WHBGfxClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
@@ -60,13 +78,16 @@ struct RenderObjectImpl {
 
       GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
       GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
-      GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, 3, 0, 1);
+      GX2RSetAttributeBuffer(&projectionBuffer, 2, projectionBuffer.elemSize, 0);
+
+      GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
 
   }
   ~RenderObjectImpl() {
       
     GX2RDestroyBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
+    GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
   }
 };
 
@@ -82,4 +103,5 @@ RenderObject::~RenderObject() {
 void RenderObject::render() { _impl -> render(); }
 void RenderObject::setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setPositionBuffer(data, elemSize, elemCount);}
 void RenderObject::setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setColourBuffer(data, elemSize, elemCount);};
+void RenderObject::setProjectionBuffer(const float* data)  { _impl->setProjectionBuffer(data);};
 void RenderObject::setMaterial(Material* material) {_impl->material = material;}

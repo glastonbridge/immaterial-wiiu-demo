@@ -1,12 +1,15 @@
 #include "Material.h"
 
+#include "../renderer/CafeGLSLCompiler.h"
+
 #include <gx2/shaders.h>
 #include <whb/gfx.h>
-#include <cstdlib>
-
-#include "../shaders/shaders.h"
-#include "../renderer/CafeGLSLCompiler.h"
 #include <whb/log.h>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 
 
@@ -32,10 +35,30 @@ WHBGfxShaderGroup *GLSL_CompileShader(const char *vsSrc, const char *psSrc)
    return shaderGroup;
 }
 
-void Material::attachShaders() {
+void loadShader(const char* filename, std::string& destination) {
+  std::ifstream inVert;
+  std::ostringstream inStreamVert;
+  inVert.open(filename);
+  inStreamVert << inVert.rdbuf();
+  inVert.close();
+  destination.assign(inStreamVert.str());
+}
+
+void Material::attachBillboardShaders() {
    group = {};
+
+   
+
+  std::string inStringVert;
+  loadShader("billboard.vert", inStringVert);
+  const char* vertexBillboard = inStringVert.c_str();
+
+  std::string inStringFrag;
+  loadShader("billboard.frag", inStringFrag);
+  const char* fragmentBillboard = inStringFrag.c_str();
+
   // TODO: Attach different shaders to different materials
-  group = GLSL_CompileShader(vertexShader, fragmentShader);
+  group = GLSL_CompileShader(vertexBillboard, fragmentBillboard);
   if (!group) {
     WHBLogPrintf("Shader compilation failed");
   } else {
@@ -43,8 +66,35 @@ void Material::attachShaders() {
     WHBLogPrintf("Shader compilation completed");
   }
 
-  WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
+  WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32);
   WHBGfxInitShaderAttribute(group, "in_color", 1, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
+  WHBGfxInitFetchShader(group);
+}
+
+
+void Material::attachPerspectiveShaders() {
+   group = {};
+  // TODO: Attach different shaders to different materials
+
+  std::string inStringVert;
+  loadShader("projected.vert", inStringVert);
+  const char* vertexProjected = inStringVert.c_str();
+
+  std::string inStringFrag;
+  loadShader("projected.frag", inStringFrag);
+  const char* fragmentProjected = inStringFrag.c_str();
+
+  group = GLSL_CompileShader(vertexProjected, fragmentProjected);
+  if (!group) {
+    WHBLogPrintf("Shader compilation failed");
+  } else {
+   
+    WHBLogPrintf("Shader compilation completed");
+  }
+
+  WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32);
+  WHBGfxInitShaderAttribute(group, "in_color", 1, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
+  WHBGfxInitShaderAttribute(group, "projection", 2, 0, GX2_ATTRIB_FORMAT_FLOAT_32);
   WHBGfxInitFetchShader(group);
 }
 
