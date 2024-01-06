@@ -27,5 +27,5 @@ void calculateProjectionMatrix(
     matrix[12] = 0.0f;
     matrix[13] = 0.0f;
     matrix[14] = (-twoZNear * zfar) / deltaZ;
-    matrix[15] = 0.0f;
+    matrix[15] = 1.0f;
 }

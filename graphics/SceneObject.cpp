@@ -5,9 +5,14 @@
 
 static const float sPositionData[] =
 {
-    1.0f, -1.0f,  0.0f,
-    0.0f,  1.0f,  0.0f,
-   -1.0f, -1.0f,  1.0f,
+   // front
+    -1.0f, 1.0f,  0.0f,
+    1.0f,  1.0f,  0.0f,
+   -1.0f, -1.0f,  0.0f,
+   //
+    1.0f,  1.0f,  0.0f,
+   -1.0f, -1.0f,  0.0f,
+   1.0f,  -1.0f,  0.0f,
 };
 
 static const float sColourData[] =
@@ -19,7 +24,7 @@ static const float sColourData[] =
 
 /**
  * Currently totally fake, but this should be an entry point to load
- * a 3D object from a path. Instead, it creates a cube
+ * a 3D object from a path. Instead, it creates a quad
  */
 std::unique_ptr<SceneObject> LoadObject(const char* path) {
   // TODO: Construct the object from an object file (assimp?)
@@ -28,9 +33,11 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
   Material* material(new Material());
   material->attachPerspectiveShaders();
   _impl->setMaterial(material);
-  _impl->setPositionBuffer(sPositionData, 4*3, 3);
+  _impl->setPositionBuffer(sPositionData, 4*3, 6);
   _impl->setColourBuffer(sColourData, 4*4, 3);
 
+   // TODO: who the fuck owns this? Leaks all over the shop because
+   // I haven't got enough working to care about structure yet
    float* projectionBuffer = (float*) malloc(sizeof(float)*16);
 
    calculateProjectionMatrix(projectionBuffer, 0.6, 16.0f/9.0f, 0.1, 2000);

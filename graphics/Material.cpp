@@ -11,7 +11,9 @@
 #include <sstream>
 #include <string>
 
-
+// TODO: stuff relating to rendering ought to be kept in renderer/
+// and stuff relating to the scene objects more generally belong
+// in graphics/
 
 WHBGfxShaderGroup *GLSL_CompileShader(const char *vsSrc, const char *psSrc)
 {
@@ -38,6 +40,8 @@ WHBGfxShaderGroup *GLSL_CompileShader(const char *vsSrc, const char *psSrc)
 void loadShader(const char* filename, std::string& destination) {
   std::ifstream inVert;
   std::ostringstream inStreamVert;
+  
+  WHBLogPrintf("Loading shader %s",filename);
   inVert.open(filename);
   inStreamVert << inVert.rdbuf();
   inVert.close();
@@ -50,11 +54,11 @@ void Material::attachBillboardShaders() {
    
 
   std::string inStringVert;
-  loadShader("billboard.vert", inStringVert);
+  loadShader("shaders/billboard.vert", inStringVert);
   const char* vertexBillboard = inStringVert.c_str();
 
   std::string inStringFrag;
-  loadShader("billboard.frag", inStringFrag);
+  loadShader("shaders/billboard.frag", inStringFrag);
   const char* fragmentBillboard = inStringFrag.c_str();
 
   // TODO: Attach different shaders to different materials
@@ -71,17 +75,16 @@ void Material::attachBillboardShaders() {
   WHBGfxInitFetchShader(group);
 }
 
-
 void Material::attachPerspectiveShaders() {
    group = {};
   // TODO: Attach different shaders to different materials
 
   std::string inStringVert;
-  loadShader("projected.vert", inStringVert);
+  loadShader("shaders/projected.vert", inStringVert);
   const char* vertexProjected = inStringVert.c_str();
 
   std::string inStringFrag;
-  loadShader("projected.frag", inStringFrag);
+  loadShader("shaders/projected.frag", inStringFrag);
   const char* fragmentProjected = inStringFrag.c_str();
 
   group = GLSL_CompileShader(vertexProjected, fragmentProjected);
@@ -94,8 +97,11 @@ void Material::attachPerspectiveShaders() {
 
   WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32);
   WHBGfxInitShaderAttribute(group, "in_color", 1, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
-  WHBGfxInitShaderAttribute(group, "projection", 2, 0, GX2_ATTRIB_FORMAT_FLOAT_32);
+
   WHBGfxInitFetchShader(group);
+  
+  WHBLogPrintf("Uniforms %u", group->vertexShader->uniformVarCount);
+  WHBLogPrintf("Uniform Blocks %u", group->vertexShader->uniformBlockCount);
 }
 
 void Material::renderUsing() const {
