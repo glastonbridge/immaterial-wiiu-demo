@@ -8,6 +8,8 @@
 
 #include <whb/gfx.h>
 #include <whb/log.h>
+#include <gx2/mem.h>
+#include "../math/projection.h"
 
 
 struct RenderObjectImpl {
@@ -76,40 +78,37 @@ struct RenderObjectImpl {
    * 
    *  -aldroid
    */
-  void setProjectionBuffer(const float* data) {
-   /*
-   // Attempt 1: create a buffer and reference it
-   void *buffer = NULL;
-   // Set vertex colour
-   projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
-                        GX2R_RESOURCE_USAGE_CPU_READ |
-                        GX2R_RESOURCE_USAGE_CPU_WRITE |
-                        GX2R_RESOURCE_USAGE_GPU_READ;
-   projectionBuffer.elemSize = 4*4*4;
-   projectionBuffer.elemCount = 1;
-   //log
-   
-   WHBLogPrintf("Projection %f,%f,%f,%f,",data[0], data[1], data[2],data[3]);
-   WHBLogPrintf("Projection %f,%f,%f,%f,",data[4], data[5], data[6],data[7]);
-   WHBLogPrintf("Projection %f,%f,%f,%f,",data[8], data[9], data[10],data[11]);
-   WHBLogPrintf("Projection %f,%f,%f,%f,",data[12], data[13], data[14],data[15]);
-   GX2RCreateBuffer(&projectionBuffer);
+  /**
+   * Hi! This works now, but as you can see at the beginning of the setProjectionBuffer function,
+   * I'm not actually swapping the byte order when copying the memory, just fudging this first value
+   * to prove it works. Have fun!
+  */
+  void setProjectionBuffer(const float *data)
+  {
+    *(int *)data = ((((*(int *)data) & 0xff000000) >> 24) |
+                    (((*(int *)data) & 0x00ff0000) >> 8) |
+                    (((*(int *)data) & 0x0000ff00) << 8) |
+                    (((*(int *)data) & 0x000000ff) << 24));
 
+    void *buffer = NULL;
+    // Set vertex colour
+    projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+                             GX2R_RESOURCE_USAGE_CPU_READ |
+                             GX2R_RESOURCE_USAGE_CPU_WRITE |
+                             GX2R_RESOURCE_USAGE_GPU_READ;
+    projectionBuffer.elemSize = 4 * 4 * 4;
+    projectionBuffer.elemCount = 1;
+    // log
 
-   buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
-   memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
-   GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
-   */
+    WHBLogPrintf("Projection %f,%f,%f,%f,", data[0], data[1], data[2], data[3]);
+    WHBLogPrintf("Projection %f,%f,%f,%f,", data[4], data[5], data[6], data[7]);
+    WHBLogPrintf("Projection %f,%f,%f,%f,", data[8], data[9], data[10], data[11]);
+    WHBLogPrintf("Projection %f,%f,%f,%f,", data[12], data[13], data[14], data[15]);
+    GX2RCreateBuffer(&projectionBuffer);
 
-
-
-   /*
-   // Attempt 2: call SetVertexUniformBlock with the projection matrix data
-   material->renderUsing();   
-   GX2SetVertexUniformBlock(
-                          0,
-                          4*4*4, data);
-    */
+    buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+    memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
+    GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
 
   void render() {
@@ -119,7 +118,8 @@ struct RenderObjectImpl {
 
       GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
       GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
-      //GX2RSetAttributeBuffer(&projectionBuffer, 15, projectionBuffer.elemSize, 0);
+      GX2RSetVertexUniformBlock(&projectionBuffer,
+                                0, 0);
 
       GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
 

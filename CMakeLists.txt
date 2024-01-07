@@ -6,7 +6,9 @@ add_executable(wiiu_demo
    renderer/Renderer.cpp
    renderer/RenderObject.cpp
    graphics/Material.cpp
-   graphics/SceneObject.cpp)
+   graphics/SceneObject.cpp
+   math/projection.cpp
+   )
 
 wut_create_rpx(wiiu_demo)
 
