@@ -16,3 +16,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
         DESTINATION "${CMAKE_INSTALL_PREFIX}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
+
+# Emulator setup (make test)
+set(CEMU_EXECUTABLE "cemu" CACHE STRING "Path to the emulator executable")
+set(SDCARD_DIR "${CMAKE_INSTALL_PREFIX}" CACHE PATH "SD card directory (emulator side, defaults to install dir)")
+add_custom_target(test
+    COMMAND ${CMAKE_COMMAND} --build . --target install
+    COMMAND ${CEMU_EXECUTABLE} -g "${SDCARD_DIR}/${PROJECT_NAME}.rpx"
+)
