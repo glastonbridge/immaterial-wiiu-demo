@@ -1,6 +1,8 @@
 #include "RenderObject.h"
 #include "../graphics/Material.h"
 
+#include <dmae/mem.h>
+
 #include <gx2/shaders.h>
 #include <gx2r/buffer.h>
 #include <gx2/draw.h>
@@ -85,10 +87,10 @@ struct RenderObjectImpl {
   */
   void setProjectionBuffer(const float *data)
   {
-    *(int *)data = ((((*(int *)data) & 0xff000000) >> 24) |
-                    (((*(int *)data) & 0x00ff0000) >> 8) |
-                    (((*(int *)data) & 0x0000ff00) << 8) |
-                    (((*(int *)data) & 0x000000ff) << 24));
+    *(int *)data = ((((*(int *)data) & 0xff000000)) |
+                    (((*(int *)data) & 0x00ff0000)) |
+                    (((*(int *)data) & 0x0000ff00)) |
+                    (((*(int *)data) & 0x000000ff)));
 
     void *buffer = NULL;
     // Set vertex colour
@@ -107,7 +109,9 @@ struct RenderObjectImpl {
     GX2RCreateBuffer(&projectionBuffer);
 
     buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-    memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
+    //memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
+    DMAEWaitDone(DMAECopyMem(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount / 4, DMAE_SWAP_32)); // <-- this works, with possible caveats: might have sync issues with GPU, might be expensive for just a single matrix (but maybe worth it for e.g. set of 20 bone mats or such)
+
     GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
 
