@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(wiiu_demo CXX)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third_party/lodepng)
+
 add_executable(wiiu_demo
    main.cpp
    renderer/Renderer.cpp
@@ -8,6 +10,7 @@ add_executable(wiiu_demo
    graphics/Material.cpp
    graphics/SceneObject.cpp
    math/projection.cpp
+   third_party/lodepng/lodepng.cpp
    )
 
 wut_create_rpx(wiiu_demo)
@@ -15,6 +18,8 @@ wut_create_rpx(wiiu_demo)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
         DESTINATION "${CMAKE_INSTALL_PREFIX}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders"
+         DESTINATION "${CMAKE_INSTALL_PREFIX}")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
 
 # Emulator setup (make test)
