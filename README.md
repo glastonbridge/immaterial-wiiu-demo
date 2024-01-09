@@ -35,7 +35,21 @@ WUT is the Wii-U toolchain that works in DevKitPro.
 
 ## Developer setup - Real hardware
 
-TBC
+### Install EnvironmentLoader and Aroma
+
+Follow https://wiiu.hacks.guide and then https://aroma.foryour.cafe , then start your Wii U in the Aroma environment. Aroma also has some optional plugins you can install, such as an FTP server and some debugging tools (TBD how to debug).
+
+### Installing and running
+
+On your SD card, place `glslcompiler.rpl` in `/wiiu/libs/` and `wiiu_demo.rpx` in `/wiiu/apps/wiiu_demo/`.
+
+The `assets` and `shaders` directories go in the root of the SD card, unless we decide to store those somewhere that makes more sense.
+
+`wiiu_demo.rpx` will appear as an app you can launch on the Wii U home screen.
+
+### Debugging
+
+TBD
 
 ## Building and running
 
