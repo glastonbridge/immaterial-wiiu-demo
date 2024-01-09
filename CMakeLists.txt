@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 project(wiiu_demo CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third_party/lodepng)
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lodepng
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
+)
 
 add_executable(wiiu_demo
    main.cpp

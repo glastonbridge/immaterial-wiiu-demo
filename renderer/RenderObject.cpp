@@ -13,6 +13,8 @@
 #include <gx2/mem.h>
 #include "../math/projection.h"
 
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 struct RenderObjectImpl {
   Material* material;
@@ -87,11 +89,6 @@ struct RenderObjectImpl {
   */
   void setProjectionBuffer(const float *data)
   {
-    *(int *)data = ((((*(int *)data) & 0xff000000)) |
-                    (((*(int *)data) & 0x00ff0000)) |
-                    (((*(int *)data) & 0x0000ff00)) |
-                    (((*(int *)data) & 0x000000ff)));
-
     void *buffer = NULL;
     // Set vertex colour
     projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
@@ -101,6 +98,8 @@ struct RenderObjectImpl {
     projectionBuffer.elemSize = 4 * 4 * 4;
     projectionBuffer.elemCount = 1;
     // log
+    auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 10.f) * glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -5.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
+    data = (float*)glm::value_ptr(mat);
 
     WHBLogPrintf("Projection %f,%f,%f,%f,", data[0], data[1], data[2], data[3]);
     WHBLogPrintf("Projection %f,%f,%f,%f,", data[4], data[5], data[6], data[7]);
