@@ -98,7 +98,7 @@ struct RenderObjectImpl {
     projectionBuffer.elemSize = 4 * 4 * 4;
     projectionBuffer.elemCount = 1;
     // log
-    auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 10.f) * glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -5.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
+    auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 20.f) * glm::translate(glm::mat4(1.f), glm::vec3(-0.7f, -0.7f, -10.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
     data = (float*)glm::value_ptr(mat);
 
     WHBLogPrintf("Projection %f,%f,%f,%f,", data[0], data[1], data[2], data[3]);
@@ -115,7 +115,7 @@ struct RenderObjectImpl {
   }
 
   void render() {
-      WHBGfxClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+      WHBGfxClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
       material->renderUsing();
 

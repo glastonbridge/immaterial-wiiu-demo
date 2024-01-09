@@ -11,5 +11,5 @@ void main()
     // Until the projection matrix can come through properly, use this sketchy
     gl_Position = projection * vec4(in_position,1.0);
     // If the out_color goes green, we are getting a value from projection matrix
-    out_color = vec4(0.0,projection[0].x,0.0,1.0);//in_color;
+    out_color = in_color;
 }

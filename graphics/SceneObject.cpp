@@ -8,20 +8,68 @@
 static const float sPositionData[] =
 {
    // front
-    -1.0f, 1.0f,  0.0f,
+   -1.0f, 1.0f,  0.0f,
     1.0f,  1.0f,  0.0f,
    -1.0f, -1.0f,  0.0f,
-   //
+   
     1.0f,  1.0f,  0.0f,
    -1.0f, -1.0f,  0.0f,
    1.0f,  -1.0f,  0.0f,
+
+   -1.0f+2.2f, 1.0f,  0.0f,
+    1.0f+2.2f,  1.0f,  0.0f,
+   -1.0f+2.2f, -1.0f,  0.0f,
+   
+    1.0f+2.2f,  1.0f,  0.0f,
+   -1.0f+2.2f, -1.0f,  0.0f,
+    1.0f+2.2f,  -1.0f,  0.0f,
+
+   -1.0f+2.2f, 1.0f+2.2f,  0.0f,
+    1.0f+2.2f,  1.0f+2.2f,  0.0f,
+   -1.0f+2.2f, -1.0f+2.2f,  0.0f,
+   
+    1.0f+2.2f,  1.0f+2.2f,  0.0f,
+   -1.0f+2.2f, -1.0f+2.2f,  0.0f,
+    1.0f+2.2f,  -1.0f+2.2f,  0.0f,
+
+   -1.0f, 1.0f+2.2f,  0.0f,
+    1.0f,  1.0f+2.2f,  0.0f,
+   -1.0f, -1.0f+2.2f,  0.0f,
+   
+    1.0f,  1.0f+2.2f,  0.0f,
+   -1.0f, -1.0f+2.2f,  0.0f,
+   1.0f,  -1.0f+2.2f,  0.0f,
 };
 
 static const float sColourData[] =
 {
-   1.0f,  0.0f,  0.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+   0.1f,  0.1f,  1.0f, 1.0f,
+
+   1.0f,  1.0f,  0.0f, 1.0f,
+   1.0f,  1.0f,  0.0f, 1.0f,
+   1.0f,  1.0f,  0.0f, 1.0f,
+   1.0f,  1.0f,  0.0f, 1.0f, 
+   1.0f,  1.0f,  0.0f, 1.0f,
+   1.0f,  1.0f,  0.0f, 1.0f, 
+
    0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  0.0f,  1.0f, 1.0f,
+   0.0f,  1.0f,  0.0f, 1.0f,
+   0.0f,  1.0f,  0.0f, 1.0f,
+   0.0f,  1.0f,  0.0f, 1.0f,
+   0.0f,  1.0f,  0.0f, 1.0f,
+   0.0f,  1.0f,  0.0f, 1.0f,
+
+   1.0f,  0.0f,  0.0f, 1.0f,
+   1.0f,  0.0f,  0.0f, 1.0f,
+   1.0f,  0.0f,  0.0f, 1.0f,
+   1.0f,  0.0f,  0.0f, 1.0f,
+   1.0f,  0.0f,  0.0f, 1.0f,
+   1.0f,  0.0f,  0.0f, 1.0f,
 };
 
 /**
@@ -34,8 +82,8 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
   _impl.reset(new SceneObject());
   Material* material(new ProjectedMaterial());
   _impl->setMaterial(material);
-  _impl->setPositionBuffer(sPositionData, 4*3, 6);
-  _impl->setColourBuffer(sColourData, 4*4, 3);
+  _impl->setPositionBuffer(sPositionData, 4*3, 6*4);
+  _impl->setColourBuffer(sColourData, 4*4, 6*4);
 
    // TODO: who the fuck owns this? Leaks all over the shop because
    // I haven't got enough working to care about structure yet
