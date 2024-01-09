@@ -21,73 +21,40 @@ struct RenderObjectImpl {
 
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
+  GX2RBuffer texcoordBuffer = {};
   GX2RBuffer projectionBuffer = {};
 
   void setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-
-    WHBLogPrintf("Loading an object");
-
-
-   void *buffer = NULL;
-
-   // Set vertex position
-   positionBuffer.flags = GX2R_RESOURCE_BIND_VERTEX_BUFFER |
-                          GX2R_RESOURCE_USAGE_CPU_READ |
-                          GX2R_RESOURCE_USAGE_CPU_WRITE |
-                          GX2R_RESOURCE_USAGE_GPU_READ;
-   positionBuffer.elemSize = elemSize;
-   positionBuffer.elemCount = elemCount;
-   GX2RCreateBuffer(&positionBuffer);
-   buffer = GX2RLockBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
-   memcpy(buffer, data, positionBuffer.elemSize * positionBuffer.elemCount);
-   GX2RUnlockBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
+    setAttribBuffer(data, elemSize, elemCount, &positionBuffer);
   }
 
   void setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-    
-   void *buffer = NULL;
-   // Set vertex colour
-   colourBuffer.flags = GX2R_RESOURCE_BIND_VERTEX_BUFFER |
-                        GX2R_RESOURCE_USAGE_CPU_READ |
-                        GX2R_RESOURCE_USAGE_CPU_WRITE |
-                        GX2R_RESOURCE_USAGE_GPU_READ;
-   colourBuffer.elemSize = elemSize;
-   colourBuffer.elemCount = elemCount;
-   GX2RCreateBuffer(&colourBuffer);
-   buffer = GX2RLockBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
-   memcpy(buffer, data, colourBuffer.elemSize * colourBuffer.elemCount);
-   GX2RUnlockBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
+    setAttribBuffer(data, elemSize, elemCount, &colourBuffer);
+  }
 
+  void setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
+    setAttribBuffer(data, elemSize, elemCount, &texcoordBuffer);
+  }
+
+  void setAttribBuffer(const float* data, uint32_t elemSize, uint32_t elemCount, GX2RBuffer* buffer) {
+    //if(!GX2RBufferExists(buffer)) {
+      buffer->flags = GX2R_RESOURCE_BIND_VERTEX_BUFFER |
+                      GX2R_RESOURCE_USAGE_CPU_READ |
+                      GX2R_RESOURCE_USAGE_CPU_WRITE |
+                      GX2R_RESOURCE_USAGE_GPU_READ;
+      buffer->elemSize = elemSize;
+      buffer->elemCount = elemCount;
+      GX2RCreateBuffer(buffer);
+    //}
+    void* bufferData = GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
+    memcpy(bufferData, data, buffer->elemSize * buffer->elemCount);
+    GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
   /**
-   * HELP ME FRIENDS
-   * 
-   * I can't get uniforms to pass through to the vertex shader.
-   * 
-   * If you look at shaders/projected.vert you will see some attempt to read in the projection
-   * buffer. As it stands, it has a hacked projection matrix, and it sets the green value to 
-   * [0,0] in the projection matrix passed in.
-   * 
-   * It should be green, because [0,0] is about 0.8. It's black, because the projection matrix
-   * is not getting passed in.
-   * 
-   * I have made a couple of attempts, one to pass it in as a buffer, and another is to use
-   * the built-in SetVertexUniformBlock commands. Neither is working.
-   * 
-   * I'm pretty sure this is one of those cases where having a working example would solve this
-   * problem really quickly.
-   * 
-   * Good hunting
-   * 
-   *  -aldroid
-   */
-  /**
-   * Hi! This works now, but as you can see at the beginning of the setProjectionBuffer function,
-   * I'm not actually swapping the byte order when copying the memory, just fudging this first value
-   * to prove it works. Have fun!
+   * Uniforms work now but right now it also just computes matrix right here. TODO: don't do that
   */
-  void setProjectionBuffer(const float *data)
+  void setProjectionBuffer(const float *data) // <- ignored currently
   {
     void *buffer = NULL;
     // Set vertex colour
@@ -101,10 +68,6 @@ struct RenderObjectImpl {
     auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 20.f) * glm::translate(glm::mat4(1.f), glm::vec3(-0.7f, -0.7f, -10.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
     data = (float*)glm::value_ptr(mat);
 
-    WHBLogPrintf("Projection %f,%f,%f,%f,", data[0], data[1], data[2], data[3]);
-    WHBLogPrintf("Projection %f,%f,%f,%f,", data[4], data[5], data[6], data[7]);
-    WHBLogPrintf("Projection %f,%f,%f,%f,", data[8], data[9], data[10], data[11]);
-    WHBLogPrintf("Projection %f,%f,%f,%f,", data[12], data[13], data[14], data[15]);
     GX2RCreateBuffer(&projectionBuffer);
 
     buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
@@ -115,16 +78,16 @@ struct RenderObjectImpl {
   }
 
   void render() {
-      WHBGfxClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+    WHBGfxClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-      material->renderUsing();
+    material->renderUsing();
 
-      GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
-      GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
-      GX2RSetVertexUniformBlock(&projectionBuffer,
-                                0, 0);
+    GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
+    GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
+    GX2RSetAttributeBuffer(&texcoordBuffer, 2, texcoordBuffer.elemSize, 0);
+    GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
 
-      GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
+    GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
 
   }
   ~RenderObjectImpl() {
@@ -147,5 +110,6 @@ RenderObject::~RenderObject() {
 void RenderObject::render() { _impl -> render(); }
 void RenderObject::setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setPositionBuffer(data, elemSize, elemCount);}
 void RenderObject::setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setColourBuffer(data, elemSize, elemCount);};
+void RenderObject::setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setTexcoordBuffer(data, elemSize, elemCount);};
 void RenderObject::setProjectionBuffer(const float* data)  { _impl->setProjectionBuffer(data);};
 void RenderObject::setMaterial(Material* material) {_impl->material = material;}

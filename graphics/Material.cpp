@@ -41,10 +41,3 @@ void loadShader(const char* filename, std::string& destination) {
   destination.assign(inStreamVert.str());
 }
 
-// Default impl, can be overridden if needed
-void Material::renderUsing() const {
-  GX2SetFetchShader(&group->fetchShader);
-  GX2SetVertexShader(group->vertexShader);
-  GX2SetPixelShader(group->pixelShader);
-  GX2SetShaderMode(GX2_SHADER_MODE_UNIFORM_BLOCK);
-}
