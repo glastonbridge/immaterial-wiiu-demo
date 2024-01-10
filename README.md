@@ -45,7 +45,7 @@ On your SD card, place `glslcompiler.rpl` in `/wiiu/libs/` and `wiiu_demo.rpx` i
 
 The `assets` and `shaders` directories go in the root of the SD card, unless we decide to store those somewhere that makes more sense.
 
-`wiiu_demo.rpx` will appear as an app you can launch on the Wii U home screen.
+`wiiu_demo.rpx` will appear as an app you can launch on the Wii U home screen. Use the `udplogserver` command that came with wut to view the logs of the app in realtime.
 
 ### Debugging
 

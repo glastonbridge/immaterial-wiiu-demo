@@ -17,12 +17,14 @@
 
 #include "scenes/TestScene.h"
 #include "renderer/Renderer.h"
+#include <whb/log_udp.h>
 
 
 int main(int argc, char **argv)
 {
 
    WHBLogCafeInit();
+   WHBLogUdpInit();
    WHBProcInit();
    AXInit();
    WHBLogPrint("Hello World! Logging initialised.");
@@ -38,5 +40,7 @@ exit:
    AXQuit();
    WHBUnmountSdCard();
    WHBProcShutdown();
+   WHBLogUdpDeinit();
+   WHBLogCafeDeinit();
    return 0;
 }
