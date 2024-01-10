@@ -13,6 +13,8 @@
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
 
+#include <sndcore2/core.h>
+
 #include "scenes/TestScene.h"
 #include "renderer/Renderer.h"
 
@@ -22,6 +24,7 @@ int main(int argc, char **argv)
 
    WHBLogCafeInit();
    WHBProcInit();
+   AXInit();
    WHBLogPrint("Hello World! Logging initialised.");
    Renderer renderer;
    TestScene scene;
@@ -32,6 +35,7 @@ int main(int argc, char **argv)
    }
 
 exit:
+   AXQuit();
    WHBUnmountSdCard();
    WHBProcShutdown();
    return 0;
