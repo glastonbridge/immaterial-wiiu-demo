@@ -13,6 +13,7 @@ add_executable(wiiu_demo
    graphics/Material.cpp
    graphics/SceneObject.cpp
    math/projection.cpp
+   util/memory.cpp
    third_party/lodepng/lodepng.cpp
    )
 

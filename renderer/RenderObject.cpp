@@ -1,5 +1,6 @@
 #include "RenderObject.h"
 #include "../graphics/Material.h"
+#include "../util/memory.h"
 
 #include <dmae/mem.h>
 
@@ -67,12 +68,13 @@ struct RenderObjectImpl {
     // log
     auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 20.f) * glm::translate(glm::mat4(1.f), glm::vec3(-0.7f, -0.7f, -10.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
     data = (float*)glm::value_ptr(mat);
+    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK, (void *)data, 16*4);
 
     GX2RCreateBuffer(&projectionBuffer);
 
     buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-    //memcpy(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount);
-    DMAEWaitDone(DMAECopyMem(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount / 4, DMAE_SWAP_32)); // <-- this works, with possible caveats: might have sync issues with GPU, might be expensive for just a single matrix (but maybe worth it for e.g. set of 20 bone mats or such)
+    swap_memcpy(buffer, data, 16 * 4);
+    //DMAEWaitDone(DMAECopyMem(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount, DMAE_SWAP_32)); // <-- this works, with possible caveats: might have sync issues with GPU, might be expensive for just a single matrix (but maybe worth it for e.g. set of 20 bone mats or such)
 
     GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
