@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(wiiu_demo CXX)
+project(wiiu_demo C CXX)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lodepng
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/minivorbis
 )
 
 add_executable(wiiu_demo
@@ -14,7 +15,9 @@ add_executable(wiiu_demo
    graphics/SceneObject.cpp
    math/projection.cpp
    util/memory.cpp
+   sound/Music.cpp
    third_party/lodepng/lodepng.cpp
+   third_party/minivorbis/minivorbis.c
    )
 
 wut_create_rpx(wiiu_demo)

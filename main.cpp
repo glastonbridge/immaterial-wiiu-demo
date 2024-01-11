@@ -19,7 +19,7 @@
 #include "scenes/TestScene.h"
 #include "renderer/Renderer.h"
 #include <whb/log_udp.h>
-
+#include "sound/Music.h"
 
 int main(int argc, char **argv)
 {
@@ -29,15 +29,17 @@ int main(int argc, char **argv)
    WHBProcInit();
    // TODO: see loadShader in Material.cpp
    WHBMountSdCard();
-   AXInit();
    WHBLogPrint("Hello World! Logging initialised.");
    {
+      MusicPlayer music("assets/dumdumdiday.ogg");
       Renderer renderer;
       TestScene scene;
       scene.setup();
       WHBLogPrintf("Begin updating...");
+      music.play();
       while (WHBProcIsRunning()) {
          renderer.renderFrame(scene);
+         WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
       }
    }
    WHBLogPrintf("Done. Quitting...");  
