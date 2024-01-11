@@ -12,6 +12,7 @@
 #include <coreinit/systeminfo.h>
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
+#include <coreinit/filesystem.h>
 
 #include <sndcore2/core.h>
 
@@ -26,21 +27,24 @@ int main(int argc, char **argv)
    WHBLogCafeInit();
    WHBLogUdpInit();
    WHBProcInit();
+   // TODO: see loadShader in Material.cpp
+   WHBMountSdCard();
    AXInit();
    WHBLogPrint("Hello World! Logging initialised.");
-   Renderer renderer;
-   TestScene scene;
-   scene.setup();
-   WHBLogPrintf("Begin updating...");
-   while (WHBProcIsRunning()) {
-      renderer.renderFrame(scene);
+   {
+      Renderer renderer;
+      TestScene scene;
+      scene.setup();
+      WHBLogPrintf("Begin updating...");
+      while (WHBProcIsRunning()) {
+         renderer.renderFrame(scene);
+      }
    }
-
-exit:
+   WHBLogPrintf("Done. Quitting...");  
    AXQuit();
    WHBUnmountSdCard();
+   WHBLogCafeDeinit();
    WHBProcShutdown();
    WHBLogUdpDeinit();
-   WHBLogCafeDeinit();
    return 0;
 }

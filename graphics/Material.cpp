@@ -1,4 +1,6 @@
 #include "Material.h"
+#include <whb/file.h>
+#include <whb/sdcard.h>
 
 // TODO: stuff relating to rendering ought to be kept in renderer/
 // and stuff relating to the scene objects more generally belong
@@ -31,13 +33,24 @@ WHBGfxShaderGroup *GLSL_CompileShader(const char *vsSrc, const char *psSrc)
 }
 
 void loadShader(const char* filename, std::string& destination) {
-  std::ifstream inVert;
-  std::ostringstream inStreamVert;
+  // TODO: these WHB file operations are deprecated and should have been replaced with standard C++
+  // file operations. But using the C++ file operations somehow causes our app to not quit properly
+  // and the console crashes when trying to quit to menu. Why??
+
+  char *sdRootPath = WHBGetSdCardMountPath();
+  char path[256];
+  sprintf(path, "%s/%s", sdRootPath, filename);
+  WHBLogPrintf("Loading shader %s", path);
+  char *text = WHBReadWholeFile(path, NULL);
+  destination = text;
+
+  // std::ifstream inVert;
+  // std::ostringstream inStreamVert;
   
-  WHBLogPrintf("Loading shader %s",filename);
-  inVert.open(filename);
-  inStreamVert << inVert.rdbuf();
-  inVert.close();
-  destination.assign(inStreamVert.str());
+  // WHBLogPrintf("Loading shader %s",filename);
+  // inVert.open(filename);
+  // inStreamVert << inVert.rdbuf();
+  // inVert.close();
+  // destination.assign(inStreamVert.str());
 }
 

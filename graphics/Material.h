@@ -23,7 +23,7 @@ void loadShader(const char* filename, std::string& destination);
 
 struct Material {
   Material() {};
-  ~Material() {};
+  virtual ~Material() {};
   virtual void renderUsing() const {
     // Default impl, can be overridden if needed
     GX2SetFetchShader(&group->fetchShader);
@@ -40,35 +40,39 @@ struct Material {
 // TODO copy these somewhere else
 struct ProjectedMaterial: public Material {
   ProjectedMaterial() {
-    group = {};
+      group = {};
 
-    std::string inStringVert;
-    loadShader("shaders/projected.vert", inStringVert);
-    const char* vertexProjected = inStringVert.c_str();
+      std::string inStringVert;
+      loadShader("shaders/projected.vert", inStringVert);
+      const char* vertexProjected = inStringVert.c_str();
 
-    std::string inStringFrag;
-    loadShader("shaders/projected.frag", inStringFrag);
-    const char* fragmentProjected = inStringFrag.c_str();
+      std::string inStringFrag;
+      loadShader("shaders/projected.frag", inStringFrag);
+      const char* fragmentProjected = inStringFrag.c_str();
 
-    group = GLSL_CompileShader(vertexProjected, fragmentProjected);
-    if (!group) {
-      WHBLogPrintf("Shader compilation failed");
-    } else {
-    
-      WHBLogPrintf("Shader compilation completed");
-    }
+      group = GLSL_CompileShader(vertexProjected, fragmentProjected);
+      if (!group) {
+        WHBLogPrintf("Shader compilation failed");
+      } else {
+      
+        WHBLogPrintf("Shader compilation completed");
+      }
 
-    WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32);
-    WHBGfxInitShaderAttribute(group, "in_color", 1, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
+      WHBGfxInitShaderAttribute(group, "in_position", 0, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
+      WHBGfxInitShaderAttribute(group, "in_color", 1, 0, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32);
 
-    WHBGfxInitFetchShader(group);
-    
-    WHBLogPrintf("Uniforms %u", group->vertexShader->uniformVarCount);
-    WHBLogPrintf("Uniform Blocks %u", group->vertexShader->uniformBlockCount);
+      WHBGfxInitFetchShader(group);
+      
+      WHBLogPrintf("Uniforms %u", group->vertexShader->uniformVarCount);
+      WHBLogPrintf("Uniform Blocks %u", group->vertexShader->uniformBlockCount);
   }
 
-  ~ProjectedMaterial() {
-    WHBGfxFreeShaderGroup(group);
+  ~ProjectedMaterial()
+  {
+    WHBLogPrintf("Destroying ProjectedMaterial");
+    GLSL_FreeVertexShader(group->vertexShader);
+    GLSL_FreePixelShader(group->pixelShader);
+    free(group);
   }
 };
 
@@ -97,8 +101,11 @@ struct BillboardMaterial: public Material {
     WHBGfxInitFetchShader(group);
   }
 
-  ~BillboardMaterial() {
-    WHBGfxFreeShaderGroup(group);
+  ~BillboardMaterial()
+  {
+    GLSL_FreeVertexShader(group->vertexShader);
+    GLSL_FreePixelShader(group->pixelShader);
+    free(group);
   }
 };
 
@@ -172,13 +179,15 @@ struct TextureMaterial: public Material {
 
   void renderUsing() const {
     Material::renderUsing();
-    WHBLogPrintf("Rendering texture of size %u x %u", texture.surface.width, texture.surface.height);
+    //WHBLogPrintf("Rendering texture of size %u x %u", texture.surface.width, texture.surface.height);
     GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[0].location);
     GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[0].location);
   }
 
   ~TextureMaterial() {
-    WHBGfxFreeShaderGroup(group);
+    GLSL_FreeVertexShader(group->vertexShader);
+    GLSL_FreePixelShader(group->pixelShader);
+    free(group);
     MEMFreeToDefaultHeap(texture.surface.image);
   }
 };
