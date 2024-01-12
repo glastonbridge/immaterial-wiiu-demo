@@ -19,7 +19,8 @@ struct MusicPlayer {
     void frameCallback(void);
 
   private:
-    AXVoice* voice;
+    AXVoice* voiceLeft;
+    AXVoice* voiceRight;
     uint32_t sampleRate;
     int16_t* bufferLeft;
     int16_t* bufferRight;
