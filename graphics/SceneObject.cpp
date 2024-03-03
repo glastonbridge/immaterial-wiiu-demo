@@ -3,9 +3,11 @@
 #include <memory>
 #include <malloc.h>
 #include <gx2/enum.h>
+#include "NastyObjLoader.h"
 
 #include "../renderer/RenderObject.h"
 #include "SceneObject.h"
+
 
 static const float sPositionData[] =
 {
@@ -125,15 +127,6 @@ struct SceneObjectImpl: public SceneObject {
       sceneMaterial.reset(material); // memory owned by the scene now
       renderObject->setMaterial(material->getRenderMaterial());
    }
-   void setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-      renderObject->setPositionBuffer(data,elemSize,elemCount);
-   }
-   void setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-      renderObject->setColourBuffer(data,elemSize,elemCount);
-   }
-   void setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-      renderObject->setTexcoordBuffer(data, elemSize, elemCount);
-   }
    void setProjectionBuffer(const float* data) {
       renderObject->setProjectionBuffer(data);
    }
@@ -151,10 +144,16 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
   _impl.reset(new SceneObjectImpl());
   SceneMaterial* material(new TextureMaterial("assets/molcar.png"));
   //SceneMaterial* material(new ProjectedMaterial());
+
+  std::vector<float> vertices;
+  std::vector<float> texcoords;
+  std::vector<float> normals;
+  NastyImportObj(path, vertices, texcoords, normals);
+
   _impl->setMaterial(material);
-  _impl->setPositionBuffer(sPositionData, 4*3, 6*4);
-  _impl->setColourBuffer(sColourData, 4*4, 6*4);
-  _impl->setTexcoordBuffer(sTexcoordData, 4*2, 6*4);
+  _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size());
+  _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, sColourData, 4*4, 6*4);
+  _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size());
 
    // TODO: who the fuck owns this? Leaks all over the shop because
    // I haven't got enough working to care about structure yet

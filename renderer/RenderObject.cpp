@@ -24,16 +24,16 @@ struct RenderObjectImpl {
   GX2RBuffer texcoordBuffer = {};
   GX2RBuffer projectionBuffer = {};
 
-  void setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-    setAttribBuffer(data, elemSize, elemCount, &positionBuffer);
-  }
-
-  void setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-    setAttribBuffer(data, elemSize, elemCount, &colourBuffer);
-  }
-
-  void setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount) {
-    setAttribBuffer(data, elemSize, elemCount, &texcoordBuffer);
+  void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount) {
+    GX2RBuffer* buffer;
+    if (BufferType::VERTEX == bt) {
+      buffer = &positionBuffer;
+    } else if (BufferType::COLOR == bt) {
+      buffer = &colourBuffer;
+    } else if (BufferType::TEXCOORD == bt) {
+      buffer = &texcoordBuffer;
+    }
+    setAttribBuffer(data, elemSize, elemCount, buffer);
   }
 
   void setAttribBuffer(const float* data, uint32_t elemSize, uint32_t elemCount, GX2RBuffer* buffer) {
@@ -111,8 +111,6 @@ RenderObject::~RenderObject() {
 
 
 void RenderObject::render() { _impl -> render(); }
-void RenderObject::setPositionBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setPositionBuffer(data, elemSize, elemCount);}
-void RenderObject::setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setColourBuffer(data, elemSize, elemCount);};
-void RenderObject::setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setTexcoordBuffer(data, elemSize, elemCount);};
+void RenderObject::setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setAttribBuffer(bt, data, elemSize, elemCount);};
 void RenderObject::setProjectionBuffer(const float* data)  { _impl->setProjectionBuffer(data);};
 void RenderObject::setMaterial(RenderMaterial* material) {_impl->material = material;}
