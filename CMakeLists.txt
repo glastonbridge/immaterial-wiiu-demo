@@ -11,9 +11,9 @@ add_executable(wiiu_demo
    main.cpp
    renderer/Renderer.cpp
    renderer/RenderObject.cpp
-   graphics/Material.cpp
+   renderer/RenderMaterial.cpp
+   renderer/RenderTexture.cpp
    graphics/SceneObject.cpp
-   math/projection.cpp
    util/memory.cpp
    sound/Music.cpp
    third_party/lodepng/lodepng.cpp

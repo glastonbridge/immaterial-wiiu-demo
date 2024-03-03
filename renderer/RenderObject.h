@@ -4,7 +4,7 @@
 #include <gx2r/buffer.h>
 
 struct RenderObjectImpl;
-struct Material;
+struct RenderMaterial;
 
 /**
  * A 3D object data object. Vertices, materials, etc.
@@ -15,7 +15,7 @@ struct RenderObject {
   RenderObject();
   ~RenderObject();
   virtual void render();
-  virtual void setMaterial(Material* material);
+  virtual void setMaterial(RenderMaterial* material);
 
 //protected:
   // Messing with the buffers involves doing GX2-specific memory locking

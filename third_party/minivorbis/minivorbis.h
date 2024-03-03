@@ -21212,10 +21212,8 @@ static int host_is_big_endian() {
   ogg_int32_t pattern = 0xfeedface; /* deadbeef */
   unsigned char *bytewise = (unsigned char *)&pattern;
   if (bytewise[0] == 0xfe) {
-    WHBLogPrintf("We big endian");
     return 1;
   }
-  WHBLogPrintf("We little endian");
   return 0;
 }
 

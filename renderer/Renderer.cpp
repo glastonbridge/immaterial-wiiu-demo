@@ -25,15 +25,8 @@
 
 Renderer::Renderer()
 {
-   int result = 0;
-
    WHBGfxInit();
    GLSL_Init();
-
-   // TODO: Multiple shaders
-
-
-   WHBLogPrintf("Begin rendering...");
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
@@ -44,22 +37,24 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
       for (auto& object : scene.objects) {
-         object->render();
+         object->getRenderObject()->render();
       }
 
 
       WHBGfxFinishRenderTV();
-
+      
       WHBGfxBeginRenderDRC();
 
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
       for (auto& object : scene.objects) {
-         object->render();
+         object->getRenderObject()->render();
       }
 
       WHBGfxFinishRenderDRC();
+      WHBLogPrint("Finished DRC");
 
       WHBGfxFinishRender();
+      WHBLogPrint("Finished a render");
    }
 
 Renderer::~Renderer() {

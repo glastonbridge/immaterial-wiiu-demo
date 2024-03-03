@@ -1,9 +1,10 @@
 #include "RenderObject.h"
-#include "../graphics/Material.h"
+#include "RenderMaterial.h"
 #include "../util/memory.h"
 
 #include <dmae/mem.h>
 
+#include <gx2/mem.h>
 #include <gx2/shaders.h>
 #include <gx2r/buffer.h>
 #include <gx2/draw.h>
@@ -11,14 +12,12 @@
 
 #include <whb/gfx.h>
 #include <whb/log.h>
-#include <gx2/mem.h>
-#include "../math/projection.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 struct RenderObjectImpl {
-  Material* material;
+  RenderMaterial* material;
 
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
@@ -39,10 +38,11 @@ struct RenderObjectImpl {
 
   void setAttribBuffer(const float* data, uint32_t elemSize, uint32_t elemCount, GX2RBuffer* buffer) {
     //if(!GX2RBufferExists(buffer)) {
-      buffer->flags = GX2R_RESOURCE_BIND_VERTEX_BUFFER |
-                      GX2R_RESOURCE_USAGE_CPU_READ |
-                      GX2R_RESOURCE_USAGE_CPU_WRITE |
-                      GX2R_RESOURCE_USAGE_GPU_READ;
+      buffer->flags = static_cast<GX2RResourceFlags>(
+        GX2R_RESOURCE_BIND_VERTEX_BUFFER |
+        GX2R_RESOURCE_USAGE_CPU_READ |
+        GX2R_RESOURCE_USAGE_CPU_WRITE |
+        GX2R_RESOURCE_USAGE_GPU_READ);
       buffer->elemSize = elemSize;
       buffer->elemCount = elemCount;
       GX2RCreateBuffer(buffer);
@@ -55,7 +55,7 @@ struct RenderObjectImpl {
   /**
    * Uniforms work now but right now it also just computes matrix right here. TODO: don't do that
   */
-  void setProjectionBuffer(const float *data) // <- ignored currently
+  void setProjectionBuffer(const float *data) 
   {
     void *buffer = NULL;
     // Set vertex colour
@@ -81,8 +81,6 @@ struct RenderObjectImpl {
   }
 
   void render() {
-    //WHBGfxClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-
     material->renderUsing();
 
     GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
@@ -96,7 +94,6 @@ struct RenderObjectImpl {
   ~RenderObjectImpl() {
 
     WHBLogPrintf("Destroying RenderObject"); 
-    delete material;
     GX2RDestroyBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
@@ -118,4 +115,4 @@ void RenderObject::setPositionBuffer(const float* data, uint32_t elemSize, uint3
 void RenderObject::setColourBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setColourBuffer(data, elemSize, elemCount);};
 void RenderObject::setTexcoordBuffer(const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setTexcoordBuffer(data, elemSize, elemCount);};
 void RenderObject::setProjectionBuffer(const float* data)  { _impl->setProjectionBuffer(data);};
-void RenderObject::setMaterial(Material* material) {_impl->material = material;}
+void RenderObject::setMaterial(RenderMaterial* material) {_impl->material = material;}
