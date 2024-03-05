@@ -22,6 +22,7 @@ struct RenderObjectImpl {
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
   GX2RBuffer texcoordBuffer = {};
+  GX2RBuffer normalBuffer = {};
   GX2RBuffer projectionBuffer = {};
 
   void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount) {
@@ -32,6 +33,8 @@ struct RenderObjectImpl {
       buffer = &colourBuffer;
     } else if (BufferType::TEXCOORD == bt) {
       buffer = &texcoordBuffer;
+    } else if (BufferType::NORMAL == bt) {
+      buffer = &normalBuffer;
     }
     setAttribBuffer(data, elemSize, elemCount, buffer);
   }
@@ -86,6 +89,7 @@ struct RenderObjectImpl {
     GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
     GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
     GX2RSetAttributeBuffer(&texcoordBuffer, 2, texcoordBuffer.elemSize, 0);
+    GX2RSetAttributeBuffer(&normalBuffer, 3, normalBuffer.elemSize, 0);
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
 
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
@@ -97,6 +101,7 @@ struct RenderObjectImpl {
     GX2RDestroyBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
+    GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
   }
 };

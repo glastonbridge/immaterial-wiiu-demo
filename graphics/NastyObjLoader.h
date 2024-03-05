@@ -15,7 +15,7 @@ Quick'n'nasty way to get some geometry in, before Crypt's object importer arrive
 ONLY USE TRIANGULATED MESHES! THIS EXPECTS VERTEX/TEXCOORD/NORMAL TRIPLES!
 */
 
-void NastyImportObj(const std::string& path, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texcoords) {
+void NastyImportObj(const std::string& path, std::vector<float>& vertices, std::vector<float>& texcoords, std::vector<float>& normals) {
   
   char *sdRootPath = WHBGetSdCardMountPath();
   char fullpath[256];
@@ -63,17 +63,17 @@ void NastyImportObj(const std::string& path, std::vector<float>& vertices, std::
         std::getline(nodestream,index,'/');
         index_i = std::stoi(index);
         for (uint32_t i = (index_i-1)*2; i < (index_i)*2; ++i) {
-          WHBLogPrintf("Pushing texcoord value %f", rawtexcoords[i]);
+          //WHBLogPrintf("Pushing texcoord value %f", rawtexcoords[i]);
           texcoords.push_back(rawtexcoords[i]);
         }
         std::getline(nodestream,index,'/');
         index_i = std::stoi(index);
         for (uint32_t i = (index_i-1)*3; i < (index_i)*3; ++i) {
-          WHBLogPrintf("Pushing normal value %f", rawnormals[i]);
+          //WHBLogPrintf("Pushing normal value %f", rawnormals[i]);
           normals.push_back(rawnormals[i]);
         }
       }
     }
   }
-  WHBLogPrintf("loaded %i vertex elements", vertices.size());
+  WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals", vertices.size(), texcoords.size(), normals.size());
 }

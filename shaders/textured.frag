@@ -5,5 +5,6 @@ layout(binding = 0) uniform sampler2D tex_sampler;
 out vec4 out_color;
 void main()
 {
-    out_color = texture(tex_sampler, in_texcoord) * in_color;
+    vec3 ld = normalize(vec3(2.,-4,-3));
+    out_color = texture(tex_sampler, in_texcoord);
 }

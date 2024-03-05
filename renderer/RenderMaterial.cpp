@@ -66,7 +66,6 @@ RenderMaterial::RenderMaterial(
       
         WHBLogPrintf("Shader compilation completed");
       }
-
       WHBLogPrintf("Shaders loaded %s %s", vertexShaderPath.c_str(), fragmentShaderPath.c_str());
       for (uint32_t i = 0; i < attribs.size(); ++i) {
          WHBLogPrintf("Attaching attributes %s - %i", attribs[i].name.c_str(), attribs[i].format);

@@ -150,10 +150,16 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
   std::vector<float> normals;
   NastyImportObj(path, vertices, texcoords, normals);
 
+   std::vector<float> vertexColors;
+   for (uint32_t i=0; i < normals.size()*4/3; ++i) {
+      vertexColors.push_back(0);
+   }
+
   _impl->setMaterial(material);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size());
-  _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, sColourData, 4*4, 6*4);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size());
+  _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
+  _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
+  _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
+  _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
 
    // TODO: who the fuck owns this? Leaks all over the shop because
    // I haven't got enough working to care about structure yet
