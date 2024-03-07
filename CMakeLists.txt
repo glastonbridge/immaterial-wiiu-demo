@@ -45,6 +45,8 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/sync_tracks"
+         DESTINATION "${CMAKE_INSTALL_PREFIX}")
 
 # Emulator setup (make test)
 set(CEMU_EXECUTABLE "cemu" CACHE STRING "Path to the emulator executable")
