@@ -26,7 +26,6 @@ struct RenderObject {
   virtual void setMaterial(RenderMaterial* material);
 
   // Messing with the buffers involves doing GX2-specific memory locking
-  void setProjectionBuffer(const float* data);  // always 16 floats
   void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount);
 private:
   void setAttribBuffer(const float* data, uint32_t elemSize, uint32_t elemCount, GX2RBuffer* buffer);

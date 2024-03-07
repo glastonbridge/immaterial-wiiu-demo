@@ -12,6 +12,8 @@ struct MusicPlayer {
   ~MusicPlayer();
   void play();
   void pause();
+  void pauseToggle(void);
+  bool isPlaying();
   void seek(float seconds);
   float currentTime();
   
@@ -19,6 +21,7 @@ struct MusicPlayer {
     void frameCallback(void);
 
   private:
+    bool playState;
     AXVoice* voiceLeft;
     AXVoice* voiceRight;
     uint32_t sampleRate;

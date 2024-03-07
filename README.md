@@ -66,7 +66,7 @@ This isn't normal cmake, it's been blessed with the right compiler settings.
 3. `cd build`
 4. `/opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake .. -DCMAKE_INSTALL_PREFIX=[path to the sdcard]`
 5. Optionally, also pass `-DCEMU_EXECUTABLE=[path to cemu] -DSDCARD_DIR=[path to SD card directory to run executable from, defaults to install dir]` to set up `make test` to compile, install and run the emulator. If you are on windows, make the `SDCARD_DIR` a Windows-side path but with forward slashes.
-
+6. For sync: Pass -DSYNC_IP=your.ip.here.please to set the IP the synctool should connect to (you can in theory use this to sync on-device. defaults to localhost, which will work with the emulator.), and set -DSYNC_PLAYER to "false" to make the demo actually connect to the synctool (by default it plays the tracks from the SD card, as it would in the final build).
 Note that in step 4, the path must be posix, in the way that `msys2.exe` structures paths. That usually means that a path in your `C:\` filesystem is translated to `/c/` and you use forward slashes (as god intended).
 
 ### Building your code!

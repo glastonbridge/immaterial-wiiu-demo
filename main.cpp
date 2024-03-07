@@ -20,6 +20,7 @@
 #include "renderer/Renderer.h"
 #include <whb/log_udp.h>
 #include "sound/Music.h"
+#include "sync/Sync.h"
 
 int main(int argc, char **argv)
 {
@@ -32,12 +33,15 @@ int main(int argc, char **argv)
    WHBLogPrint("Hello World! Logging initialised.");
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
+      Sync sync("sync_tracks/", SYNC_IP, &music, 0.1f);
+      syncObjPtr = &sync;
       Renderer renderer;
       TestScene scene;
       scene.setup();
       WHBLogPrintf("Begin updating...");
       music.play();
       while (WHBProcIsRunning()) {
+         sync.update();
          renderer.renderFrame(scene);
          
          WHBLogPrintf("Frame done, playback time is %f", music.currentTime());

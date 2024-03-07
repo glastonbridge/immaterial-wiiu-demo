@@ -123,15 +123,35 @@ MusicPlayer::~MusicPlayer() {
 void MusicPlayer::play() {
     AXSetVoiceState(voiceLeft, AX_VOICE_STATE_PLAYING);
     AXSetVoiceState(voiceRight, AX_VOICE_STATE_PLAYING);
+    playState = true;
 }
 
 void MusicPlayer::pause() {
     AXSetVoiceState(voiceLeft, AX_VOICE_STATE_STOPPED);
     AXSetVoiceState(voiceRight, AX_VOICE_STATE_STOPPED);
+    playState = false;
+}
+
+void MusicPlayer::pauseToggle(void) {
+    if (playState == true) {
+        pause();
+    } else {
+        play();
+    }
 }
 
 void MusicPlayer::seek(float seconds) {
-    // TODO how 2 audio on cafe
+    AXVoiceOffsets bufferInfo;
+    AXGetVoiceOffsets(voiceLeft, &bufferInfo);
+    bufferInfo.currentOffset = (uint32_t)(seconds * sampleRate);
+    AXSetVoiceOffsets(voiceLeft, &bufferInfo);
+    AXGetVoiceOffsets(voiceRight, &bufferInfo);
+    bufferInfo.currentOffset = (uint32_t)(seconds * sampleRate);
+    AXSetVoiceOffsets(voiceRight, &bufferInfo);
+}
+
+bool MusicPlayer::isPlaying() {
+    return playState;
 }
 
 float MusicPlayer::currentTime() {

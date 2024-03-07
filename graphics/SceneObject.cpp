@@ -127,9 +127,6 @@ struct SceneObjectImpl: public SceneObject {
       sceneMaterial.reset(material); // memory owned by the scene now
       renderObject->setMaterial(material->getRenderMaterial());
    }
-   void setProjectionBuffer(const float* data) {
-      renderObject->setProjectionBuffer(data);
-   }
 protected:
    std::unique_ptr<SceneMaterial> sceneMaterial;
 };
@@ -161,9 +158,5 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
   _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
   _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
 
-   // TODO: who the fuck owns this? Leaks all over the shop because
-   // I haven't got enough working to care about structure yet
-   float* projectionBuffer = (float*) memalign(GX2_UNIFORM_BLOCK_ALIGNMENT, sizeof(float)*16);
-   _impl->setProjectionBuffer(projectionBuffer);
   return _impl;
 }

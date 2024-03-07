@@ -16,6 +16,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "../sync/Sync.h"
+
 struct RenderObjectImpl {
   RenderMaterial* material;
 
@@ -24,6 +26,16 @@ struct RenderObjectImpl {
   GX2RBuffer texcoordBuffer = {};
   GX2RBuffer normalBuffer = {};
   GX2RBuffer projectionBuffer = {};
+
+  RenderObjectImpl() {
+    projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+                             GX2R_RESOURCE_USAGE_CPU_READ |
+                             GX2R_RESOURCE_USAGE_CPU_WRITE |
+                             GX2R_RESOURCE_USAGE_GPU_READ;
+    projectionBuffer.elemSize = 4 * 4 * 4;
+    projectionBuffer.elemCount = 1;
+    GX2RCreateBuffer(&projectionBuffer);
+  }
 
   void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount) {
     GX2RBuffer* buffer;
@@ -55,35 +67,18 @@ struct RenderObjectImpl {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  /**
-   * Uniforms work now but right now it also just computes matrix right here. TODO: don't do that
-  */
-  void setProjectionBuffer(const float *data) 
-  {
+  void render() {
     void *buffer = NULL;
-    // Set vertex colour
-    projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
-                             GX2R_RESOURCE_USAGE_CPU_READ |
-                             GX2R_RESOURCE_USAGE_CPU_WRITE |
-                             GX2R_RESOURCE_USAGE_GPU_READ;
-    projectionBuffer.elemSize = 4 * 4 * 4;
-    projectionBuffer.elemCount = 1;
-    // log
-    auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 20.f) * glm::translate(glm::mat4(1.f), glm::vec3(-0.7f, -0.7f, -10.f)) * glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
-    data = (float*)glm::value_ptr(mat);
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK, (void *)data, 16 * 4);
-
-    GX2RCreateBuffer(&projectionBuffer);
-
+    auto mat = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 20.f) * \
+      glm::translate(glm::mat4(1.f), glm::vec3(-0.7f, -0.7f, -10.f)) * \
+      glm::rotate(glm::mat4(1.f), glm::radians(syncVal("TestPart:Object:RotY")), glm::vec3(0.f, 1.f, 0.f));
+    float* matPtr = (float*)glm::value_ptr(mat);
+    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK, (void *)matPtr, 16 * 4);
     buffer = GX2RLockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK, (void *)buffer, 16 * 4);
-    swap_memcpy(buffer, data, 16 * 4);
-    //DMAEWaitDone(DMAECopyMem(buffer, data, projectionBuffer.elemSize * projectionBuffer.elemCount, DMAE_SWAP_32)); // <-- this works, with possible caveats: might have sync issues with GPU, might be expensive for just a single matrix (but maybe worth it for e.g. set of 20 bone mats or such)
-
+    swap_memcpy(buffer, matPtr, 16 * 4);
     GX2RUnlockBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-  }
 
-  void render() {
     material->renderUsing();
 
     GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
@@ -117,5 +112,4 @@ RenderObject::~RenderObject() {
 
 void RenderObject::render() { _impl -> render(); }
 void RenderObject::setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount)  { _impl->setAttribBuffer(bt, data, elemSize, elemCount);};
-void RenderObject::setProjectionBuffer(const float* data)  { _impl->setProjectionBuffer(data);};
 void RenderObject::setMaterial(RenderMaterial* material) {_impl->material = material;}
