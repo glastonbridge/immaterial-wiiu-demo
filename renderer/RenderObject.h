@@ -10,14 +10,16 @@ enum BufferType {
   VERTEX,
   TEXCOORD,
   NORMAL,
-  COLOR,
-  PROJECTION,
+  COLOR
+};
+
+enum UniformType {
+  CAMERA_PROJECTION,
+  TRANSFORM
 };
 
 /**
- * A 3D object data object. Vertices, materials, etc.
- * 
- * Also knows how to render itself. Is that poor separation of concerns? You're not my mum.
+ * The parts of an object that are concerned with the rendering implementation
  */
 struct RenderObject {
   RenderObject();
@@ -26,8 +28,7 @@ struct RenderObject {
   virtual void setMaterial(RenderMaterial* material);
 
   // Messing with the buffers involves doing GX2-specific memory locking
-  void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount);
-private:
-  void setAttribBuffer(const float* data, uint32_t elemSize, uint32_t elemCount, GX2RBuffer* buffer);
+  void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, size_t elemCount);
+  void setUniformFloatMat(UniformType bt, const float* mat, size_t numFloats);
   RenderObjectImpl* _impl;
 };

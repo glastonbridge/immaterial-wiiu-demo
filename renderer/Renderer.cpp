@@ -22,6 +22,7 @@
 
 #include "../scenes/SceneBase.h"
 #include "RenderObject.h"
+#include <glm/ext.hpp>
 
 Renderer::Renderer()
 {
@@ -35,8 +36,10 @@ void Renderer::renderFrame(const SceneBase& scene) {
 
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+      float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto& object : scene.objects) {
+         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
          object->getRenderObject()->render();
       }
 

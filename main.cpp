@@ -42,6 +42,7 @@ int main(int argc, char **argv)
       music.play();
       while (WHBProcIsRunning()) {
          sync.update();
+         scene.update(music.currentTime());
          renderer.renderFrame(scene);
          
          WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
