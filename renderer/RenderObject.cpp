@@ -47,7 +47,7 @@ struct RenderObjectImpl {
                              GX2R_RESOURCE_USAGE_CPU_READ |
                              GX2R_RESOURCE_USAGE_CPU_WRITE |
                              GX2R_RESOURCE_USAGE_GPU_READ;
-    boneTransformBuffer.elemSize = 4 * 4 * 4;
+    boneTransformBuffer.elemSize = 4 * 3 * 4;
     boneTransformBuffer.elemCount = 32; // will this work? lets find out!
     GX2RCreateBuffer(&boneTransformBuffer);
   }
