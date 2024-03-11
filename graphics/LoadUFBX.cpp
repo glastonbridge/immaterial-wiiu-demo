@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <ufbx.h>
+#include <glm/glm.hpp>
 
 // #define DEBUG 1
 
@@ -16,11 +17,11 @@ void LoadUFBX(
         const std::string& path,
         const char* objectName, 
         std::vector<float>& vertices,
-         std::vector<float>& texcoords, 
-         std::vector<float>& normals,
-         std::vector<int>& boneIndices, 
-         std::vector<float>& boneWeights,
-         std::vector<float>& animFrames // TODO maybe we could sample live here instead of storing at target rate? also, return these as mat3x4s?
+        std::vector<float>& texcoords, 
+        std::vector<float>& normals,
+        std::vector<uint8_t>& boneIndices, 
+        std::vector<float>& boneWeights,
+        std::vector<std::vector<glm::mat4x3>>& animFrames // nested: frame, bone, matrix
     ) {
 
     // Load data
@@ -142,8 +143,8 @@ void LoadUFBX(
                     normals.push_back(normal.y);
                     normals.push_back(normal.z);
 
-                    boneIndices.push_back(boneIdx.x); // TODO how 2 index into the bone array in GLSL?
-                    boneIndices.push_back(boneIdx.y);
+                    boneIndices.push_back((uint8_t)boneIdx.x); // TODO how 2 index into the bone array in GLSL?
+                    boneIndices.push_back((uint8_t)boneIdx.y);
                     boneWeights.push_back(boneWgt.x);
                     boneWeights.push_back(boneWgt.y);
                 }
@@ -187,6 +188,8 @@ void LoadUFBX(
                 // Copy every frame
                 bool havePrinted = false;
                 for(size_t frame = 0; frame < frameCount; frame++) {
+                    std::vector<glm::mat4x3> frameMats;
+
                     // Get every bones transform for the frame
                     for(size_t boneIdx = 0; boneIdx < boneCount; boneIdx++) {
                         ufbx_skin_cluster* cluster = skin->clusters.data[boneIdx];
@@ -229,7 +232,7 @@ void LoadUFBX(
                         // Do some funny coordinate swaps to make the homogenous part end up at the left side of the matrix
                         // because that's what the C3D matrices want.
                         // TODO: we're on wiiu now, redo this
-                        ufbx_matrix tempMat2;
+                        /*ufbx_matrix tempMat2;
                         tempMat2.v[ 0] = tempMat.v[ 3];
                         tempMat2.v[ 1] = tempMat.v[ 0];
                         tempMat2.v[ 2] = tempMat.v[ 1];
@@ -261,15 +264,16 @@ void LoadUFBX(
                         tempMat.v[ 8] = tempMat2.v[ 0];
                         tempMat.v[ 9] = tempMat2.v[ 3];
                         tempMat.v[10] = tempMat2.v[ 2];
-                        tempMat.v[11] = tempMat2.v[ 1];
+                        tempMat.v[11] = tempMat2.v[ 1];*/
 
                         // Finally, we have done it and other than a rotation by 90 degrees around z (on device y. the one pointing up.)
                         // we now have things pointing the same direction as in the modeling tools, assuming a camera at
                         // negative y and looking at the origin.
-                        for(int i = 0; i < 12; i++) {
-                            animFrames.push_back(tempMat.v[i]); // really we should be doing nested stuff here
-                            // objectNew.animFrames[FBX_FRAME_IDX(frame, boneIdx, i, boneCount)] = tempMat.v[i]; 
-                        }
+                        frameMats.push_back(glm::mat4x3(
+                            tempMat.v[ 0], tempMat.v[ 1], tempMat.v[ 2], tempMat.v[ 3],
+                            tempMat.v[ 4], tempMat.v[ 5], tempMat.v[ 6], tempMat.v[ 7],
+                            tempMat.v[ 8], tempMat.v[ 9], tempMat.v[10], tempMat.v[11]
+                        ));
 
                         #ifdef DEBUG
                         WHBLogPrintf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n\n",
@@ -279,6 +283,7 @@ void LoadUFBX(
                         );
                         #endif                        
                     }
+                    animFrames.push_back(frameMats);
                     havePrinted = true;
                 }
             }
@@ -290,5 +295,5 @@ void LoadUFBX(
             WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!\n");
         }
     }
-    WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals", vertices.size(), texcoords.size(), normals.size());
+    WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals, %d animation frames", vertices.size(), texcoords.size(), normals.size(), animFrames.size());
 }

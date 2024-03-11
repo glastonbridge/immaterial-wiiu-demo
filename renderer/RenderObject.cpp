@@ -26,7 +26,7 @@ struct RenderObjectImpl {
   GX2RBuffer boneWeightBuffer = {};  
   GX2RBuffer projectionBuffer = {};
   GX2RBuffer transformBuffer = {};
-
+  GX2RBuffer boneTransformBuffer = {};
 
   RenderObjectImpl() {
     projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
@@ -43,9 +43,16 @@ struct RenderObjectImpl {
     transformBuffer.elemSize = 4 * 4 * 4;
     transformBuffer.elemCount = 1;
     GX2RCreateBuffer(&transformBuffer);
+    boneTransformBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+                             GX2R_RESOURCE_USAGE_CPU_READ |
+                             GX2R_RESOURCE_USAGE_CPU_WRITE |
+                             GX2R_RESOURCE_USAGE_GPU_READ;
+    boneTransformBuffer.elemSize = 4 * 4 * 4;
+    boneTransformBuffer.elemCount = 32; // will this work? lets find out!
+    GX2RCreateBuffer(&boneTransformBuffer);
   }
 
-  void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, size_t elemCount) {
+  void setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, size_t elemCount) {
     GX2RBuffer* buffer;
     if (BufferType::VERTEX == bt) {
       buffer = &positionBuffer;
@@ -66,7 +73,7 @@ struct RenderObjectImpl {
     setAttribBuffer(data, elemSize, elemCount, buffer);
   }
 
-  void setAttribBuffer(const float* data, uint32_t elemSize, size_t elemCount, GX2RBuffer* buffer) {
+  void setAttribBuffer(const void* data, uint32_t elemSize, size_t elemCount, GX2RBuffer* buffer) {
     //if(!GX2RBufferExists(buffer)) {
       buffer->flags = static_cast<GX2RResourceFlags>(
         GX2R_RESOURCE_BIND_VERTEX_BUFFER |
@@ -88,6 +95,11 @@ struct RenderObjectImpl {
       buffer = &projectionBuffer;
     } else if (UniformType::TRANSFORM==bt) {
       buffer = &transformBuffer;
+    } else if (UniformType::BONE_TRANSFORM==bt) {
+      buffer = &boneTransformBuffer;
+    } else {
+      WHBLogPrintf("Unknown uniform type");
+      return;
     }
     setUniformFloatMat(mat, numFloats, buffer);
   }
@@ -125,6 +137,7 @@ struct RenderObjectImpl {
     }
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
     GX2RSetVertexUniformBlock(&transformBuffer, 1, 0);
+    GX2RSetVertexUniformBlock(&boneTransformBuffer, 2, 0);
 
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
 
@@ -138,6 +151,7 @@ struct RenderObjectImpl {
     GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&transformBuffer, GX2R_RESOURCE_BIND_NONE);
+    GX2RDestroyBufferEx(&boneTransformBuffer, GX2R_RESOURCE_BIND_NONE);
   }
 };
 
@@ -151,7 +165,7 @@ RenderObject::~RenderObject() {
 
 
 void RenderObject::render() { _impl -> render(); }
-void RenderObject::setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, uint32_t elemCount)  { 
+void RenderObject::setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, uint32_t elemCount)  { 
   _impl->setAttribBuffer(bt, data, elemSize, elemCount);
 }
 void RenderObject::setUniformFloatMat(UniformType bt, const float* mat, size_t numFloats) {

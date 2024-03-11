@@ -147,13 +147,12 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
     std::vector<float> vertices;
     std::vector<float> texcoords;
     std::vector<float> normals;
-    std::vector<int> boneIndices;
+    std::vector<uint8_t> boneIndices;
     std::vector<float> boneWeights;
-    std::vector<float> animFrames;
 
     //NastyImportObj(path, vertices, texcoords, normals);
-    LoadUFBX(path, "Cube", vertices, texcoords, normals, boneIndices, boneWeights, animFrames); // not actually a cube
-
+    LoadUFBX(path, "Cube", vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames); // not actually a cube
+    
     std::vector<float> vertexColors;
     for (uint32_t i=0; i < normals.size()*4/3; ++i) {
         vertexColors.push_back(0);
@@ -164,6 +163,8 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
     _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
     _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
     _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2, boneIndices.size());
+    _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 4*2, boneWeights.size()/2);
 
     return _impl;
 }

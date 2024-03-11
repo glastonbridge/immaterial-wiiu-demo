@@ -18,7 +18,8 @@ enum BufferType {
 
 enum UniformType {
   CAMERA_PROJECTION,
-  TRANSFORM
+  TRANSFORM,
+  BONE_TRANSFORM
 };
 
 /**
@@ -31,7 +32,7 @@ struct RenderObject {
   virtual void setMaterial(RenderMaterial* material);
 
   // Messing with the buffers involves doing GX2-specific memory locking
-  void setAttribBuffer(BufferType bt, const float* data, uint32_t elemSize, size_t elemCount);
+  void setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, size_t elemCount);
   void setUniformFloatMat(UniformType bt, const float* mat, size_t numFloats);
   RenderObjectImpl* _impl;
 };

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <vector>
+#include <glm/glm.hpp>
 
 struct RenderObject;
 
@@ -14,6 +16,8 @@ struct SceneObject {
   SceneObject();
   ~SceneObject();
   RenderObject* getRenderObject();
+  std::vector<std::vector<glm::mat4x3>> animFrames;
+
 protected:
   std::unique_ptr<RenderObject> renderObject;
 };
