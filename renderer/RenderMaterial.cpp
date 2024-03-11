@@ -51,6 +51,10 @@ RenderMaterial::RenderMaterial(
   ) {
       group = {};
 
+      for (uint32_t i = 0; i < BufferType::_MAX; ++i) {
+         bindingForBuffer[i] = -1;
+      }
+
       std::string inStringVert;
       loadShader(vertexShaderPath.c_str(), inStringVert);
       const char* vertexProjected = inStringVert.c_str();
@@ -68,8 +72,9 @@ RenderMaterial::RenderMaterial(
       }
       WHBLogPrintf("Shaders loaded %s %s", vertexShaderPath.c_str(), fragmentShaderPath.c_str());
       for (uint32_t i = 0; i < attribs.size(); ++i) {
-         WHBLogPrintf("Attaching attributes %s - %i", attribs[i].name.c_str(), attribs[i].format);
+         WHBLogPrintf("Attaching attributes %s - %i @ %d", attribs[i].name.c_str(), attribs[i].format, i);
          WHBGfxInitShaderAttribute(group, attribs[i].name.c_str(), i, 0, attribs[i].format);
+         bindingForBuffer[attribs[i].type] = i;
       }
 
       WHBGfxInitFetchShader(group);

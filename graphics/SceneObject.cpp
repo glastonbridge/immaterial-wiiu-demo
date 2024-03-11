@@ -4,11 +4,12 @@
 #include <malloc.h>
 #include <gx2/enum.h>
 #include "NastyObjLoader.h"
+#include "LoadUFBX.h"
 
 #include "../renderer/RenderObject.h"
 #include "SceneObject.h"
 
-
+/**
 static const float sPositionData[] =
 {
    // front
@@ -106,6 +107,7 @@ static const float sTexcoordData[] =
     1.0f, 1.0f,
     0.0f, 1.0f,
 };
+*/
 
 SceneObject::SceneObject() {
 
@@ -136,27 +138,32 @@ protected:
  * a 3D object from a path. Instead, it creates a quad
  */
 std::unique_ptr<SceneObject> LoadObject(const char* path) {
-  // TODO: Construct the object from an object file (assimp?)
-  std::unique_ptr<SceneObjectImpl> _impl;
-  _impl.reset(new SceneObjectImpl());
-  SceneMaterial* material(new TextureMaterial("assets/molcar.png"));
-  //SceneMaterial* material(new ProjectedMaterial());
+    // TODO: Construct the object from an object file (assimp?)
+    std::unique_ptr<SceneObjectImpl> _impl;
+    _impl.reset(new SceneObjectImpl());
+    SceneMaterial* material(new BoneMaterial("assets/colorgrid.png"));
+    //SceneMaterial* material(new ProjectedMaterial());
 
-  std::vector<float> vertices;
-  std::vector<float> texcoords;
-  std::vector<float> normals;
-  NastyImportObj(path, vertices, texcoords, normals);
+    std::vector<float> vertices;
+    std::vector<float> texcoords;
+    std::vector<float> normals;
+    std::vector<int> boneIndices;
+    std::vector<float> boneWeights;
+    std::vector<float> animFrames;
 
-   std::vector<float> vertexColors;
-   for (uint32_t i=0; i < normals.size()*4/3; ++i) {
-      vertexColors.push_back(0);
-   }
+    //NastyImportObj(path, vertices, texcoords, normals);
+    LoadUFBX(path, "Cube", vertices, texcoords, normals, boneIndices, boneWeights, animFrames); // not actually a cube
 
-  _impl->setMaterial(material);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
-  _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
+    std::vector<float> vertexColors;
+    for (uint32_t i=0; i < normals.size()*4/3; ++i) {
+        vertexColors.push_back(0);
+    }
 
-  return _impl;
+    _impl->setMaterial(material);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
+
+    return _impl;
 }

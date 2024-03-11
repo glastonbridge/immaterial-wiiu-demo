@@ -7,6 +7,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/minivorbis
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rocket
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ufbx
 )
 
 # Add sources here
@@ -25,6 +26,8 @@ add_executable(wiiu_demo
    third_party/rocket/device.c
    third_party/rocket/tcp.c
    third_party/rocket/track.c
+   third_party/ufbx/ufbx.c
+   graphics/LoadUFBX.cpp
    )
 
 # Sync IP

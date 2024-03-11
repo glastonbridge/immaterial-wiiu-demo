@@ -10,7 +10,10 @@ enum BufferType {
   VERTEX,
   TEXCOORD,
   NORMAL,
-  COLOR
+  COLOR,
+  BONE_IDX,
+  BONE_WEIGHT,
+  _MAX
 };
 
 enum UniformType {

@@ -22,8 +22,11 @@ struct RenderObjectImpl {
   GX2RBuffer colourBuffer = {};
   GX2RBuffer texcoordBuffer = {};
   GX2RBuffer normalBuffer = {};
+  GX2RBuffer boneIdxBuffer = {};
+  GX2RBuffer boneWeightBuffer = {};  
   GX2RBuffer projectionBuffer = {};
   GX2RBuffer transformBuffer = {};
+
 
   RenderObjectImpl() {
     projectionBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
@@ -52,6 +55,13 @@ struct RenderObjectImpl {
       buffer = &texcoordBuffer;
     } else if (BufferType::NORMAL == bt) {
       buffer = &normalBuffer;
+    } else if (BufferType::BONE_IDX == bt) {
+      buffer = &boneIdxBuffer;
+    } else if (BufferType::BONE_WEIGHT == bt) {
+      buffer = &boneWeightBuffer;
+    } else {
+      WHBLogPrintf("Unknown buffer type");
+      return;
     }
     setAttribBuffer(data, elemSize, elemCount, buffer);
   }
@@ -95,10 +105,24 @@ struct RenderObjectImpl {
 
     material->renderUsing();
 
-    GX2RSetAttributeBuffer(&positionBuffer, 0, positionBuffer.elemSize, 0);
-    GX2RSetAttributeBuffer(&colourBuffer, 1, colourBuffer.elemSize, 0);
-    GX2RSetAttributeBuffer(&texcoordBuffer, 2, texcoordBuffer.elemSize, 0);
-    GX2RSetAttributeBuffer(&normalBuffer, 3, normalBuffer.elemSize, 0);
+    if(material->getBindingForBuffer(BufferType::VERTEX) != -1) {
+        GX2RSetAttributeBuffer(&positionBuffer, material->getBindingForBuffer(BufferType::VERTEX), positionBuffer.elemSize, 0);
+    }
+    if(material->getBindingForBuffer(BufferType::COLOR) != -1) {
+        GX2RSetAttributeBuffer(&colourBuffer, material->getBindingForBuffer(BufferType::COLOR), colourBuffer.elemSize, 0);
+    }
+    if(material->getBindingForBuffer(BufferType::TEXCOORD) != -1) {
+        GX2RSetAttributeBuffer(&texcoordBuffer, material->getBindingForBuffer(BufferType::TEXCOORD), texcoordBuffer.elemSize, 0);
+    }
+    if(material->getBindingForBuffer(BufferType::NORMAL) != -1) {
+        GX2RSetAttributeBuffer(&normalBuffer, material->getBindingForBuffer(BufferType::NORMAL), normalBuffer.elemSize, 0);
+    }
+    if(material->getBindingForBuffer(BufferType::BONE_IDX) != -1) {
+        GX2RSetAttributeBuffer(&boneIdxBuffer, material->getBindingForBuffer(BufferType::BONE_IDX), boneIdxBuffer.elemSize, 0);
+    }
+    if(material->getBindingForBuffer(BufferType::BONE_WEIGHT) != -1) {
+        GX2RSetAttributeBuffer(&boneWeightBuffer, material->getBindingForBuffer(BufferType::BONE_WEIGHT), boneWeightBuffer.elemSize, 0);
+    }
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
     GX2RSetVertexUniformBlock(&transformBuffer, 1, 0);
 
