@@ -19,11 +19,7 @@ struct TestScene: public SceneBase {
 
     auto transform = glm::rotate(glm::mat4(1.f), glm::radians(syncVal("TestPart:Object:RotY")), glm::vec3(0.f, 1.f, 0.f));
     
-    // This bit isn't working
     float* mat = (float*)glm::value_ptr(transform);
     objects[0]->getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
-
-    // So slap it on the camera projection for now
-    cameraProjection *= transform;
   }
 };
