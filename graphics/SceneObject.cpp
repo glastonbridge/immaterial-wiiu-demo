@@ -167,7 +167,7 @@ void SceneObject::setAnimationFrame(float frame) {
 /**
  * Currently extremely real
  */
-std::unique_ptr<SceneObject> LoadObject(const char* path) {
+std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
 
     std::unique_ptr<SceneObjectImpl> _impl;
     _impl.reset(new SceneObjectImpl());
@@ -179,7 +179,7 @@ std::unique_ptr<SceneObject> LoadObject(const char* path) {
     std::vector<float> boneIndices;
     std::vector<float> boneWeights;
 
-    LoadUFBX(path, "Cube", vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames); // not actually a cube
+    LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames);
     
     std::vector<float> vertexColors;
     for (uint32_t i=0; i < normals.size()*4/3; ++i) {

@@ -11,7 +11,7 @@
 struct TestScene: public SceneBase {
   void setup() override {
     
-    objects.push_back(LoadObject("assets/gizmos.fbx"));
+    objects.push_back(LoadObject("assets/gizmos.fbx", "Cube")); // not actually a cube
   }
 
   void update(double time) override {
