@@ -12,8 +12,27 @@
 struct RenderTexture {
   RenderTexture(const std::string& path);
   ~RenderTexture();
-  void renderUsing(const WHBGfxShaderGroup* group);
+  void renderUsing(const WHBGfxShaderGroup* group, int binding = 0);
 private:  
   GX2Texture texture;
   GX2Sampler sampler;
+};
+
+/**
+ * A texture that is also a buffer that can be rendered to
+*/
+struct BufferTexture {
+  BufferTexture();
+  ~BufferTexture();
+
+  void bindTarget(bool clear = true);
+  void unbindTarget();
+  void renderUsing(const WHBGfxShaderGroup* group, int binding = 0);
+
+private:  
+  GX2Texture texture;
+  GX2Sampler sampler;
+  GX2ColorBuffer colorBuffer;
+  GX2DepthBuffer depthBuffer;
+  GX2ContextState* contextState;
 };

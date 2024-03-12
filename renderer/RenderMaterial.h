@@ -29,7 +29,7 @@ struct RenderMaterial {
     return this->bindingForBuffer[bt];
   }
 
-  protected: 
+  //protected: 
   WHBGfxShaderGroup * group;
   std::unique_ptr<RenderTexture> texture;
   int bindingForBuffer[BufferType::_MAX];

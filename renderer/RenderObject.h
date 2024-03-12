@@ -30,6 +30,7 @@ struct RenderObject {
   ~RenderObject();
   virtual void render();
   virtual void setMaterial(RenderMaterial* material);
+  virtual RenderMaterial* getMaterial();
 
   // Messing with the buffers involves doing GX2-specific memory locking
   void setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, size_t elemCount);

@@ -23,19 +23,20 @@
 #include "../scenes/SceneBase.h"
 #include "RenderObject.h"
 #include <glm/ext.hpp>
+#include "RenderMaterial.h"
 
 Renderer::Renderer()
 {
    WHBGfxInit();
    GLSL_Init();
+   renderBuffer = new BufferTexture();
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
-         // Render!
+      // Render!
       WHBGfxBeginRender();
 
-      WHBGfxBeginRenderTV();
-      WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+      renderBuffer->bindTarget(true);
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto& object : scene.objects) {
@@ -43,6 +44,16 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object->getRenderObject()->render();
       }
 
+      renderBuffer->unbindTarget();
+
+      WHBGfxBeginRenderTV();
+      WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+
+      for (auto& object : scene.objects) {
+         renderBuffer->renderUsing(object->getRenderObject()->getMaterial()->group);
+         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
+         object->getRenderObject()->render();
+      }
 
       WHBGfxFinishRenderTV();
       

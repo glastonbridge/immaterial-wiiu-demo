@@ -86,7 +86,7 @@ void RenderMaterial::renderUsing() const {
     GX2SetPixelShader(group->pixelShader);
     GX2SetShaderMode(GX2_SHADER_MODE_UNIFORM_BLOCK);
     if (texture) {
-      texture->renderUsing(group);
+      //texture->renderUsing(group);
     }
 }
 

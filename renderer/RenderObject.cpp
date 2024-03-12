@@ -172,3 +172,4 @@ void RenderObject::setUniformFloatMat(UniformType bt, const float* mat, size_t n
   _impl->setUniformFloatMat(bt, mat, numFloats);
 }
 void RenderObject::setMaterial(RenderMaterial* material) {_impl->material = material;}
+RenderMaterial* RenderObject::getMaterial() { return _impl->material;}
