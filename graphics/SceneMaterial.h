@@ -70,7 +70,7 @@ struct BoneMaterial: public SceneMaterial {
     attribs.push_back(AttribSpec {"in_position", BufferType::VERTEX, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
     attribs.push_back(AttribSpec {"in_texcoord", BufferType::TEXCOORD, GX2_ATTRIB_FORMAT_FLOAT_32_32});
     attribs.push_back(AttribSpec {"in_normal", BufferType::NORMAL, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
-    attribs.push_back(AttribSpec {"in_bone_idx", BufferType::BONE_IDX, GX2_ATTRIB_FORMAT_UINT_8_8});
+    attribs.push_back(AttribSpec {"in_bone_idx", BufferType::BONE_IDX, GX2_ATTRIB_FORMAT_FLOAT_32_32});
     attribs.push_back(AttribSpec {"in_bone_weight", BufferType::BONE_WEIGHT, GX2_ATTRIB_FORMAT_FLOAT_32_32});
     renderMaterial.reset(new RenderMaterial(
       "shaders/bones.vert",

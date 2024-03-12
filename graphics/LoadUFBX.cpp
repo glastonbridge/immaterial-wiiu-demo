@@ -19,9 +19,9 @@ void LoadUFBX(
         std::vector<float>& vertices,
         std::vector<float>& texcoords, 
         std::vector<float>& normals,
-        std::vector<uint8_t>& boneIndices, 
+        std::vector<float>& boneIndices, 
         std::vector<float>& boneWeights,
-        std::vector<std::vector<glm::mat4x3>>& animFrames // nested: frame, bone, matrix
+        std::vector<std::vector<glm::mat4>>& animFrames // nested: frame, bone, matrix
     ) {
 
     // Load data
@@ -143,8 +143,8 @@ void LoadUFBX(
                     normals.push_back(normal.y);
                     normals.push_back(normal.z);
 
-                    boneIndices.push_back((uint8_t)boneIdx.x); // TODO how 2 index into the bone array in GLSL?
-                    boneIndices.push_back((uint8_t)boneIdx.y);
+                    boneIndices.push_back(boneIdx.x); // up to 4 bones per vert possible using this method. 
+                    boneIndices.push_back(boneIdx.y);
                     boneWeights.push_back(boneWgt.x);
                     boneWeights.push_back(boneWgt.y);
                 }
@@ -188,7 +188,7 @@ void LoadUFBX(
                 // Copy every frame
                 bool havePrinted = false;
                 for(size_t frame = 0; frame < frameCount; frame++) {
-                    std::vector<glm::mat4x3> frameMats;
+                    std::vector<glm::mat4> frameMats;
 
                     // Get every bones transform for the frame
                     for(size_t boneIdx = 0; boneIdx < boneCount; boneIdx++) {
@@ -219,69 +219,12 @@ void LoadUFBX(
                         );
                         #endif
 
-                        // Transpose
-                        ufbx_matrix tempMat;
-                        for (int i = 0; i < 4; ++i) {
-                            for (int j = 0; j < 3; ++j) {
-                                int idx_in = i * 3 + j;
-                                int idx_out = j * 4 + i;
-                                tempMat.v[idx_out] = transformMat.v[idx_in];
-                            }
-                        }
-
-                        // Do some funny coordinate swaps to make the homogenous part end up at the left side of the matrix
-                        // because that's what the C3D matrices want.
-                        // TODO: we're on wiiu now, redo this
-                        /*ufbx_matrix tempMat2;
-                        tempMat2.v[ 0] = tempMat.v[ 3];
-                        tempMat2.v[ 1] = tempMat.v[ 0];
-                        tempMat2.v[ 2] = tempMat.v[ 1];
-                        tempMat2.v[ 3] = tempMat.v[ 2];
-
-                        tempMat2.v[ 4] = tempMat.v[ 7];
-                        tempMat2.v[ 5] = tempMat.v[ 4];
-                        tempMat2.v[ 6] = tempMat.v[ 5];
-                        tempMat2.v[ 7] = tempMat.v[ 6];
-
-                        tempMat2.v[ 8] = tempMat.v[11];
-                        tempMat2.v[ 9] = tempMat.v[ 8];
-                        tempMat2.v[10] = tempMat.v[ 9];
-                        tempMat2.v[11] = tempMat.v[10];
-
-                        // Now swap second and third column as well as the first and third row
-                        // because it is illegal for modeling tools and engines to ever use the
-                        // same coordinate system.
-                        tempMat.v[ 0] = tempMat2.v[ 4];
-                        tempMat.v[ 1] = tempMat2.v[ 7];
-                        tempMat.v[ 2] = tempMat2.v[ 6];
-                        tempMat.v[ 3] = tempMat2.v[ 5];
-
-                        tempMat.v[ 4] = tempMat2.v[ 8];
-                        tempMat.v[ 5] = tempMat2.v[11];
-                        tempMat.v[ 6] = tempMat2.v[10];
-                        tempMat.v[ 7] = tempMat2.v[ 9];
-
-                        tempMat.v[ 8] = tempMat2.v[ 0];
-                        tempMat.v[ 9] = tempMat2.v[ 3];
-                        tempMat.v[10] = tempMat2.v[ 2];
-                        tempMat.v[11] = tempMat2.v[ 1];*/
-
-                        // Finally, we have done it and other than a rotation by 90 degrees around z (on device y. the one pointing up.)
-                        // we now have things pointing the same direction as in the modeling tools, assuming a camera at
-                        // negative y and looking at the origin.
-                        frameMats.push_back(glm::mat4x3(
-                            tempMat.v[ 0], tempMat.v[ 1], tempMat.v[ 2], tempMat.v[ 3],
-                            tempMat.v[ 4], tempMat.v[ 5], tempMat.v[ 6], tempMat.v[ 7],
-                            tempMat.v[ 8], tempMat.v[ 9], tempMat.v[10], tempMat.v[11]
-                        ));
-
-                        #ifdef DEBUG
-                        WHBLogPrintf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n\n",
-                            tempMat.v[0], tempMat.v[1], tempMat.v[2], tempMat.v[3],
-                            tempMat.v[4], tempMat.v[5], tempMat.v[6], tempMat.v[7],
-                            tempMat.v[8], tempMat.v[9], tempMat.v[10], tempMat.v[11]
-                        );
-                        #endif                        
+                        frameMats.push_back(glm::mat4(
+                            transformMat.v[ 0], transformMat.v[ 1], transformMat.v[ 2], 0.0,
+                            transformMat.v[ 3], transformMat.v[ 4], transformMat.v[ 5], 0.0,
+                            transformMat.v[ 6], transformMat.v[ 7], transformMat.v[ 8], 0.0,
+                            transformMat.v[ 9], transformMat.v[10], transformMat.v[11], 1.0
+                        ));                     
                     }
                     animFrames.push_back(frameMats);
                     havePrinted = true;

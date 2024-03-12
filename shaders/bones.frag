@@ -9,6 +9,7 @@ out vec4 out_color;
 
 void main()
 {
-    vec3 ld = normalize(vec3(2.,-4, 3));
-    out_color = texture(tex_sampler, in_texcoord)*vec4(vec3(0.5+0.5*dot(ld,in_normal)),1.0);
+    vec3 ld = normalize(vec3(0.0f,-10.0f, 0.0f));
+    vec3 n = normalize(in_normal);
+    out_color = texture(tex_sampler, in_texcoord) * vec4(vec3(0.5f + 0.5f * dot(ld, in_normal)), 1.0f);
 }

@@ -3,6 +3,7 @@
 #include "../sync/Sync.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "../renderer/RenderObject.h"
 
 #include "../graphics/SceneObject.h"
@@ -25,19 +26,7 @@ struct TestScene: public SceneBase {
     
     float* mat = (float*)glm::value_ptr(transform);
     objects[0]->getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
-
-    size_t numBones = objects[0]->animFrames[0].size();
-    float* boneMatsForFrameInterp = (float*)malloc(4*3*numBones*sizeof(float)); // TODO permanentize, fuck mallocing every frame
-    size_t frame = syncVal("TestPart::Object:Frame");
-    frame = std::min(frame, objects[0]->animFrames.size());
-    frame = std::max(frame, 0u);
     
-    // Copy all the bone mats into the array. TODO interpolate
-    for(int i = 0; i < numBones; i++) {
-      memcpy(boneMatsForFrameInterp + (i * 4 * 3), glm::value_ptr(objects[0]->animFrames[frame][i]), 4*3*sizeof(float));
-    }
-
-    objects[0]->getRenderObject()->setUniformFloatMat(UniformType::BONE_TRANSFORM, boneMatsForFrameInterp, 4*3*numBones); // 4x3 matrix, 2 bones
-    free(boneMatsForFrameInterp);
+    objects[0]->setAnimationFrame(syncVal("TestPart:Object:Frame"));
   }
 };

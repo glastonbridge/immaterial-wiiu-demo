@@ -47,7 +47,7 @@ struct RenderObjectImpl {
                              GX2R_RESOURCE_USAGE_CPU_READ |
                              GX2R_RESOURCE_USAGE_CPU_WRITE |
                              GX2R_RESOURCE_USAGE_GPU_READ;
-    boneTransformBuffer.elemSize = 4 * 3 * 4;
+    boneTransformBuffer.elemSize = 4 * 4 * 4;
     boneTransformBuffer.elemCount = 32; // will this work? lets find out!
     GX2RCreateBuffer(&boneTransformBuffer);
   }
@@ -74,7 +74,7 @@ struct RenderObjectImpl {
   }
 
   void setAttribBuffer(const void* data, uint32_t elemSize, size_t elemCount, GX2RBuffer* buffer) {
-    //if(!GX2RBufferExists(buffer)) {
+    if(!GX2RBufferExists(buffer)) {
       buffer->flags = static_cast<GX2RResourceFlags>(
         GX2R_RESOURCE_BIND_VERTEX_BUFFER |
         GX2R_RESOURCE_USAGE_CPU_READ |
@@ -83,7 +83,7 @@ struct RenderObjectImpl {
       buffer->elemSize = elemSize;
       buffer->elemCount = elemCount;
       GX2RCreateBuffer(buffer);
-    //}
+    }
     void* bufferData = GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
     memcpy(bufferData, data, buffer->elemSize * buffer->elemCount);
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);

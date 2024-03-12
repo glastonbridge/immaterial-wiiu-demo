@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 struct RenderObject;
 
@@ -16,10 +17,12 @@ struct SceneObject {
   SceneObject();
   ~SceneObject();
   RenderObject* getRenderObject();
-  std::vector<std::vector<glm::mat4x3>> animFrames;
+  std::vector<std::vector<glm::mat4>> animFrames;
+  void setAnimationFrame(float frame);
 
 protected:
   std::unique_ptr<RenderObject> renderObject;
+  float* boneMatInterpBuffer = nullptr;
 };
 
 std::unique_ptr<SceneObject> LoadObject(const char* path);
