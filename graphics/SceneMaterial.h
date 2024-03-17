@@ -77,7 +77,7 @@ struct BoneMaterial: public SceneMaterial {
       "shaders/bones.frag",
       attribs
     ));
-    renderMaterial->setTexture(new RenderTexture(path_str));
+    renderMaterial->setTexture(new RenderTexture(path_str)); // this leaks, doesn't it?
   }
 };
 

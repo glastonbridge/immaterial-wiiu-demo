@@ -35,6 +35,7 @@ int main(int argc, char **argv)
       MusicPlayer music("assets/dumdumdiday.ogg");
       Renderer renderer;
       TestScene scene;
+      WHBLogPrintf("Begin setup...");
       scene.setup();
       WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER

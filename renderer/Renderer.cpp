@@ -6,6 +6,8 @@
 #include <gx2/registers.h>
 #include <gx2r/draw.h>
 #include <gx2r/buffer.h>
+#include <gx2/state.h>
+#include <gx2/event.h>
 #include <string.h>
 #include <stdio.h>
 #include <whb/file.h>
@@ -34,8 +36,9 @@ Renderer::Renderer()
 
 void Renderer::renderFrame(const SceneBase& scene) {
       // Render!
-      WHBGfxBeginRender();
+      WHBLogPrint("Rendering frame...");
 
+      WHBLogPrint("Binding render target");
       renderBuffer->bindTarget(true);
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
@@ -43,8 +46,12 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
          object->getRenderObject()->render();
       }
-
+      WHBLogPrint("Rendered one");
       renderBuffer->unbindTarget();
+
+      WHBLogPrint("Unbound render target");
+      
+      WHBGfxBeginRender();
 
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
@@ -54,6 +61,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
          object->getRenderObject()->render();
       }
+      WHBLogPrint("Finished TV");
 
       WHBGfxFinishRenderTV();
       
@@ -61,6 +69,8 @@ void Renderer::renderFrame(const SceneBase& scene) {
 
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
       for (auto& object : scene.objects) {
+         renderBuffer->renderUsing(object->getRenderObject()->getMaterial()->group);
+         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
          object->getRenderObject()->render();
       }
 

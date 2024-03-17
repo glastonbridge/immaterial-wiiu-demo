@@ -168,7 +168,7 @@ void SceneObject::setAnimationFrame(float frame) {
  * Currently extremely real
  */
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
-
+    WHBLogPrintf("Loading object %s from %s", name, path);
     std::unique_ptr<SceneObjectImpl> _impl;
     _impl.reset(new SceneObjectImpl());
 
@@ -179,13 +179,15 @@ std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
     std::vector<float> boneIndices;
     std::vector<float> boneWeights;
 
+    WHBLogPrintf("Call LoadUFBX...");
     LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames);
     
     std::vector<float> vertexColors;
     for (uint32_t i=0; i < normals.size()*4/3; ++i) {
         vertexColors.push_back(0);
     }
-
+    
+    WHBLogPrintf("Set attrib buffer...");
     _impl->setMaterial(material);
     _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
     _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);

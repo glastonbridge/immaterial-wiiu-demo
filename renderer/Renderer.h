@@ -1,5 +1,6 @@
 
 #include "RenderTexture.h"
+#include "RenderBuffer.h"
 
 struct SceneBase;
 struct Renderer {

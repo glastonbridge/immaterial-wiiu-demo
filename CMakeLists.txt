@@ -17,6 +17,7 @@ add_executable(wiiu_demo
    renderer/RenderObject.cpp
    renderer/RenderMaterial.cpp
    renderer/RenderTexture.cpp
+   renderer/RenderBuffer.cpp
    graphics/SceneObject.cpp
    util/memory.cpp
    sound/Music.cpp
