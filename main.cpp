@@ -33,13 +33,14 @@ int main(int argc, char **argv)
    WHBLogPrint("Hello World! Logging initialised.");
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
-      Sync sync("sync_tracks/", SYNC_IP, &music, 0.1f);
-      syncObjPtr = &sync;
       Renderer renderer;
       TestScene scene;
       scene.setup();
       WHBLogPrintf("Begin updating...");
+#ifdef SYNC_PLAYER
       music.play();
+#endif      
+      Sync sync("sync_tracks/", SYNC_IP, &music, 0.1f);
       while (WHBProcIsRunning()) {
          sync.update();
          scene.update(music.currentTime());

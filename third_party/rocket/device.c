@@ -413,7 +413,9 @@ int sync_update(struct sync_device *d, int row, struct sync_cb *cb,
 	while (sockio_poll(d, &readable, NULL) > 0) {
 		unsigned char cmd = 0, flag;
 		uint32_t new_row;
-
+		if (readable == 0) {
+			break;
+		}
 		if (sockio_recv(d, (char *)&cmd, 1))
 			goto sockerr;
 

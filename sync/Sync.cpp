@@ -53,10 +53,12 @@ void Sync::update() {
   float row = musicPlayer->currentTime() / secondsPerRow;
   secondsPerRowForCB = secondsPerRow;
   #ifndef SYNC_PLAYER
+  WHBLogPrintf("Upd. start");
     if(sync_update(rocket, (int)floor(row), &rocketCallbacks, musicPlayer)) {
       WHBLogPrintf("Sync update failed, reconnecting if in tool mode");
       connect();
     };
+    WHBLogPrintf("Upd. end");
   #endif
 }
 

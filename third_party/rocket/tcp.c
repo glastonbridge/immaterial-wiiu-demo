@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 
 struct sync_tcp {
 	SOCKET sock;
@@ -98,6 +99,7 @@ static SOCKET server_connect(const char *host, unsigned short nport)
 	return sock;
 }
 
+int is_hw = -1;
 static int sync_tcp_poll(void *ctxt, int *res_readable, int *res_writeable)
 {
 	struct sync_tcp *tcp = ctxt;
@@ -133,14 +135,32 @@ static int sync_tcp_poll(void *ctxt, int *res_readable, int *res_writeable)
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
 	r = select((int)tcp->sock + 1, &rfds, &wfds, NULL, &to);
 	if (r > 0) {
-		if (res_readable)
-			*res_readable = FD_ISSET(tcp->sock, &rfds);
+		if (res_readable) {
+			// The wiiu select behaviour is Weird
+			//*res_readable = FD_ISSET(tcp->sock, &rfds);
+			// Try to identify if we're on HW or not by looking for aroma
+			// this is bad but :shrug:
+			if (is_hw == -1) {
+				FILE *f = fopen("wiiu/environments/aroma/root.rpx", "r");
+				if (f) {
+					fclose(f);
+					is_hw = 1;
+				} else {
+					is_hw = 0;
+				}
+			}
+			if(is_hw) {
+				ssize_t bytes_available = 0;
+				ioctl(tcp->sock, FIONREAD, &bytes_available);
+				*res_readable = bytes_available > 0;
+			}
+		}
 		if (res_writeable)
 			*res_writeable = FD_ISSET(tcp->sock, &wfds);
 	}
+
 	return r;
 
 #endif

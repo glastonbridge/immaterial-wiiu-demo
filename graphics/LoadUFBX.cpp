@@ -29,7 +29,7 @@ void LoadUFBX(
     ufbx_error error; // Optional, pass NULL if you don't care about errors
     ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
     if (!scene) {
-        WHBLogPrintf("Failed to load: %s\n", error.description.data);
+        WHBLogPrintf("Failed to load: %s", error.description.data);
         return;
     }
 
@@ -45,7 +45,7 @@ void LoadUFBX(
         if(objectName != NULL) {
             if(strncmp(node->name.data, objectName, 255) != 0) {
                 #ifdef DEBUG
-                WHBLogPrintf("-> Have filter name and this is not it, skipping\n");
+                WHBLogPrintf("-> Have filter name and this is not it, skipping");
                 #endif
                 continue;
             }
@@ -64,7 +64,7 @@ void LoadUFBX(
             // Alloc VBO data struct
             int totalVerts = mesh->faces.count * 3;
             #ifdef DEBUG
-            WHBLogPrintf("Allocated %d verts\n", totalVerts);
+            WHBLogPrintf("Allocated %d verts", totalVerts);
             #endif
 
             // Go through all faces
@@ -73,7 +73,7 @@ void LoadUFBX(
                 // We support only triangles, please triangulate on export Or Else
                 if(mesh->faces.data[faceIdx].num_indices != 3) {
                     // Complain and skip
-                    WHBLogPrintf("Yikes! Non-tri face at %ld\n", faceIdx);
+                    WHBLogPrintf("Yikes! Non-tri face at %ld", faceIdx);
                     continue;
                 }
 
@@ -81,21 +81,21 @@ void LoadUFBX(
                 size_t faceFirstVertIdx = mesh->faces.data[faceIdx].index_begin;
                 for (size_t vertIdx = faceFirstVertIdx; vertIdx < faceFirstVertIdx + 3; vertIdx++) {
                     #ifdef DEBUG
-                    WHBLogPrintf("Vertex %ld\n", vertIdx);
+                    WHBLogPrintf("Vertex %ld", vertIdx);
                     #endif
 
                     // Standard geometry data
                     ufbx_vec3 pos = ufbx_get_vertex_vec3(&mesh->vertex_position, vertIdx);
                     #ifdef DEBUG
-                    WHBLogPrintf("  * pos: %f %f %f\n", pos.x, pos.y, pos.z);
+                    WHBLogPrintf("  * pos: %f %f %f", pos.x, pos.y, pos.z);
                     #endif
                     ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, vertIdx);
                     #ifdef DEBUG
-                    WHBLogPrintf("  * normal: %f %f %f\n", normal.x, normal.y, normal.z);
+                    WHBLogPrintf("  * normal: %f %f %f", normal.x, normal.y, normal.z);
                     #endif
                     ufbx_vec2 uv = ufbx_get_vertex_vec2(&mesh->vertex_uv, vertIdx);
                     #ifdef DEBUG
-                    WHBLogPrintf("  * uv: %f %f\n", uv.x, uv.y);
+                    WHBLogPrintf("  * uv: %f %f", uv.x, uv.y);
                     #endif
 
                     // Them bones. Of which we support two. More are possible at increased cost.
@@ -111,26 +111,26 @@ void LoadUFBX(
                         ufbx_skin_vertex* vertSkinData = &skin->vertices.data[mesh->vertex_indices.data[vertIdx]];
                         int numBones = vertSkinData->num_weights;
                         #ifdef DEBUG
-                        WHBLogPrintf("  * got skin data, bones: %d\n", numBones);
+                        WHBLogPrintf("  * got skin data, bones: %d", numBones);
                         #endif
                         if(numBones >= 1) {
                             boneIdx.x = skin->weights.data[vertSkinData->weight_begin].cluster_index;
                             boneWgt.x = skin->weights.data[vertSkinData->weight_begin].weight;
                             #ifdef DEBUG
-                            WHBLogPrintf("  * bone 0: %f %f\n", boneIdx.x, boneWgt.x);
+                            WHBLogPrintf("  * bone 0: %f %f", boneIdx.x, boneWgt.x);
                             #endif
                         }
                         if(numBones >= 2) {
                             boneIdx.y = skin->weights.data[vertSkinData->weight_begin + 1].cluster_index;
                             boneWgt.y = skin->weights.data[vertSkinData->weight_begin + 1].weight;
                             #ifdef DEBUG
-                            WHBLogPrintf("  * bone 1: %f %f\n", boneIdx.y, boneWgt.y);
+                            WHBLogPrintf("  * bone 1: %f %f", boneIdx.y, boneWgt.y);
                             #endif
                         }
                     }
                     else {
                         #ifdef DEBUG
-                        WHBLogPrintf("  * no skin data\n");
+                        WHBLogPrintf("  * no skin data");
                         #endif
                     }
 
@@ -151,13 +151,13 @@ void LoadUFBX(
             }
             
             #ifdef DEBUG
-            WHBLogPrintf("Loaded %ld verts\n", setVertIdx);
+            WHBLogPrintf("Loaded %ld verts", setVertIdx);
             #endif
 
             // Is there an animation?
             if(scene->anim_stacks.count >= 1) {
                 if(scene->anim_stacks.count > 1) {
-                    WHBLogPrintf("Warning: more than one animation stack (%ld), only the longest will be used\n", scene->anim_stacks.count);
+                    WHBLogPrintf("Warning: more than one animation stack (%ld), only the longest will be used", scene->anim_stacks.count);
                 }
 
                 int stack_use = 0;
@@ -172,7 +172,7 @@ void LoadUFBX(
                 }
 
                 #ifdef DEBUG
-                WHBLogPrintf("Loading animation\n");
+                WHBLogPrintf("Loading animation");
                 #endif
                 ufbx_anim_stack* anim_stack = scene->anim_stacks.data[stack_use];
 
@@ -181,8 +181,8 @@ void LoadUFBX(
                 size_t frameCount = (size_t)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / frameDur + 0.5);
                 size_t boneCount = skin->clusters.count; // TODO return these?
                 #ifdef DEBUG
-                WHBLogPrintf("  * frame count: %ld\n", frameCount);
-                WHBLogPrintf("  * bone count: %ld\n", boneCount);
+                WHBLogPrintf("  * frame count: %ld", frameCount);
+                WHBLogPrintf("  * bone count: %ld", boneCount);
                 #endif
 
                 // Copy every frame
@@ -194,7 +194,9 @@ void LoadUFBX(
                     for(size_t boneIdx = 0; boneIdx < boneCount; boneIdx++) {
                         ufbx_skin_cluster* cluster = skin->clusters.data[boneIdx];
                         if(!havePrinted) {
-                            WHBLogPrintf("  * bone %ld: %s\n", boneIdx, cluster->bone_node->name.data);
+                            #ifdef DEBUG
+                            WHBLogPrintf("  * bone %ld: %s", boneIdx, cluster->bone_node->name.data);
+                            #endif
                         }
                         ufbx_node* bone = cluster->bone_node;
                         float frameTime = anim_stack->anim.time_begin + frame * frameDur;
@@ -231,11 +233,11 @@ void LoadUFBX(
                 }
             }
             else {
-                WHBLogPrintf("Yikes! Invalid animation stack count (= %ld) or no skin present!\n", scene->anim_stacks.count);
+                WHBLogPrintf("Yikes! Invalid animation stack count (= %ld) or no skin present!", scene->anim_stacks.count);
             }
         }
         else {
-            WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!\n");
+            WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!");
         }
     }
     WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals, %d animation frames", vertices.size(), texcoords.size(), normals.size(), animFrames.size());

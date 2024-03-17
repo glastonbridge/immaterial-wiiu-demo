@@ -58,3 +58,11 @@ add_custom_target(test
     COMMAND ${CMAKE_COMMAND} --build . --target install
     COMMAND ${CEMU_EXECUTABLE} -g "${SDCARD_DIR}/${PROJECT_NAME}.rpx"
 )
+
+# Wii U wiiload target (doesn't copy the assets, do that yourself)
+# until such time as we add ftp copy support
+set(WIILOAD_IP "192.168.1.254" CACHE STRING "IP of the Wii U for wiiload")
+add_custom_target(wiiload
+    COMMAND ${CMAKE_COMMAND} --build . --target install
+    COMMAND WIILOAD=tcp:${WIILOAD_IP} wiiload "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
+)
