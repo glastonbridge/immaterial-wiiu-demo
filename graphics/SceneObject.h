@@ -26,3 +26,4 @@ protected:
 };
 
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name);
+std::unique_ptr<SceneObject> LoadQuad();

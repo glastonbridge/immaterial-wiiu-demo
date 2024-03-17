@@ -18,18 +18,19 @@
 #include <gx2/temp.h>
 #include <gx2r/mem.h>
 
-BufferTexture::~BufferTexture() {
+RenderBuffer::~RenderBuffer() {
     MEMFreeToDefaultHeap(texture.surface.image);
     MEMFreeToDefaultHeap(depthBuffer.surface.image);
     MEMFreeToDefaultHeap(contextState);
 }
 
-void BufferTexture::renderUsing(const WHBGfxShaderGroup* group, int binding) {
+void RenderBuffer::renderUsing(const WHBGfxShaderGroup* group, int binding) {
     GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
     GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
+    
 }
 
-BufferTexture::BufferTexture() {
+RenderBuffer::RenderBuffer() {
     // Figure out sizes
     // we assume we want TV size. probably 1080p
     int width, height;
@@ -114,15 +115,15 @@ BufferTexture::BufferTexture() {
         GX2_BLEND_MODE_ONE, GX2_BLEND_MODE_ZERO,
         GX2_BLEND_COMBINE_MODE_ADD
     );
-    GX2SetDepthOnlyControl(FALSE, FALSE, GX2_COMPARE_FUNC_ALWAYS);
+    GX2SetDepthOnlyControl(TRUE, TRUE, GX2_COMPARE_FUNC_LESS);
 }
 
-void BufferTexture::bindTarget(bool clear) {
+void RenderBuffer::bindTarget(bool clear) {
     GX2ClearColor(&colorBuffer, 0.5, 0.4, 0.9, 1.0);
     GX2ClearDepthStencilEx(&depthBuffer, depthBuffer.depthClear, depthBuffer.stencilClear, GX2_CLEAR_FLAGS_DEPTH);
     GX2SetContextState(contextState);
 }
-void BufferTexture::unbindTarget() {
+void RenderBuffer::unbindTarget() {
     GX2DrawDone();
     GX2SetContextState(NULL);
     GX2Flush();

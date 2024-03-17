@@ -31,7 +31,7 @@ WHBGfxShaderGroup *GLSL_CompileShader(const char *vsSrc, const char *psSrc)
    return shaderGroup;
 }
 
-void loadShader(const char* filename, std::string& destination) {
+const char* loadShader(const char* filename) {
   // TODO: these WHB file operations are deprecated and should have been replaced with standard C++
   // file operations. But using the C++ file operations somehow causes our app to not quit properly
   // and the console crashes when trying to quit to menu. Why??
@@ -40,8 +40,17 @@ void loadShader(const char* filename, std::string& destination) {
   char path[256];
   sprintf(path, "%s/%s", sdRootPath, filename);
   WHBLogPrintf("Loading shader %s", path);
-  char *text = WHBReadWholeFile(path, NULL);
-  destination = text;
+
+   // just use the C file operations for now
+   FILE* file = fopen(path, "r");
+   fseek(file, 0, SEEK_END);
+   size_t size = ftell(file);
+   fseek(file, 0, SEEK_SET);
+   char* text = (char*)malloc(size + 1);
+   fread(text, 1, size, file);
+   text[size] = 0;
+   fclose(file);
+   return text;
 }
 
 RenderMaterial::RenderMaterial(
@@ -55,19 +64,14 @@ RenderMaterial::RenderMaterial(
          bindingForBuffer[i] = -1;
       }
 
-      std::string inStringVert;
-      loadShader(vertexShaderPath.c_str(), inStringVert);
-      const char* vertexProjected = inStringVert.c_str();
+      const char* vertexProjected = loadShader(vertexShaderPath.c_str());
+      const char* fragmentProjected = loadShader(fragmentShaderPath.c_str());
 
-      std::string inStringFrag;
-      loadShader(fragmentShaderPath.c_str(), inStringFrag);
-      const char* fragmentProjected = inStringFrag.c_str();
-
+      WHBLogPrintf("Compiling %s %s", vertexShaderPath.c_str(), fragmentShaderPath.c_str());
       group = GLSL_CompileShader(vertexProjected, fragmentProjected);
       if (!group) {
         WHBLogPrintf("Shader compilation failed");
       } else {
-      
         WHBLogPrintf("Shader compilation completed");
       }
       WHBLogPrintf("Shaders loaded %s %s", vertexShaderPath.c_str(), fragmentShaderPath.c_str());
@@ -76,6 +80,9 @@ RenderMaterial::RenderMaterial(
          WHBGfxInitShaderAttribute(group, attribs[i].name.c_str(), i, 0, attribs[i].format);
          bindingForBuffer[attribs[i].type] = i;
       }
+
+      free((void*)vertexProjected);
+      free((void*)fragmentProjected);
 
       WHBGfxInitFetchShader(group);
 }
@@ -86,7 +93,7 @@ void RenderMaterial::renderUsing() const {
     GX2SetPixelShader(group->pixelShader);
     GX2SetShaderMode(GX2_SHADER_MODE_UNIFORM_BLOCK);
     if (texture) {
-      //texture->renderUsing(group);
+      texture->renderUsing(group);
     }
 }
 

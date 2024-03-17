@@ -31,58 +31,41 @@ Renderer::Renderer()
 {
    WHBGfxInit();
    GLSL_Init();
-   renderBuffer = new BufferTexture();
+   fullscreenQuad = LoadQuad();
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
-      // Render!
-      WHBLogPrint("Rendering frame...");
-
+      // Render to offscreen buffer
       WHBLogPrint("Binding render target");
-      renderBuffer->bindTarget(true);
+      scene.renderBuffer->bindTarget(true);
+
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto& object : scene.objects) {
          object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
          object->getRenderObject()->render();
       }
-      WHBLogPrint("Rendered one");
-      renderBuffer->unbindTarget();
+      scene.renderBuffer->unbindTarget();
 
-      WHBLogPrint("Unbound render target");
-      
+      //  Render to screen with post processing
       WHBGfxBeginRender();
 
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-
-      for (auto& object : scene.objects) {
-         renderBuffer->renderUsing(object->getRenderObject()->getMaterial()->group);
-         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
-         object->getRenderObject()->render();
-      }
-      WHBLogPrint("Finished TV");
-
+      scene.renderBuffer->renderUsing(fullscreenQuad->getRenderObject()->getMaterial()->group);
+      fullscreenQuad->getRenderObject()->render();
       WHBGfxFinishRenderTV();
       
       WHBGfxBeginRenderDRC();
-
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      for (auto& object : scene.objects) {
-         renderBuffer->renderUsing(object->getRenderObject()->getMaterial()->group);
-         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
-         object->getRenderObject()->render();
-      }
-
+      scene.renderBuffer->renderUsing(fullscreenQuad->getRenderObject()->getMaterial()->group);
+      fullscreenQuad->getRenderObject()->render();
       WHBGfxFinishRenderDRC();
-      WHBLogPrint("Finished DRC");
 
       WHBGfxFinishRender();
-      WHBLogPrint("Finished a render");
    }
 
 Renderer::~Renderer() {
-   
    WHBLogPrintf("Exiting...");
    WHBGfxShutdown();
 }

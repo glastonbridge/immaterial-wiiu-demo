@@ -8,106 +8,30 @@
 
 #include "../renderer/RenderObject.h"
 #include "SceneObject.h"
+#include "MaterialCollection.h"
 
-/**
-static const float sPositionData[] =
+static const float sPositionDataQuad[] =
 {
-   // front
+    // tri 1
    -1.0f, 1.0f,  0.0f,
     1.0f,  1.0f,  0.0f,
    -1.0f, -1.0f,  0.0f,
-   
+
+    // tri 2
     1.0f,  1.0f,  0.0f,
    -1.0f, -1.0f,  0.0f,
    1.0f,  -1.0f,  0.0f,
-
-   -1.0f+2.2f, 1.0f,  0.0f,
-    1.0f+2.2f,  1.0f,  0.0f,
-   -1.0f+2.2f, -1.0f,  0.0f,
-   
-    1.0f+2.2f,  1.0f,  0.0f,
-   -1.0f+2.2f, -1.0f,  0.0f,
-    1.0f+2.2f,  -1.0f,  0.0f,
-
-   -1.0f+2.2f, 1.0f+2.2f,  0.0f,
-    1.0f+2.2f,  1.0f+2.2f,  0.0f,
-   -1.0f+2.2f, -1.0f+2.2f,  0.0f,
-   
-    1.0f+2.2f,  1.0f+2.2f,  0.0f,
-   -1.0f+2.2f, -1.0f+2.2f,  0.0f,
-    1.0f+2.2f,  -1.0f+2.2f,  0.0f,
-
-   -1.0f, 1.0f+2.2f,  0.0f,
-    1.0f,  1.0f+2.2f,  0.0f,
-   -1.0f, -1.0f+2.2f,  0.0f,
-   
-    1.0f,  1.0f+2.2f,  0.0f,
-   -1.0f, -1.0f+2.2f,  0.0f,
-   1.0f,  -1.0f+2.2f,  0.0f,
-};
-
-static const float sColourData[] =
-{
-   0.1f,  0.1f,  1.0f, 1.0f,
-   0.1f,  0.1f,  1.0f, 1.0f,
-   0.1f,  0.1f,  1.0f, 1.0f,
-   0.1f,  0.1f,  1.0f, 1.0f,
-   0.1f,  0.1f,  1.0f, 1.0f,
-   0.1f,  0.1f,  1.0f, 1.0f,
-
-   1.0f,  1.0f,  0.0f, 1.0f,
-   1.0f,  1.0f,  0.0f, 1.0f,
-   1.0f,  1.0f,  0.0f, 1.0f,
-   1.0f,  1.0f,  0.0f, 1.0f, 
-   1.0f,  1.0f,  0.0f, 1.0f,
-   1.0f,  1.0f,  0.0f, 1.0f, 
-
-   0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  1.0f,  0.0f, 1.0f,
-   0.0f,  1.0f,  0.0f, 1.0f,
-
-   1.0f,  0.0f,  0.0f, 1.0f,
-   1.0f,  0.0f,  0.0f, 1.0f,
-   1.0f,  0.0f,  0.0f, 1.0f,
-   1.0f,  0.0f,  0.0f, 1.0f,
-   1.0f,  0.0f,  0.0f, 1.0f,
-   1.0f,  0.0f,  0.0f, 1.0f,
 };
 
 static const float sTexcoordData[] =
 {
+    0.0f, 0.0f,
     1.0f, 0.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
     0.0f, 1.0f,
-
     1.0f, 0.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
     0.0f, 1.0f,
-
-    1.0f, 0.0f,
-    0.0f, 0.0f,
     1.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    0.0f, 1.0f,
-
-    1.0f, 0.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    0.0f, 1.0f,
 };
-*/
 
 SceneObject::SceneObject() {
 
@@ -128,7 +52,7 @@ struct SceneObjectImpl: public SceneObject {
       renderObject.reset(new RenderObject());
    }
    void setMaterial(SceneMaterial* material) {
-      sceneMaterial.reset(material); // memory owned by the scene now
+      sceneMaterial.reset(material); // memory owned by the scene now 
       renderObject->setMaterial(material->getRenderMaterial());
    }
 protected:
@@ -165,7 +89,7 @@ void SceneObject::setAnimationFrame(float frame) {
 }
 
 /**
- * Currently extremely real
+ * Load an object from a file.
  */
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
     WHBLogPrintf("Loading object %s from %s", name, path);
@@ -195,6 +119,21 @@ std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
     _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
     _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2*4, boneIndices.size()/2);
     _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 2*4, boneWeights.size()/2);
+
+    return _impl;
+}
+
+/**
+ * Generate a quad object.
+ */
+std::unique_ptr<SceneObject> LoadQuad() {
+    std::unique_ptr<SceneObjectImpl> _impl;
+    _impl.reset(new SceneObjectImpl());
+
+    SceneMaterial* material(new BillboardMaterial());
+    _impl->setMaterial(material);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, sPositionDataQuad, 4*3, 6);
+    _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, sTexcoordData, 4*2, 6);
 
     return _impl;
 }

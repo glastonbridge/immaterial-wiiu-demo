@@ -1,13 +1,15 @@
 
 #include "RenderTexture.h"
 #include "RenderBuffer.h"
+#include "../graphics/SceneObject.h"
 
 struct SceneBase;
 struct Renderer {
-  Renderer();
-  ~Renderer();
-  void renderFrame(const SceneBase& scene);
+  public:
+    Renderer();
+    ~Renderer();
+    void renderFrame(const SceneBase& scene);
 
-  // TEMP HACK
-  BufferTexture* renderBuffer;
+  private:
+    std::unique_ptr<SceneObject> fullscreenQuad;
 };

@@ -8,9 +8,9 @@
 /**
  * A texture that is also a buffer that can be rendered to
 */
-struct BufferTexture {
-  BufferTexture();
-  ~BufferTexture();
+struct RenderBuffer {
+  RenderBuffer();
+  ~RenderBuffer();
 
   void bindTarget(bool clear = true);
   void unbindTarget();
