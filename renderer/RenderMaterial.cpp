@@ -42,7 +42,7 @@ const char* loadShader(const char* filename) {
   WHBLogPrintf("Loading shader %s", path);
 
    // just use the C file operations for now
-   FILE* file = fopen(path, "r");
+   FILE* file = fopen(path, "rb");
    fseek(file, 0, SEEK_END);
    size_t size = ftell(file);
    fseek(file, 0, SEEK_SET);

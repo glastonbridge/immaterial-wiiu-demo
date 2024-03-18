@@ -22,8 +22,17 @@
 #include "sound/Music.h"
 #include "sync/Sync.h"
 
+// what if we try to define this here, will that do anything (nope)
+extern "C" struct _reent *__wut_getreent(void)
+{
+   return _GLOBAL_REENT;
+}
+
 int main(int argc, char **argv)
 {
+   // wiiu homebrew bug workaround (which unfortunately doesn't seem to actually work)
+   fprintf(stdout, "hi\n");
+   fprintf(stderr, "hello\n");
 
    WHBLogCafeInit();
    WHBLogUdpInit();

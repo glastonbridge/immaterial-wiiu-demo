@@ -27,8 +27,21 @@ void LoadUFBX(
     // Load data
     ufbx_load_opts opts = { 0 }; // Optional, pass NULL for defaults
     ufbx_error error; // Optional, pass NULL if you don't care about errors
-    ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
+    
+    // sometimes broken mysteriously, so lets grab it all to memory first
+    //ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
+    
+    FILE* file = fopen(path.c_str(), "rb");
+    fseek(file, 0, SEEK_END);
+    size_t size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char* data = (char*)malloc(size);
+    fread(data, 1, size, file);
+    fclose(file);
+    ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);
+
     if (!scene) {
+        free(data);
         WHBLogPrintf("Failed to load: %s", error.description.data);
         return;
     }
@@ -241,4 +254,5 @@ void LoadUFBX(
         }
     }
     WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals, %d animation frames", vertices.size(), texcoords.size(), normals.size(), animFrames.size());
+    free(data);
 }
