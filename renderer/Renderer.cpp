@@ -20,8 +20,6 @@
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
 
-#include "CafeGLSLCompiler.h"
-
 #include "../scenes/SceneBase.h"
 #include "RenderObject.h"
 #include <glm/ext.hpp>
@@ -29,8 +27,6 @@
 
 Renderer::Renderer()
 {
-   WHBGfxInit();
-   GLSL_Init();
    fullscreenQuad = LoadQuad();
 }
 
@@ -68,5 +64,4 @@ void Renderer::renderFrame(const SceneBase& scene) {
 
 Renderer::~Renderer() {
    WHBLogPrintf("Exiting...");
-   WHBGfxShutdown();
 }

@@ -22,6 +22,8 @@
 #include "sound/Music.h"
 #include "sync/Sync.h"
 
+#include "renderer/CafeGLSLCompiler.h"
+
 // what if we try to define this here, will that do anything (nope)
 extern "C" struct _reent *__wut_getreent(void)
 {
@@ -33,10 +35,13 @@ int main(int argc, char **argv)
    // wiiu homebrew bug workaround (which unfortunately doesn't seem to actually work)
    fprintf(stdout, "hi\n");
    fprintf(stderr, "hello\n");
-
+   
    WHBLogCafeInit();
    WHBLogUdpInit();
    WHBProcInit();
+   WHBGfxInit();
+   GLSL_Init();
+
    // TODO: see loadShader in Material.cpp
    WHBMountSdCard();
    WHBLogPrint("Hello World! Logging initialised.");
@@ -59,11 +64,17 @@ int main(int argc, char **argv)
          WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
       }
    }
-   WHBLogPrintf("Done. Quitting...");  
+   WHBLogPrintf("Done. Quitting...");
+   
+   // by moving glsl init to main and not calling glsl shutdown, we apparently dodge a crash on exit? what?
+   //GLSL_Shutdown();
+
+   WHBGfxShutdown();
    AXQuit();
    WHBUnmountSdCard();
    WHBLogCafeDeinit();
    WHBProcShutdown();
    WHBLogUdpDeinit();
+
    return 0;
 }
