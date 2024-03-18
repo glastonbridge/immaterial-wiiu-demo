@@ -24,8 +24,8 @@ struct SceneBase {
   void updateCamera() {
       cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 20.f);
       cameraView = glm::lookAt(
-        glm::vec3(0.0, -10.0, 0.0001), 
-        glm::vec3(0.f, 0.f, 0.f), 
+        glm::vec3(5.f, 4.f, 5.f), 
+        glm::vec3(0.5f, 1.f, -1.5f), 
         glm::vec3(0.f, 1.f, 0.f)
       );
   }

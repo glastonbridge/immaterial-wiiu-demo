@@ -32,7 +32,7 @@ Renderer::Renderer()
 
 void Renderer::renderFrame(const SceneBase& scene) {
       // Render to offscreen buffer
-      WHBLogPrint("Binding render target");
+      //WHBLogPrint("Binding render target");
       scene.renderBuffer->bindTarget(true);
 
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);

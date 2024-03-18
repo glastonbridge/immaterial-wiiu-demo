@@ -24,10 +24,10 @@ void main()
     float aperture = 0.05f;
     float coc_extent = dist_to_focal_plane / (dist_to_cam / (focal_length / aperture));
 
-    out_color = texture(tex_sampler, in_texcoord) * vec4(vec3(0.5f + 0.5f * dot(ld, in_normal)), coc_extent * 0.05);
+    out_color = texture(tex_sampler, in_texcoord) * vec4(vec3(0.8f + 0.2f * dot(ld, in_normal)), coc_extent * 0.05);
 
     vec3 to_camera = normalize(-in_pos_camspace);
-    float fresnel = max(pow(1.0 - dot(to_camera, n_cam), 1.5), 0.0);
+    float fresnel = max(pow(1.0 - dot(to_camera, n_cam), 3.), 0.0);
     out_color = out_color + vec4(fresnel, fresnel, fresnel, 0.0);
 
 }
