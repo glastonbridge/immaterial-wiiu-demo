@@ -64,6 +64,16 @@ add_custom_target(test
 # until such time as we add ftp copy support
 set(WIILOAD_IP "192.168.1.254" CACHE STRING "IP of the Wii U for wiiload")
 add_custom_target(wiiload
-    COMMAND ${CMAKE_COMMAND} --build . --target install
+    COMMAND ${CMAKE_COMMAND} --build . --target wiiu_demo
     COMMAND WIILOAD=tcp:${WIILOAD_IP} wiiload "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
+)
+
+# "Deploy" target for copying assets to the Wii U using FTP, then running wiiload
+# Deploy path is fixed (/fs/vol/external01/), IP is same as WIILOAD_IP
+add_custom_target(deploy
+    COMMAND ${CMAKE_COMMAND} --build . --target install
+    COMMAND find "${CMAKE_INSTALL_PREFIX}/assets" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/assets/" --ftp-create-dirs '\\;'
+    COMMAND find "${CMAKE_INSTALL_PREFIX}/shaders" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/shaders/" --ftp-create-dirs '\\;'
+    COMMAND find "${CMAKE_INSTALL_PREFIX}/sync_tracks" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/sync_tracks/" --ftp-create-dirs '\\;'
+    COMMAND ${CMAKE_COMMAND} --build . --target wiiload
 )
