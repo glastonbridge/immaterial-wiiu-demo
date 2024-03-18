@@ -28,6 +28,14 @@ void RenderBuffer::renderUsing(const WHBGfxShaderGroup* group, int binding) {
     GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
     GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
     
+    // Alpha off
+    GX2SetBlendControl(GX2_RENDER_TARGET_0,
+        GX2_BLEND_MODE_ONE, GX2_BLEND_MODE_ZERO,
+        GX2_BLEND_COMBINE_MODE_ADD,
+        FALSE,
+        GX2_BLEND_MODE_ONE, GX2_BLEND_MODE_ZERO,
+        GX2_BLEND_COMBINE_MODE_ADD
+    );
 }
 
 RenderBuffer::RenderBuffer() {
@@ -62,7 +70,7 @@ RenderBuffer::RenderBuffer() {
     texture.surface.height = height;
     texture.surface.depth = 1; // probably not relevant for 2D?
     texture.surface.dim = GX2_SURFACE_DIM_TEXTURE_2D; // there's some fun ones like arrays or 3D textures if we want those
-    texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8; // pixel format
+    texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8; // pixel format. rgba8 here means that depth in the alpha channel is problematic but :shrug:. Tried using float but it is Very Slow. Maybe
     texture.surface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
     texture.surface.aa = GX2_AA_MODE1X; // anti-aliasing off (but we could set it to on?)
     texture.viewNumSlices = 1; // I don't know what this means
@@ -111,7 +119,7 @@ RenderBuffer::RenderBuffer() {
     GX2SetBlendControl(GX2_RENDER_TARGET_0,
         GX2_BLEND_MODE_ONE, GX2_BLEND_MODE_ZERO,
         GX2_BLEND_COMBINE_MODE_ADD,
-        TRUE,
+        FALSE,
         GX2_BLEND_MODE_ONE, GX2_BLEND_MODE_ZERO,
         GX2_BLEND_COMBINE_MODE_ADD
     );
