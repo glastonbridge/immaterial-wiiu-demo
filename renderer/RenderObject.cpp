@@ -26,6 +26,7 @@ struct RenderObjectImpl {
   GX2RBuffer boneWeightBuffer = {};  
   GX2RBuffer projectionBuffer = {};
   GX2RBuffer transformBuffer = {};
+  GX2RBuffer viewBuffer = {};
   GX2RBuffer boneTransformBuffer = {};
 
   RenderObjectImpl() {
@@ -36,6 +37,7 @@ struct RenderObjectImpl {
     projectionBuffer.elemSize = 4 * 4 * 4;
     projectionBuffer.elemCount = 1;
     GX2RCreateBuffer(&projectionBuffer);
+
     transformBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
                              GX2R_RESOURCE_USAGE_CPU_READ |
                              GX2R_RESOURCE_USAGE_CPU_WRITE |
@@ -43,6 +45,15 @@ struct RenderObjectImpl {
     transformBuffer.elemSize = 4 * 4 * 4;
     transformBuffer.elemCount = 1;
     GX2RCreateBuffer(&transformBuffer);
+
+    viewBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+                             GX2R_RESOURCE_USAGE_CPU_READ |
+                             GX2R_RESOURCE_USAGE_CPU_WRITE |
+                             GX2R_RESOURCE_USAGE_GPU_READ;
+    viewBuffer.elemSize = 4 * 4 * 4;
+    viewBuffer.elemCount = 1;                             
+    GX2RCreateBuffer(&viewBuffer);
+
     boneTransformBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
                              GX2R_RESOURCE_USAGE_CPU_READ |
                              GX2R_RESOURCE_USAGE_CPU_WRITE |
@@ -95,6 +106,8 @@ struct RenderObjectImpl {
       buffer = &projectionBuffer;
     } else if (UniformType::TRANSFORM==bt) {
       buffer = &transformBuffer;
+    } else if (UniformType::CAMERA_VIEW==bt) {
+      buffer = &viewBuffer;      
     } else if (UniformType::BONE_TRANSFORM==bt) {
       buffer = &boneTransformBuffer;
     } else {
@@ -138,6 +151,7 @@ struct RenderObjectImpl {
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
     GX2RSetVertexUniformBlock(&transformBuffer, 1, 0);
     GX2RSetVertexUniformBlock(&boneTransformBuffer, 2, 0);
+    GX2RSetVertexUniformBlock(&viewBuffer, 3, 0);
 
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
 

@@ -42,7 +42,8 @@ void Renderer::renderFrame(const SceneBase& scene) {
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto& object : scene.objects) {
-         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, cameraProjection, 16);
+         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
+         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
          object->getRenderObject()->render();
       }
       scene.renderBuffer->unbindTarget();

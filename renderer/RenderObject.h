@@ -19,7 +19,8 @@ enum BufferType {
 enum UniformType {
   CAMERA_PROJECTION,
   TRANSFORM,
-  BONE_TRANSFORM
+  BONE_TRANSFORM,
+  CAMERA_VIEW
 };
 
 /**
