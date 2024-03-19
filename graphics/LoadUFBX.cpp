@@ -31,13 +31,22 @@ int LoadUFBX(
     // sometimes broken mysteriously, so lets grab it all to memory first
     //ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
     
-    FILE* file = fopen(path.c_str(), "rb");
+    // Variant WHB
+    char *sdRootPath = WHBGetSdCardMountPath();
+    char pathWithSd[256];
+    size_t size;
+    sprintf(pathWithSd, "%s/%s", sdRootPath, path.c_str());
+    char* data = WHBReadWholeFile(pathWithSd, &size);
+
+    // Variant C Stdlib
+    /*FILE* file = fopen(path.c_str(), "rb");
     fseek(file, 0, SEEK_END);
     size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);
     char* data = (char*)malloc(size);
     fread(data, 1, size, file);
-    fclose(file);
+    fclose(file);*/
+
     ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);
 
     if (!scene) {

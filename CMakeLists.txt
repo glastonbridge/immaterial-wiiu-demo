@@ -77,3 +77,9 @@ add_custom_target(deploy
     COMMAND find "${CMAKE_INSTALL_PREFIX}/sync_tracks" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/sync_tracks/" --ftp-create-dirs '\\;'
     COMMAND ${CMAKE_COMMAND} --build . --target wiiload
 )
+
+# hacky fix for emulator breaking when asset loading for some reason
+set(EMULATOR_FIXES "true" CACHE BOOL "Set to false to disable kludges needed to run on emulator")
+if(EMULATOR_FIXES)
+    target_compile_definitions(wiiu_demo PRIVATE UFBX_TRACE=1)
+endif()
