@@ -4,7 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-void LoadUFBX(
+int LoadUFBX(
     const std::string& path,
     const char* objectName, 
     std::vector<float>& vertices,

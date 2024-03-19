@@ -24,11 +24,37 @@
 #include "RenderObject.h"
 #include <glm/ext.hpp>
 #include "RenderMaterial.h"
+#include "../graphics/MaterialCollection.h"
+#include "../util/memory.h"
 
 Renderer::Renderer()
 {
-   fullscreenQuad = LoadQuad();
+   composeQuad = LoadQuad(new ComposeMaterial());
+   blurQuad = LoadQuad(new BlurMaterial());
+   bufferA = std::make_unique<RenderBuffer>(false, 1280, 720);
+   bufferB = std::make_unique<RenderBuffer>(false, 1280, 720);
 }
+
+int32_t GX2GetVertexUniformVarOffset(const GX2VertexShader *shader, const char *name)
+{
+	GX2UniformVar *uniform = GX2GetVertexUniformVar(shader, name);
+	return uniform ? uniform->offset : -1;
+}
+
+int32_t GX2GetPixelUniformVarOffset(const GX2PixelShader *shader, const char *name)
+{
+	GX2UniformVar *uniform = GX2GetPixelUniformVar(shader, name);
+	return uniform ? uniform->offset : -1;
+}
+
+
+int32_t GX2GetPixelUniformVarType(const GX2PixelShader *shader, const char *name)
+{
+	GX2UniformVar *uniform = GX2GetPixelUniformVar(shader, name);
+	return uniform ? uniform->type : -1;
+}
+
+static float uniformData[512 * 4] __attribute__ ((aligned (0x40)));
 
 void Renderer::renderFrame(const SceneBase& scene) {
       // Render to offscreen buffer
@@ -40,23 +66,47 @@ void Renderer::renderFrame(const SceneBase& scene) {
       for (auto& object : scene.objects) {
          object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
          object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
+         object->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
          object->getRenderObject()->render();
       }
       scene.renderBuffer->unbindTarget();
 
+      // Apply blur
+      for(int i = 0; i < 2; i++) {
+         float scale = (float)(1 << (i));
+         
+         // Horizontal
+         bufferA->bindTarget(true);
+         if (i == 0) {
+            scene.renderBuffer->renderUsing(blurQuad->getRenderObject()->getMaterial()->group);
+         }
+         else {
+            bufferB->renderUsing(blurQuad->getRenderObject()->getMaterial()->group);
+         }
+         blurQuad->getRenderObject()->setExtraUniform(0, glm::vec4(scale, 0.0001f, 0.0f, 0.0f));
+         blurQuad->getRenderObject()->render();
+         bufferA->unbindTarget();
+
+         // Vertical
+         bufferB->bindTarget(true);
+         bufferA->renderUsing(blurQuad->getRenderObject()->getMaterial()->group);
+         blurQuad->getRenderObject()->setExtraUniform(0, glm::vec4(scale, 1.0001f, 0.0f, 0.0f));
+         blurQuad->getRenderObject()->render();
+         bufferB->unbindTarget();
+      }
+
       //  Render to screen with post processing
       WHBGfxBeginRender();
-
       WHBGfxBeginRenderTV();
-      WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      scene.renderBuffer->renderUsing(fullscreenQuad->getRenderObject()->getMaterial()->group);
-      fullscreenQuad->getRenderObject()->render();
+      WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);      
+      bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group);
+      composeQuad->getRenderObject()->render();      
       WHBGfxFinishRenderTV();
       
       WHBGfxBeginRenderDRC();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      scene.renderBuffer->renderUsing(fullscreenQuad->getRenderObject()->getMaterial()->group);
-      fullscreenQuad->getRenderObject()->render();
+      bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group);
+      composeQuad->getRenderObject()->render();
       WHBGfxFinishRenderDRC();
 
       WHBGfxFinishRender();

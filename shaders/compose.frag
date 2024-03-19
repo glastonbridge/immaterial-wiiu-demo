@@ -2,6 +2,7 @@
 
 layout(location = 0) in vec2 in_texcoord;
 layout(binding = 0) uniform sampler2D tex_sampler;
+layout(location = 1) in vec4 compose_params;
 
 out vec4 out_color;
 

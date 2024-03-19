@@ -92,45 +92,48 @@ void SceneObject::setAnimationFrame(float frame) {
  * Load an object from a file.
  */
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
-    WHBLogPrintf("Loading object %s from %s", name, path);
-    std::unique_ptr<SceneObjectImpl> _impl;
-    _impl.reset(new SceneObjectImpl());
+   WHBLogPrintf("Loading object %s from %s", name, path);
+   std::unique_ptr<SceneObjectImpl> _impl;
+   _impl.reset(new SceneObjectImpl());
 
-    SceneMaterial* material(new BoneMaterial("assets/colorgrid.png"));
-    std::vector<float> vertices;
-    std::vector<float> texcoords;
-    std::vector<float> normals;
-    std::vector<float> boneIndices;
-    std::vector<float> boneWeights;
+   SceneMaterial* material(new BoneMaterial("assets/colorgrid.png"));
+   std::vector<float> vertices;
+   std::vector<float> texcoords;
+   std::vector<float> normals;
+   std::vector<float> boneIndices;
+   std::vector<float> boneWeights;
 
-    WHBLogPrintf("Call LoadUFBX...");
-    LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames);
-    
-    std::vector<float> vertexColors;
-    for (uint32_t i=0; i < normals.size()*4/3; ++i) {
-        vertexColors.push_back(0);
-    }
-    
-    WHBLogPrintf("Set attrib buffer...");
-    _impl->setMaterial(material);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2*4, boneIndices.size()/2);
-    _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 2*4, boneWeights.size()/2);
+   WHBLogPrintf("Call LoadUFBX...");
+   int success = LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames);
+   if(!success) {
+      WHBLogPrintf("Failed to load UFBX for the first time, trying again.");
+      LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights, _impl->animFrames);
+   }
+   
+   std::vector<float> vertexColors;
+   for (uint32_t i=0; i < normals.size()*4/3; ++i) {
+      vertexColors.push_back(0);
+   }
+   
+   WHBLogPrintf("Set attrib buffer...");
+   _impl->setMaterial(material);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4*3, vertices.size()/3);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4*4, vertexColors.size()/4);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4*2, texcoords.size()/2);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::NORMAL, normals.data(), 4*3, normals.size()/3);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2*4, boneIndices.size()/2);
+   _impl->getRenderObject()->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 2*4, boneWeights.size()/2);
 
-    return _impl;
+   return _impl;
 }
 
 /**
  * Generate a quad object.
  */
-std::unique_ptr<SceneObject> LoadQuad() {
+std::unique_ptr<SceneObject> LoadQuad(SceneMaterial* material) {
     std::unique_ptr<SceneObjectImpl> _impl;
     _impl.reset(new SceneObjectImpl());
 
-    SceneMaterial* material(new BillboardMaterial());
     _impl->setMaterial(material);
     _impl->getRenderObject()->setAttribBuffer(BufferType::VERTEX, sPositionDataQuad, 4*3, 6);
     _impl->getRenderObject()->setAttribBuffer(BufferType::TEXCOORD, sTexcoordData, 4*2, 6);

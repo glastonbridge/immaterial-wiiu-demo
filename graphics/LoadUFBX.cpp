@@ -13,7 +13,7 @@
 // #define DEBUG 1
 
 // hi I'm halcy and I like to reuse code from previous releases
-void LoadUFBX(
+int LoadUFBX(
         const std::string& path,
         const char* objectName, 
         std::vector<float>& vertices,
@@ -43,7 +43,7 @@ void LoadUFBX(
     if (!scene) {
         free(data);
         WHBLogPrintf("Failed to load: %s", error.description.data);
-        return;
+        return(0);
     }
 
     // Go through all objects in the scene
@@ -255,4 +255,5 @@ void LoadUFBX(
     }
     WHBLogPrintf("loaded %i vertex elements, %i texcoord elements and %i normals, %d animation frames", vertices.size(), texcoords.size(), normals.size(), animFrames.size());
     free(data);
+    return(1);
 }

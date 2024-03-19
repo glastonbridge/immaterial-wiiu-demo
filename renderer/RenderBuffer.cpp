@@ -38,7 +38,7 @@ void RenderBuffer::renderUsing(const WHBGfxShaderGroup* group, int binding) {
     );
 }
 
-RenderBuffer::RenderBuffer() {
+RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_override) {
     // Figure out sizes
     // we assume we want TV size. probably 1080p
     int width, height;
@@ -61,7 +61,13 @@ RenderBuffer::RenderBuffer() {
             height = 720;
         break;
     }
-
+    if (width_override > 0) {
+        width = width_override;
+    }
+    if (height_override > 0) {
+        height = height_override;
+    }
+    
     // Set up the texture first
     WHBLogPrintf("Setting up a render buffer with dimensions %i x %i", width, height);
     memset(&texture, 0, sizeof(GX2Texture));    
@@ -70,7 +76,11 @@ RenderBuffer::RenderBuffer() {
     texture.surface.height = height;
     texture.surface.depth = 1; // probably not relevant for 2D?
     texture.surface.dim = GX2_SURFACE_DIM_TEXTURE_2D; // there's some fun ones like arrays or 3D textures if we want those
-    texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8; // pixel format. rgba8 here means that depth in the alpha channel is problematic but :shrug:. Tried using float but it is Very Slow. Maybe
+    if(highPrecision) {
+        texture.surface.format = GX2_SURFACE_FORMAT_FLOAT_R32_G32_B32_A32;
+    } else {
+        texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8;
+    }
     texture.surface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
     texture.surface.aa = GX2_AA_MODE1X; // anti-aliasing off (but we could set it to on?)
     texture.viewNumSlices = 1; // I don't know what this means

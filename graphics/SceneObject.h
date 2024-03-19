@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "../graphics/SceneMaterial.h"
 
 struct RenderObject;
 
@@ -26,4 +27,4 @@ protected:
 };
 
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name);
-std::unique_ptr<SceneObject> LoadQuad();
+std::unique_ptr<SceneObject> LoadQuad(SceneMaterial* material = nullptr);

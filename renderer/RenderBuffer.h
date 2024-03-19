@@ -9,7 +9,7 @@
  * A texture that is also a buffer that can be rendered to
 */
 struct RenderBuffer {
-  RenderBuffer();
+  RenderBuffer(bool highPrecision = false, int width = 0, int height = 0);
   ~RenderBuffer();
 
   void bindTarget(bool clear = true);

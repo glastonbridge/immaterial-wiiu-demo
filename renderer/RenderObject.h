@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <gx2r/buffer.h>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 struct RenderObjectImpl;
 struct RenderMaterial;
@@ -36,5 +38,6 @@ struct RenderObject {
   // Messing with the buffers involves doing GX2-specific memory locking
   void setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, size_t elemCount);
   void setUniformFloatMat(UniformType bt, const float* mat, size_t numFloats);
+  void setExtraUniform(int index, glm::vec4 data);
   RenderObjectImpl* _impl;
 };

@@ -11,5 +11,8 @@ struct Renderer {
     void renderFrame(const SceneBase& scene);
 
   private:
-    std::unique_ptr<SceneObject> fullscreenQuad;
+    std::unique_ptr<SceneObject> composeQuad;
+    std::unique_ptr<SceneObject> blurQuad;
+    std::unique_ptr<RenderBuffer> bufferA;
+    std::unique_ptr<RenderBuffer> bufferB;
 };
