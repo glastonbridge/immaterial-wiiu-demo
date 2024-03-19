@@ -96,7 +96,7 @@ std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
    std::unique_ptr<SceneObjectImpl> _impl;
    _impl.reset(new SceneObjectImpl());
 
-   SceneMaterial* material(new BoneMaterial("assets/colorgrid.png"));
+   SceneMaterial* material(new BoneMaterial("assets/train.png"));
    std::vector<float> vertices;
    std::vector<float> texcoords;
    std::vector<float> normals;

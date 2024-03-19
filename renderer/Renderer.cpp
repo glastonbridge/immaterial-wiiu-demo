@@ -58,7 +58,7 @@ static float uniformData[512 * 4] __attribute__ ((aligned (0x40)));
 
 void Renderer::renderFrame(const SceneBase& scene) {
       // Render to offscreen buffer
-      WHBLogPrint("Binding render target");
+      //WHBLogPrint("Binding render target");
       scene.renderBuffer->bindTarget(true);
 
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);

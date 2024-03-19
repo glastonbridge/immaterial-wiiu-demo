@@ -9,7 +9,7 @@
 
 struct TestScene: public SceneBase {
   void setup() override {
-    objects.push_back(LoadObject("assets/gizmos.fbx", "Cube")); // not actually a cube
+    objects.push_back(LoadObject("assets/train.fbx", NULL));
   }
 
   void update(double time) override {

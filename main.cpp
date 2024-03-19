@@ -61,7 +61,7 @@ int main(int argc, char **argv)
          scene.update(music.currentTime());
          renderer.renderFrame(scene);
          
-         WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
+         //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
       }
    }
    WHBLogPrintf("Done. Quitting...");

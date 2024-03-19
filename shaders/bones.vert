@@ -33,6 +33,7 @@ layout(location = 5) out vec4 out_cam_params;
 void main()
 {
     mat4 bone_mat = bone_transform[int(in_bone_idx.x)] * in_bone_weight.x + bone_transform[int(in_bone_idx.y)] * in_bone_weight.y;
+    bone_mat += mat4(1.0) * max(0.0, 1.0 - in_bone_weight.x - in_bone_weight.y);
 
     out_pos = (transform * bone_mat * vec4(in_position, 1.0f)).xyz;
     out_pos_camspace = (view * vec4(out_pos, 1.0f)).xyz;

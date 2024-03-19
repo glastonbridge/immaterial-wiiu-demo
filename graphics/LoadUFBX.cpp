@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 
 // #define DEBUG 1
+#undef DEBUG
 
 // hi I'm halcy and I like to reuse code from previous releases
 int LoadUFBX(
@@ -175,6 +176,7 @@ int LoadUFBX(
             #ifdef DEBUG
             WHBLogPrintf("Loaded %ld verts", setVertIdx);
             #endif
+            WHBLogPrintf("verts %ld", vertices.size());
 
             // Is there an animation?
             if(scene->anim_stacks.count >= 1) {
