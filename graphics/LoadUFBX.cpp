@@ -169,87 +169,87 @@ void LoadUFBX(
             #endif
             WHBLogPrintf("verts %ld", vertices.size());
 
-            // // Is there an animation?
-            // if(scene->anim_stacks.count >= 1) {
-            //     if(scene->anim_stacks.count > 1) {
-            //         WHBLogPrintf("Warning: more than one animation stack (%ld), only the longest will be used", scene->anim_stacks.count);
-            //     }
+            // Is there an animation?
+            if(scene->anim_stacks.count >= 1) {
+                if(scene->anim_stacks.count > 1) {
+                    WHBLogPrintf("Warning: more than one animation stack (%ld), only the longest will be used", scene->anim_stacks.count);
+                }
 
-            //     int stack_use = 0;
-            //     int stack_frames = 0;
-            //     for(int i = scene->anim_stacks.count - 1; i >= 0; i--) {
-            //         ufbx_anim_stack* anim_stack = scene->anim_stacks.data[i];
-            //         int frames = (int)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / (1.0 / 60.0) + 0.5);
-            //         if(frames > stack_frames) {
-            //             stack_use = i;
-            //             stack_frames = frames;
-            //         }
-            //     }
+                int stack_use = 0;
+                int stack_frames = 0;
+                for(int i = scene->anim_stacks.count - 1; i >= 0; i--) {
+                    ufbx_anim_stack* anim_stack = scene->anim_stacks.data[i];
+                    int frames = (int)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / (1.0 / 60.0) + 0.5);
+                    if(frames > stack_frames) {
+                        stack_use = i;
+                        stack_frames = frames;
+                    }
+                }
 
-            //     #ifdef DEBUG
-            //     WHBLogPrintf("Loading animation");
-            //     #endif
-            //     ufbx_anim_stack* anim_stack = scene->anim_stacks.data[stack_use];
+                #ifdef DEBUG
+                WHBLogPrintf("Loading animation");
+                #endif
+                ufbx_anim_stack* anim_stack = scene->anim_stacks.data[stack_use];
 
-            //     // We sample at 60fps
-            //     float frameDur = 1.0 / 60.0;
-            //     size_t frameCount = (size_t)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / frameDur + 0.5);
-            //     size_t boneCount = skin->clusters.count; // TODO return these?
-            //     #ifdef DEBUG
-            //     WHBLogPrintf("  * frame count: %ld", frameCount);
-            //     WHBLogPrintf("  * bone count: %ld", boneCount);
-            //     #endif
+                // We sample at 60fps
+                float frameDur = 1.0 / 60.0;
+                size_t frameCount = (size_t)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / frameDur + 0.5);
+                size_t boneCount = skin->clusters.count; // TODO return these?
+                #ifdef DEBUG
+                WHBLogPrintf("  * frame count: %ld", frameCount);
+                WHBLogPrintf("  * bone count: %ld", boneCount);
+                #endif
 
-            //     // Copy every frame
-            //     bool havePrinted = false;
-            //     for(size_t frame = 0; frame < frameCount; frame++) {
-            //         std::vector<glm::mat4> frameMats;
+                // Copy every frame
+                bool havePrinted = false;
+                for(size_t frame = 0; frame < frameCount; frame++) {
+                    std::vector<glm::mat4> frameMats;
 
-            //         // Get every bones transform for the frame
-            //         for(size_t boneIdx = 0; boneIdx < boneCount; boneIdx++) {
-            //             ufbx_skin_cluster* cluster = skin->clusters.data[boneIdx];
-            //             if(!havePrinted) {
-            //                 #ifdef DEBUG
-            //                 WHBLogPrintf("  * bone %ld: %s", boneIdx, cluster->bone_node->name.data);
-            //                 #endif
-            //             }
-            //             ufbx_node* bone = cluster->bone_node;
-            //             float frameTime = anim_stack->anim.time_begin + frame * frameDur;
-            //             ufbx_transform transform = ufbx_evaluate_transform(&anim_stack->anim, bone, frameTime);
-            //             ufbx_matrix transformMatLocal = ufbx_transform_to_matrix(&transform);
-            //             ufbx_matrix transformMat = ufbx_matrix_mul(&transformMatLocal, &cluster->geometry_to_bone);
+                    // Get every bones transform for the frame
+                    for(size_t boneIdx = 0; boneIdx < boneCount; boneIdx++) {
+                        ufbx_skin_cluster* cluster = skin->clusters.data[boneIdx];
+                        if(!havePrinted) {
+                            #ifdef DEBUG
+                            WHBLogPrintf("  * bone %ld: %s", boneIdx, cluster->bone_node->name.data);
+                            #endif
+                        }
+                        ufbx_node* bone = cluster->bone_node;
+                        float frameTime = anim_stack->anim.time_begin + frame * frameDur;
+                        ufbx_transform transform = ufbx_evaluate_transform(&anim_stack->anim, bone, frameTime);
+                        ufbx_matrix transformMatLocal = ufbx_transform_to_matrix(&transform);
+                        ufbx_matrix transformMat = ufbx_matrix_mul(&transformMatLocal, &cluster->geometry_to_bone);
 
-            //             #ifdef DEBUG
-            //             WHBLogPrintf("%f %f %f\n%f %f %f\n%f %f %f\n%f %f %f\n\n",
-            //                 transformMat.v[0],
-            //                 transformMat.v[1],
-            //                 transformMat.v[2],
-            //                 transformMat.v[3],
-            //                 transformMat.v[4],
-            //                 transformMat.v[5],
-            //                 transformMat.v[6],
-            //                 transformMat.v[7],
-            //                 transformMat.v[8],
-            //                 transformMat.v[9],
-            //                 transformMat.v[10],
-            //                 transformMat.v[11]
-            //             );
-            //             #endif
+                        #ifdef DEBUG
+                        WHBLogPrintf("%f %f %f\n%f %f %f\n%f %f %f\n%f %f %f\n\n",
+                            transformMat.v[0],
+                            transformMat.v[1],
+                            transformMat.v[2],
+                            transformMat.v[3],
+                            transformMat.v[4],
+                            transformMat.v[5],
+                            transformMat.v[6],
+                            transformMat.v[7],
+                            transformMat.v[8],
+                            transformMat.v[9],
+                            transformMat.v[10],
+                            transformMat.v[11]
+                        );
+                        #endif
 
-            //             frameMats.push_back(glm::mat4(
-            //                 transformMat.v[ 0], transformMat.v[ 1], transformMat.v[ 2], 0.0,
-            //                 transformMat.v[ 3], transformMat.v[ 4], transformMat.v[ 5], 0.0,
-            //                 transformMat.v[ 6], transformMat.v[ 7], transformMat.v[ 8], 0.0,
-            //                 transformMat.v[ 9], transformMat.v[10], transformMat.v[11], 1.0
-            //             ));                     
-            //         }
-            //         animFrames.push_back(frameMats);
-            //         havePrinted = true;
-            //     }
-            // }
-            // else {
-            //     WHBLogPrintf("Yikes! Invalid animation stack count (= %ld) or no skin present!", scene->anim_stacks.count);
-            // }
+                        frameMats.push_back(glm::mat4(
+                            transformMat.v[ 0], transformMat.v[ 1], transformMat.v[ 2], 0.0,
+                            transformMat.v[ 3], transformMat.v[ 4], transformMat.v[ 5], 0.0,
+                            transformMat.v[ 6], transformMat.v[ 7], transformMat.v[ 8], 0.0,
+                            transformMat.v[ 9], transformMat.v[10], transformMat.v[11], 1.0
+                        ));                     
+                    }
+                    animFrames.push_back(frameMats);
+                    havePrinted = true;
+                }
+            }
+            else {
+                WHBLogPrintf("Yikes! Invalid animation stack count (= %ld) or no skin present!", scene->anim_stacks.count);
+            }
         }
         else {
             WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!");
