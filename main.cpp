@@ -16,7 +16,7 @@
 
 #include <sndcore2/core.h>
 
-#include "scenes/TestScene.h"
+#include "scenes/RealScene.h"
 #include "renderer/Renderer.h"
 #include <whb/log_udp.h>
 #include "sound/Music.h"
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
       Renderer renderer;
-      TestScene scene;
+      RealScene scene;
       WHBLogPrintf("Begin setup...");
       scene.setup();
       WHBLogPrintf("Begin updating...");

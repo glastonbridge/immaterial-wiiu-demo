@@ -42,11 +42,16 @@ void Renderer::renderFrame(const SceneBase& scene) {
 
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
-      for (auto& object : scene.objects) {
-         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
-         object->getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
-         object->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
-         object->getRenderObject()->render();
+      for (auto const &instance : scene.instances) {
+         auto &object = *scene.objects[instance.id];
+         object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
+         object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
+         object.getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
+
+         float* mat = (float*)glm::value_ptr(instance.transform);
+         object.getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
+         object.setAnimationFrame(instance.anim);
+         object.getRenderObject()->render();
       }
       scene.renderBuffer->unbindTarget();
 
