@@ -26,6 +26,7 @@
 #include "RenderMaterial.h"
 #include "../graphics/MaterialCollection.h"
 #include "../util/memory.h"
+#include <glm/gtx/string_cast.hpp>
 
 Renderer::Renderer()
 {
@@ -49,9 +50,11 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object.getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
 
          float* mat = (float*)glm::value_ptr(instance.transform);
+         WHBLogPrintf("Rendering object with transform %s", glm::to_string(instance.transform).c_str());
          object.getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
          object.setAnimationFrame(instance.anim);
          object.getRenderObject()->render();
+         GX2DrawDone();
       }
       scene.renderBuffer->unbindTarget();
 

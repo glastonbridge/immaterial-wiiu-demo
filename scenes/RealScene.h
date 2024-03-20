@@ -33,7 +33,9 @@ struct RealScene: public SceneBase {
     instances[1].transform = glm::rotate(glm::mat4(1.f), glm::radians(rotY), glm::vec3(0.f, 1.f, 0.f));
     instances[1].anim = syncVal("TestPart:Object:Frame");
 
-    instances[2].transform = glm::rotate(glm::mat4(1.f), glm::radians(rotY), glm::vec3(1.f, 0.f, 0.f));
+    rotY = syncVal("TestPart:Object2:RotY");
+    instances[2].transform = glm::rotate(glm::mat4(1.f), glm::radians(rotY), glm::vec3(0.f, 1.f, 0.f));
+    instances[2].anim = syncVal("TestPart:Object:Frame");
   }
 
   void teardown() final {
