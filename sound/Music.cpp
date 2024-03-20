@@ -5,6 +5,8 @@
 #include <sndcore2/core.h>
 #include <coreinit/cache.h>
 #include <cstring>
+#include <stdlib.h>
+#include <malloc.h>
 
 MusicPlayer::MusicPlayer(const char* oggFileName) {
     AXInitParams init = {AX_INIT_RENDERER_48KHZ, 0, 0}; // possible sample rates are 48k and 32k, rest of parameters doesn't matter
@@ -34,8 +36,8 @@ MusicPlayer::MusicPlayer(const char* oggFileName) {
     } while (readSize > 0);
 
     // Copy interleaved data to separate buffers.
-    bufferLeft = (int16_t*)(MEMAllocFromDefaultHeap(decodedData.size() / 2 * sizeof(int16_t)));
-    bufferRight = (int16_t*)(MEMAllocFromDefaultHeap(decodedData.size() / 2 * sizeof(int16_t)));
+    bufferLeft = (int16_t*)(malloc(decodedData.size() / 2 * sizeof(int16_t)));
+    bufferRight = (int16_t*)(malloc(decodedData.size() / 2 * sizeof(int16_t)));
     for (unsigned int i = 0; i < decodedData.size(); i += 2) {
         bufferLeft[i / 2] = decodedData[i];
         bufferRight[i / 2] = decodedData[i + 1];

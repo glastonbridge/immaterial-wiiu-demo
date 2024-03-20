@@ -17,6 +17,8 @@
 #include <gx2/swap.h>
 #include <gx2/temp.h>
 #include <gx2r/mem.h>
+#include <stdlib.h>
+#include <malloc.h>
 
 RenderBuffer::~RenderBuffer() {
     MEMFreeToDefaultHeap(texture.surface.image);
@@ -87,7 +89,7 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
     texture.compMap = 0x00010203; // This swizzles components I think?
     GX2CalcSurfaceSizeAndAlignment(&texture.surface);
     GX2InitTextureRegs(&texture);
-    texture.surface.image = MEMAllocFromDefaultHeapEx(texture.surface.imageSize, texture.surface.alignment); // TODO maybe mem1 needed
+    texture.surface.image = memalign(texture.surface.alignment, texture.surface.imageSize); // TODO maybe mem1 needed
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, texture.surface.image, texture.surface.imageSize);
 
     // Also set up a sampler
@@ -114,11 +116,11 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
     depthBuffer.depthClear = 1.0f;
     GX2CalcSurfaceSizeAndAlignment(&(depthBuffer.surface));
     GX2InitDepthBufferRegs(&depthBuffer);
-    depthBuffer.surface.image = MEMAllocFromDefaultHeapEx(depthBuffer.surface.imageSize, depthBuffer.surface.alignment);
+    depthBuffer.surface.image = memalign(depthBuffer.surface.alignment, depthBuffer.surface.imageSize);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, depthBuffer.surface.image, depthBuffer.surface.imageSize);
 
     // Set up a context state (the object that holds buffer info, what you actually bind to render to)
-    contextState = (GX2ContextState*)MEMAllocFromDefaultHeapEx(sizeof(GX2ContextState), GX2_CONTEXT_STATE_ALIGNMENT);
+    contextState = (GX2ContextState*)memalign(GX2_CONTEXT_STATE_ALIGNMENT, sizeof(GX2ContextState));
     GX2SetupContextStateEx(contextState, TRUE);
     GX2SetContextState(contextState);
     GX2SetColorBuffer(&colorBuffer, GX2_RENDER_TARGET_0);

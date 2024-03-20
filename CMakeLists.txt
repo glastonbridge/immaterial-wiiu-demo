@@ -83,4 +83,5 @@ add_custom_target(deploy
 set(EMULATOR_FIXES "true" CACHE BOOL "Set to false to disable kludges needed to run on emulator")
 if(EMULATOR_FIXES)
     target_compile_definitions(wiiu_demo PRIVATE UFBX_TRACE=1)
+    target_compile_definitions(wiiu_demo PRIVATE EMU_KLUDGES=1)
 endif()

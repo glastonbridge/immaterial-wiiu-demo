@@ -46,7 +46,7 @@ RenderTexture::RenderTexture(const std::string& path) {
     GX2CalcSurfaceSizeAndAlignment(&texture.surface);
     GX2InitTextureRegs(&texture);
     WHBLogPrintf("Allocating %i bytes for texture", texture.surface.imageSize);
-    texture.surface.image = MEMAllocFromDefaultHeapEx(texture.surface.imageSize, texture.surface.alignment);
+    texture.surface.image = memalign(texture.surface.alignment, texture.surface.imageSize);
     WHBLogPrintf("Allocated %p for texture", texture.surface.image);
     
     // Continuous to pitched if needed
@@ -74,7 +74,7 @@ RenderTexture::~RenderTexture() {
 }
 
 void RenderTexture::renderUsing(const WHBGfxShaderGroup* group, int binding) {
-  WHBLogPrintf("Binding a %p texture for group %p @ %i -> %i", this, group, binding, group->pixelShader->samplerVars[binding].location);
+  // WHBLogPrintf("Binding a %p texture for group %p @ %i -> %i", this, group, binding, group->pixelShader->samplerVars[binding].location);
   GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
   GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
 }

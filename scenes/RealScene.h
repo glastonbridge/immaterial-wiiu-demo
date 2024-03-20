@@ -29,15 +29,26 @@ struct RealScene: public SceneBase {
     materials.push_back(std::make_unique<BoneMaterial>("assets/house1_small.png"));
     materials.push_back(std::make_unique<BoneMaterial>("assets/lampshade_small.png"));
 
+    for(int i = 0; i < 100; i++) {
+      materials.push_back(std::make_unique<BoneMaterial>("assets/lampshade_small.png"));
+    }
+
     objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_train_mat].get()));
     //objects.push_back(LoadObject("assets/cushion.fbx", NULL, materials[ID_cushion_mat].get())); // Cushion needs triangulation, will crash if loaded
     objects.push_back(LoadObject("assets/house1.fbx", NULL, materials[ID_house1_mat].get()));
     objects.push_back(LoadObject("assets/lampshade.fbx", NULL, materials[ID_lampshade_mat].get()));
 
+    for(int i = 0; i < 100; i++) {
+      objects.push_back(LoadObject("assets/lampshade.fbx", NULL, materials[ID_lampshade_mat].get()));
+    }
+    
+
     instances.emplace_back(ID_train);
     instances.emplace_back(ID_house1);
     instances.emplace_back(ID_train);
-    instances.emplace_back(ID_lampshade);
+    for(int i = 0; i < 1000; i++) {
+      instances.emplace_back(ID_lampshade);
+    }
   }
 
   void update(double time) final {
