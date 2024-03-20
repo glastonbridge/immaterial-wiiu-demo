@@ -23,6 +23,7 @@
 #include "sync/Sync.h"
 
 #include "renderer/CafeGLSLCompiler.h"
+#include "renderer/ShaderManager.h"
 
 // what if we try to define this here, will that do anything (nope)
 extern "C" struct _reent *__wut_getreent(void)
@@ -41,9 +42,11 @@ int main(int argc, char **argv)
    WHBProcInit();
    WHBGfxInit();
    GLSL_Init();
-
-   // TODO: see loadShader in Material.cpp
    WHBMountSdCard();
+
+   // Preheat shader cache
+   getShaderManager();
+
    WHBLogPrint("Hello World! Logging initialised.");
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
@@ -65,7 +68,7 @@ int main(int argc, char **argv)
       }
    }
    WHBLogPrintf("Done. Quitting...");
-   
+
    // by moving glsl init to main and not calling glsl shutdown, we apparently dodge a crash on exit? what?
    //GLSL_Shutdown();
 

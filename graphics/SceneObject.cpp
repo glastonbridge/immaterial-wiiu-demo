@@ -20,7 +20,7 @@ static const float sPositionDataQuad[] =
     // tri 2
     1.0f,  1.0f,  0.0f,
    -1.0f, -1.0f,  0.0f,
-   1.0f,  -1.0f,  0.0f,
+    1.0f,  -1.0f,  0.0f,
 };
 
 static const float sTexcoordData[] =

@@ -19,7 +19,7 @@ struct RenderMaterial {
   RenderMaterial(
     const std::string& vertexShaderPath,
     const std::string& fragmentShaderPath,
-    const std::vector<AttribSpec>& 
+    const std::vector<AttribSpec>& attribs
   );
   
   virtual ~RenderMaterial();
@@ -30,8 +30,7 @@ struct RenderMaterial {
   }
 
   //protected: 
-  WHBGfxShaderGroup * group;
+  WHBGfxShaderGroup* group;
   std::unique_ptr<RenderTexture> texture;
   int bindingForBuffer[BufferType::_MAX];
 };
-

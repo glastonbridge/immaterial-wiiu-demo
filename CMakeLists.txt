@@ -29,7 +29,8 @@ add_executable(wiiu_demo
    third_party/rocket/track.c
    third_party/ufbx/ufbx.c
    graphics/LoadUFBX.cpp
-   )
+   renderer/ShaderManager.cpp
+)
 
 # Sync IP
 set(SYNC_IP "127.0.0.1" CACHE STRING "IP of the computer running the synctool")

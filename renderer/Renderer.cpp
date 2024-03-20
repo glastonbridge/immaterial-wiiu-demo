@@ -35,27 +35,6 @@ Renderer::Renderer()
    bufferB = std::make_unique<RenderBuffer>(false, 1280, 720);
 }
 
-int32_t GX2GetVertexUniformVarOffset(const GX2VertexShader *shader, const char *name)
-{
-	GX2UniformVar *uniform = GX2GetVertexUniformVar(shader, name);
-	return uniform ? uniform->offset : -1;
-}
-
-int32_t GX2GetPixelUniformVarOffset(const GX2PixelShader *shader, const char *name)
-{
-	GX2UniformVar *uniform = GX2GetPixelUniformVar(shader, name);
-	return uniform ? uniform->offset : -1;
-}
-
-
-int32_t GX2GetPixelUniformVarType(const GX2PixelShader *shader, const char *name)
-{
-	GX2UniformVar *uniform = GX2GetPixelUniformVar(shader, name);
-	return uniform ? uniform->type : -1;
-}
-
-static float uniformData[512 * 4] __attribute__ ((aligned (0x40)));
-
 void Renderer::renderFrame(const SceneBase& scene) {
       // Render to offscreen buffer
       //WHBLogPrint("Binding render target");

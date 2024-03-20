@@ -10,6 +10,7 @@
 struct TestScene: public SceneBase {
   void setup() override {
     objects.push_back(LoadObject("assets/train.fbx", NULL));
+    objects.push_back(LoadObject("assets/gizmos.fbx", "Cube"));
   }
 
   void update(double time) override {
@@ -20,6 +21,8 @@ struct TestScene: public SceneBase {
     float* mat = (float*)glm::value_ptr(transform);
     objects[0]->getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
     objects[0]->setAnimationFrame(syncVal("TestPart:Object:Frame"));
+    objects[1]->getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
+    objects[1]->setAnimationFrame(syncVal("TestPart:Object:Frame"));
   }
 
   void teardown() override {
