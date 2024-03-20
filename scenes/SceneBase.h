@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../graphics/SceneObject.h"
+#include "../graphics/SceneMaterial.h"
 #include "../renderer/RenderObject.h"
 #include "../renderer/RenderBuffer.h"
 #include "../sync/Sync.h"
@@ -23,6 +24,7 @@ struct SceneInstance {
 
 struct SceneBase {
   std::vector<std::unique_ptr<SceneObject>> objects;
+  std::vector<std::unique_ptr<SceneMaterial>> materials;
   std::vector<SceneInstance> instances;
   glm::mat4x4 cameraProjection;
   glm::mat4x4 cameraView;

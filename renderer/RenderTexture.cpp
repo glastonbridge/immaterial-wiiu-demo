@@ -17,9 +17,10 @@
 #include <gx2/swap.h>
 #include <gx2/temp.h>
 #include <gx2r/mem.h>
+#include <stdlib.h>
+#include <malloc.h>
 
 RenderTexture::RenderTexture(const std::string& path) {
-
     // Load a texture
     std::vector<unsigned char> image;
     unsigned width, height;
@@ -46,7 +47,8 @@ RenderTexture::RenderTexture(const std::string& path) {
     GX2InitTextureRegs(&texture);
     WHBLogPrintf("Allocating %i bytes for texture", texture.surface.imageSize);
     texture.surface.image = MEMAllocFromDefaultHeapEx(texture.surface.imageSize, texture.surface.alignment);
-
+    WHBLogPrintf("Allocated %p for texture", texture.surface.image);
+    
     // Continuous to pitched if needed
     if(texture.surface.pitch != width) {
       uint32_t* texDataPtrPitched = (uint32_t*)texture.surface.image;
@@ -57,7 +59,7 @@ RenderTexture::RenderTexture(const std::string& path) {
       WHBLogPrintf("Converted pitch and copied %i bytes to texture", width * sizeof(uint32_t));
     } else {
       memcpy(texture.surface.image, image.data(), image.size());
-      WHBLogPrintf("Converted pitch and copied %i samples to texture", image.size());
+      WHBLogPrintf("Copied %i samples to texture", image.size());
     }
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, texture.surface.image, texture.surface.imageSize);
     
@@ -72,7 +74,7 @@ RenderTexture::~RenderTexture() {
 }
 
 void RenderTexture::renderUsing(const WHBGfxShaderGroup* group, int binding) {
+  WHBLogPrintf("Binding a %p texture for group %p @ %i -> %i", this, group, binding, group->pixelShader->samplerVars[binding].location);
   GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
   GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
-
 }

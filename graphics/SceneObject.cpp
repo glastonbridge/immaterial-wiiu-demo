@@ -52,11 +52,8 @@ struct SceneObjectImpl: public SceneObject {
       renderObject.reset(new RenderObject());
    }
    void setMaterial(SceneMaterial* material) {
-      sceneMaterial.reset(material); // memory owned by the scene now 
       renderObject->setMaterial(material->getRenderMaterial());
    }
-protected:
-   std::unique_ptr<SceneMaterial> sceneMaterial;
 };
 
 void SceneObject::setAnimationFrame(float frame) {
@@ -84,19 +81,18 @@ void SceneObject::setAnimationFrame(float frame) {
       memcpy(this->boneMatInterpBuffer + (i * 4 * 4), glm::value_ptr(boneFrameMat), 4 * 4 * sizeof(float));
     }
 
-    // Bones to shader buffer
+    // Bones to shader buffer 
     this->getRenderObject()->setUniformFloatMat(UniformType::BONE_TRANSFORM, this->boneMatInterpBuffer, 4 * 4 * numBones);
 }
 
 /**
  * Load an object from a file.
  */
-std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name) {
+std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name, SceneMaterial* material) {
    WHBLogPrintf("Loading object %s from %s", name, path);
    std::unique_ptr<SceneObjectImpl> _impl;
    _impl.reset(new SceneObjectImpl());
 
-   SceneMaterial* material(new BoneMaterial("assets/train.png"));
    std::vector<float> vertices;
    std::vector<float> texcoords;
    std::vector<float> normals;

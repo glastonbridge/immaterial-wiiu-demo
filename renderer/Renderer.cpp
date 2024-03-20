@@ -50,7 +50,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object.getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
 
          float* mat = (float*)glm::value_ptr(instance.transform);
-         WHBLogPrintf("Rendering object with transform %s", glm::to_string(instance.transform).c_str());
+         // WHBLogPrintf("Rendering object with transform %s", glm::to_string(instance.transform).c_str());
          object.getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
          object.setAnimationFrame(instance.anim);
          object.getRenderObject()->render();

@@ -26,5 +26,5 @@ protected:
   float* boneMatInterpBuffer = nullptr;
 };
 
-std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name);
+std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name, SceneMaterial* material = nullptr);
 std::unique_ptr<SceneObject> LoadQuad(SceneMaterial* material = nullptr);
