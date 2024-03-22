@@ -51,3 +51,6 @@ struct SceneBase {
     delete renderBuffer;
   }
 };
+
+// See scenes.cpp
+SceneBase* getScene(int id);

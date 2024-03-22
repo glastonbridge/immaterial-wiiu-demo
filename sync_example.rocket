@@ -97,12 +97,33 @@ color="ffa9b250">
 		<key row="32" value="1.000000" interpolation="0" />
 		<key row="33" value="0.000000" interpolation="1" />
 		<key row="43" value="2.000000" interpolation="0" />
+		<key row="53" value="2.000000" interpolation="1" />
+		<key row="55" value="0.000000" interpolation="1" />
+		<key row="57" value="1.000000" interpolation="0" />
 	</track>
 	<track name="Global:Fade" folded="0" muteKeyCount="0"
 color="ff60b250">
 		<key row="0" value="0.000000" interpolation="1" />
 		<key row="32" value="1.000000" interpolation="0" />
 		<key row="33" value="0.000000" interpolation="0" />
+	</track>
+	<track name="Global:Scene" folded="0" muteKeyCount="0"
+color="ff4fb292">
+		<key row="0" value="0.000000" interpolation="0" />
+		<key row="55" value="1.000000" interpolation="0" />
+	</track>
+	<track name="GizmosPart:Gizmos:RotY" folded="0" muteKeyCount="0"
+color="ff4f71b2">
+		<key row="55" value="1.000000" interpolation="0" />
+	</track>
+	<track name="GizmosPart:Gizmos:Scale" folded="0" muteKeyCount="0"
+color="ff8850b2">
+		<key row="55" value="2.000000" interpolation="0" />
+	</track>
+	<track name="GizmosPart:Gizmos:Frame" folded="0" muteKeyCount="0"
+color="ffb25091">
+		<key row="55" value="0.000000" interpolation="1" />
+		<key row="89" value="180.000000" interpolation="0" />
 	</track>
 </tracks>
 	</rootElement>

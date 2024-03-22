@@ -16,7 +16,8 @@
 
 #include <sndcore2/core.h>
 
-#include "scenes/RealScene.h"
+#include "scenes/SceneBase.h"
+#include "scenes/SceneAssets.h"
 #include "renderer/Renderer.h"
 #include <whb/log_udp.h>
 #include "sound/Music.h"
@@ -44,22 +45,39 @@ int main(int argc, char **argv)
    // Load all assets
    getSceneAssets();
 
+   // Current scene
+   int currentScene = -1000;
+   SceneBase* scene = nullptr;
+
+   // Scene ID -> Scene mapping array
    WHBLogPrint("Hello World! Logging initialised.");
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
       Renderer renderer;
-      RealScene scene;
-      WHBLogPrintf("Begin setup...");
-      scene.setup();
+      
       WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
       music.play();
 #endif      
       Sync sync("sync_tracks/", SYNC_IP, &music, 0.1f);
       while (WHBProcIsRunning()) {
+         // Update rocket
          sync.update();
-         scene.update(music.currentTime());
-         renderer.renderFrame(scene);
+         
+         // Scene switcher
+         int newScene = syncVal("Global:Scene");
+         if(currentScene != newScene) {
+            if (scene != nullptr) {
+               scene->teardown();
+               delete scene;
+            }
+            scene = getScene(newScene);
+            scene->setup();
+         }
+
+         // Update scene
+         scene->update(music.currentTime());
+         renderer.renderFrame(*scene);
          
          //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
       }

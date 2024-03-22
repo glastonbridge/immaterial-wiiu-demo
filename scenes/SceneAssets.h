@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../renderer/RenderObject.h"
 #include "../graphics/SceneObject.h"
 #include "../graphics/MaterialCollection.h"
@@ -7,6 +9,7 @@ enum objectID : size_t {
     ID_cushion,
     ID_house1,
     ID_lampshade,
+    ID_gizmos
 };
 
 enum materialID : size_t {
@@ -14,6 +17,7 @@ enum materialID : size_t {
     ID_cushion_mat,
     ID_house1_mat,
     ID_lampshade_mat,
+    ID_colorgrid_mat
 };
 
 struct SceneAssets {

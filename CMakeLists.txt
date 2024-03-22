@@ -12,25 +12,26 @@ include_directories(
 
 # Add sources here
 add_executable(wiiu_demo
-   main.cpp
-   renderer/Renderer.cpp
-   renderer/RenderObject.cpp
-   renderer/RenderMaterial.cpp
-   renderer/RenderTexture.cpp
-   renderer/RenderBuffer.cpp
-   graphics/SceneObject.cpp
-   util/memory.cpp
-   sound/Music.cpp
-   sync/Sync.cpp
-   third_party/lodepng/lodepng.cpp
-   third_party/minivorbis/minivorbis.c
-   third_party/rocket/device.c
-   third_party/rocket/tcp.c
-   third_party/rocket/track.c
-   third_party/ufbx/ufbx.c
-   graphics/LoadUFBX.cpp
-   renderer/ShaderManager.cpp
-   scenes/SceneAssets.cpp
+    main.cpp
+    renderer/Renderer.cpp
+    renderer/RenderObject.cpp
+    renderer/RenderMaterial.cpp
+    renderer/RenderTexture.cpp
+    renderer/RenderBuffer.cpp
+    graphics/SceneObject.cpp
+    util/memory.cpp
+    sound/Music.cpp
+    sync/Sync.cpp
+    third_party/lodepng/lodepng.cpp
+    third_party/minivorbis/minivorbis.c
+    third_party/rocket/device.c
+    third_party/rocket/tcp.c
+    third_party/rocket/track.c
+    third_party/ufbx/ufbx.c
+    graphics/LoadUFBX.cpp
+    renderer/ShaderManager.cpp
+    scenes/SceneAssets.cpp
+    scenes/Scenes.cpp
 )
 
 # Sync IP
