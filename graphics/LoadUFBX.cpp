@@ -176,10 +176,9 @@ int LoadUFBX(
             #ifdef DEBUG
             WHBLogPrintf("Loaded %ld verts", setVertIdx);
             #endif
-            WHBLogPrintf("verts %ld", vertices.size());
 
             // Is there an animation?
-            if(scene->anim_stacks.count >= 1) {
+            if(scene->anim_stacks.count >= 1 && skin != NULL) {
                 if(scene->anim_stacks.count > 1) {
                     WHBLogPrintf("Warning: more than one animation stack (%ld), only the longest will be used", scene->anim_stacks.count);
                 }
@@ -196,11 +195,13 @@ int LoadUFBX(
                 }
 
                 #ifdef DEBUG
-                WHBLogPrintf("Loading animation");
+                WHBLogPrintf("Loading animation, stack stack to use is %d", stack_use);
                 #endif
                 ufbx_anim_stack* anim_stack = scene->anim_stacks.data[stack_use];
 
                 // We sample at 60fps
+                WHBLogPrintf("  * anim time begin: %f", anim_stack->anim.time_begin);
+                WHBLogPrintf("  * anim time end: %f", anim_stack->anim.time_end);
                 float frameDur = 1.0 / 60.0;
                 size_t frameCount = (size_t)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / frameDur + 0.5);
                 size_t boneCount = skin->clusters.count; // TODO return these?

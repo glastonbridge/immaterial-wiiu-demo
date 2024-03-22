@@ -28,6 +28,8 @@
 #include "../util/memory.h"
 #include <glm/gtx/string_cast.hpp>
 
+#include "../scenes/SceneAssets.h"
+
 Renderer::Renderer()
 {
    composeQuad = LoadQuad(new ComposeMaterial());
@@ -37,6 +39,10 @@ Renderer::Renderer()
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
+      // Asset loader that just loads all assets at startup
+       // we can make this better if it turns out we're low on RAM, but we're probably not
+      SceneAssets* assets = getSceneAssets();
+    
       // Render to offscreen buffer
       //WHBLogPrint("Binding render target");
       scene.renderBuffer->bindTarget(true);
@@ -44,7 +50,8 @@ void Renderer::renderFrame(const SceneBase& scene) {
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto const &instance : scene.instances) {
-         auto &object = *scene.objects[instance.id];
+    
+         auto &object = *assets->objects[instance.id];
          object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
          object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
          object.getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
@@ -92,7 +99,9 @@ void Renderer::renderFrame(const SceneBase& scene) {
       
       WHBGfxBeginRenderDRC();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-      bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group);
+      bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 0);
+      scene.renderBuffer->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 1);
+      composeQuad->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Global:Vignette"), 1.0f - syncVal("Global:Fade"), 0.0f, 0.0f));
       composeQuad->getRenderObject()->render();
       WHBGfxFinishRenderDRC();
 

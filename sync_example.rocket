@@ -4,8 +4,8 @@
 beatsPerMin="125">
 	<track name="TestPart:Object:RotY" folded="0" muteKeyCount="0"
 color="ffb27474">
-		<key row="0" value="0.000000" interpolation="1" />
-		<key row="41" value="50.000000" interpolation="1" />
+		<key row="0" value="40.000000" interpolation="1" />
+		<key row="41" value="600.000000" interpolation="1" />
 	</track>
 	<track name="TestPart:Object:Frame" folded="0" muteKeyCount="0"
 color="ffb28050">
@@ -60,6 +60,8 @@ color="ff60b250">
 	<track name="Camera:FocalDist" folded="0" muteKeyCount="0"
 color="ff4fb292">
 		<key row="0" value="-12.000000" interpolation="0" />
+		<key row="53" value="-12.000000" interpolation="2" />
+		<key row="67" value="-22.000000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalLen" folded="0" muteKeyCount="0"
 color="ff4f71b2">
@@ -79,6 +81,28 @@ color="ffb25091">
 		<key row="0" value="1.500000" interpolation="0" />
 		<key row="64" value="1.500000" interpolation="1" />
 		<key row="72" value="10.000000" interpolation="0" />
+	</track>
+	<track name="TestPart:Object2:RotY" folded="0" muteKeyCount="0"
+color="ffb27474">
+		<key row="0" value="511.000000" interpolation="1" />
+		<key row="87" value="-20.000000" interpolation="1" />
+	</track>
+	<track name="TestPart:Object2:ShiftX" folded="0" muteKeyCount="0"
+color="ffb28050">
+		<key row="0" value="6.000000" interpolation="0" />
+	</track>
+	<track name="Global:Vignette" folded="0" muteKeyCount="0"
+color="ffa9b250">
+		<key row="0" value="0.000000" interpolation="1" />
+		<key row="32" value="1.000000" interpolation="0" />
+		<key row="33" value="0.000000" interpolation="1" />
+		<key row="43" value="2.000000" interpolation="0" />
+	</track>
+	<track name="Global:Fade" folded="0" muteKeyCount="0"
+color="ff60b250">
+		<key row="0" value="0.000000" interpolation="1" />
+		<key row="32" value="1.000000" interpolation="0" />
+		<key row="33" value="0.000000" interpolation="0" />
 	</track>
 </tracks>
 	</rootElement>

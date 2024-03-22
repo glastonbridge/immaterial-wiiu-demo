@@ -30,6 +30,7 @@ add_executable(wiiu_demo
    third_party/ufbx/ufbx.c
    graphics/LoadUFBX.cpp
    renderer/ShaderManager.cpp
+   scenes/SceneAssets.cpp
 )
 
 # Sync IP

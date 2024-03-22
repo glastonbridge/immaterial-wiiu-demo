@@ -41,6 +41,9 @@ int main(int argc, char **argv)
    // Preheat shader cache
    getShaderManager();
 
+   // Load all assets
+   getSceneAssets();
+
    WHBLogPrint("Hello World! Logging initialised.");
    {
       MusicPlayer music("assets/dumdumdiday.ogg");
