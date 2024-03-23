@@ -76,3 +76,17 @@ struct BoneMaterial: public SceneMaterial {
     renderMaterial->setTexture(new RenderTexture(path_str)); 
   }
 };
+
+struct SkyboxMaterial: public SceneMaterial {
+  SkyboxMaterial(const char* path) {
+    std::string path_str(path);
+    std::vector<AttribSpec> attribs;
+    attribs.push_back(AttribSpec {"in_position", BufferType::VERTEX, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
+    renderMaterial.reset(new RenderMaterial(
+      "shaders/skybox.vert",
+      "shaders/skybox.frag",
+      attribs
+    ));
+    renderMaterial->setTexture(new RenderTexture(path_str, true));
+  }
+};

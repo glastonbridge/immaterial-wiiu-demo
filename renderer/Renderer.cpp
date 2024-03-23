@@ -42,7 +42,8 @@ void Renderer::renderFrame(const SceneBase& scene) {
       // Asset loader that just loads all assets at startup
        // we can make this better if it turns out we're low on RAM, but we're probably not
       SceneAssets* assets = getSceneAssets();
-    
+      GX2SetCullOnlyControl(GX2_FRONT_FACE_CCW, GX2_DISABLE, GX2_DISABLE);
+
       // Render to offscreen buffer
       //WHBLogPrint("Binding render target");
       scene.renderBuffer->bindTarget(true);

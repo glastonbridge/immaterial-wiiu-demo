@@ -19,7 +19,8 @@ color="ffa9b250">
 	</track>
 	<track name="Camera:PosY" folded="0" muteKeyCount="0"
 color="ff60b250">
-		<key row="0" value="10.000000" interpolation="1" />
+		<key row="0" value="10.000000" interpolation="2" />
+		<key row="67" value="0.000000" interpolation="1" />
 		<key row="102" value="20.000000" interpolation="1" />
 	</track>
 	<track name="Camera:PosZ" folded="0" muteKeyCount="0"

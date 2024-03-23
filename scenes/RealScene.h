@@ -16,6 +16,7 @@ struct RealScene: public SceneBase {
       instances.emplace_back(ID_lampshade);
     }
     instances.emplace_back(ID_cushion);
+    instances.emplace_back(ID_skybox);
   }
 
   void update(double time) final {

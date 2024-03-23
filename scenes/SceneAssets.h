@@ -4,6 +4,17 @@
 #include "../graphics/SceneObject.h"
 #include "../graphics/MaterialCollection.h"
 
+enum materialID : size_t {
+    ID_mat_train,
+    ID_mat_duvet,
+    ID_mat_house1,
+    ID_mat_lampshade,
+    ID_mat_colorgrid,
+    ID_mat_house2,
+    ID_mat_viaduct,
+    ID_mat_skybox
+};
+
 enum objectID : size_t {
     ID_train,
     ID_cushion,
@@ -13,17 +24,8 @@ enum objectID : size_t {
     ID_house2,
     ID_viaduct,
     ID_duvet_hills,
+    ID_skybox,
     _ID_ASSETS_MAX // keep at end
-};
-
-enum materialID : size_t {
-    ID_mat_train,
-    ID_mat_duvet,
-    ID_mat_house1,
-    ID_mat_lampshade,
-    ID_mat_colorgrid,
-    ID_mat_house2,
-    ID_mat_viaduct
 };
 
 struct SceneAssets {
@@ -39,6 +41,7 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/colorgrid.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/house2_small.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/viaduct.png"));
+        materials.push_back(std::make_unique<SkyboxMaterial>("assets/sky_"));
 
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
@@ -49,6 +52,7 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/house2.fbx", NULL, materials[ID_mat_house2].get()));
         objects.push_back(LoadObject("assets/viaduct.fbx", NULL, materials[ID_mat_viaduct].get()));
         objects.push_back(LoadObject("assets/duvet_hills.fbx", NULL, materials[ID_mat_duvet].get()));
+        objects.push_back(LoadObject("assets/box.fbx", "Cube", materials[ID_mat_skybox].get()));
     };
 };
 

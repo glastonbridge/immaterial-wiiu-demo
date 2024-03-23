@@ -10,7 +10,7 @@
  * A texture, typically owned by a RenderMaterial
  */
 struct RenderTexture {
-  RenderTexture(const std::string& path);
+  RenderTexture(const std::string& path, bool isCubeMap = false);
   ~RenderTexture();
   void renderUsing(const WHBGfxShaderGroup* group, int binding = 0);
 private:  
