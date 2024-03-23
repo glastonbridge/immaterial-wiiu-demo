@@ -1,6 +1,12 @@
 #pragma once
 
+// #define USE_OURMALLOC
+#undef USE_OURMALLOC
+#undef DEBUG_OURMALLOC
+
 #include <stddef.h>
+
+#ifdef USE_OURMALLOC
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,3 +26,8 @@ extern "C" {
 #define free(ptr) __our_free(ptr)
 #define realloc(ptr, new_size) __our_realloc(ptr, new_size)
 
+#else
+
+#include <malloc.h>
+
+#endif

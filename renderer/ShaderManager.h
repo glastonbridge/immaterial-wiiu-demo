@@ -7,7 +7,6 @@
 #include <whb/gfx.h>
 #include <whb/log.h>
 #include <gx2/shaders.h>
-#include "../renderer/CafeGLSLCompiler.h"
 #include <cstdlib>
 
 struct ShaderManager {

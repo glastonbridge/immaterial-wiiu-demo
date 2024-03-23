@@ -23,11 +23,14 @@
 #include "sound/Music.h"
 #include "sync/Sync.h"
 
-#include "renderer/CafeGLSLCompiler.h"
 #include "renderer/ShaderManager.h"
 
+#include "util/ourmalloc.h"
+
 // Non-default heap
+#ifdef USE_OURMALLOC
 MEMHeapHandle ourHeap;
+#endif
 
 int main(int argc, char **argv)
 {
@@ -39,7 +42,6 @@ int main(int argc, char **argv)
    WHBLogUdpInit();
    WHBProcInit();
    WHBGfxInit();
-   GLSL_Init();
    WHBMountSdCard();
 
    // Preheat shader cache
@@ -48,12 +50,12 @@ int main(int argc, char **argv)
    // Init the heap, 750mb
    // this is explicitly and intentionally NOT used as the default heap, to isolate us from the base
    // wiiu memory management that WHB uses, because it gets fucked up somehow by the GLSL compiler
-   WHBLogCafeInit();
-   WHBLogUdpInit();
+#ifdef USE_OURMALLOC
    uint32_t heapSize = int(1024*1024*1025*0.75);
    void* heapBaseAddr = MEMAllocFromDefaultHeapEx(heapSize, 4);
    WHBLogPrintf("Allocated heap at %p", heapBaseAddr);
    ourHeap = MEMCreateExpHeapEx(heapBaseAddr, heapSize, 0);
+#endif
 
    // Load all assets
    getSceneAssets();
@@ -64,55 +66,60 @@ int main(int argc, char **argv)
 
    // Scene ID -> Scene mapping array
    WHBLogPrint("Hello World! Logging initialised.");
-   {
-      MusicPlayer music("assets/clairvoyance.ogg", 8.1f);
-      Renderer renderer;
-      
-      WHBLogPrintf("Begin updating...");
+   MusicPlayer music("assets/clairvoyance.ogg", 8.1f);
+   Renderer renderer;
+   
+   WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
-      music.play();
+   music.play();
 #endif      
-      Sync sync(
-         "sync_tracks/", 
-         SYNC_IP, 
-         &music, 
-         (60.0f / 107.0f) / 8.0f // 107 BPM, 4 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
-      );
-      while (WHBProcIsRunning()) {
-         // Update rocket
-         sync.update();
-         
-         // Scene switcher
-         int newScene = syncVal("Global:Scene");
-         if(currentScene != newScene) {
-            if (scene != nullptr) {
-               scene->teardown();
-               delete scene;
-            }
-            scene = getScene(newScene);
-            scene->setup();
-            currentScene = newScene;
+   Sync sync(
+      "sync_tracks/", 
+      SYNC_IP, 
+      &music, 
+      (60.0f / 107.0f) / 8.0f // 107 BPM, 4 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
+   );
+   while (WHBProcIsRunning()) {
+      // Update rocket
+      sync.update();
+      
+      // Scene switcher
+      int newScene = syncVal("Global:Scene");
+      if(currentScene != newScene) {
+         if (scene != nullptr) {
+            scene->teardown();
+            delete scene;
          }
-
-         // Update scene
-         scene->update(music.currentTime());
-         renderer.renderFrame(*scene);
-         
-         //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
+         scene = getScene(newScene);
+         scene->setup();
+         currentScene = newScene;
       }
+
+      // Update scene
+      scene->update(music.currentTime());
+      renderer.renderFrame(*scene);
+      
+      //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
    }
    WHBLogPrintf("Done. Quitting...");
 
-   // by moving glsl init to main and not calling glsl shutdown, we apparently dodge a crash on exit? what?
+   // by not calling glsl shutdown, we apparently dodge a crash on exit, sometimes. but also now we have shader caching 
+   // and in most cases we don't need to recompile shaders so there won't be a need to load the GLSL compiler anyways
    //GLSL_Shutdown();
-   MEMDestroyExpHeap(ourHeap);
-   MEMFreeToDefaultHeap(heapBaseAddr);
+
    WHBGfxShutdown();
    AXQuit();
    WHBUnmountSdCard();
    WHBLogCafeDeinit();
    WHBProcShutdown();
+   WHBLogPrintf("Deinitialising UDP logging...");
    WHBLogUdpDeinit();
 
+   // We should, technically, destroy the heap here, but it seems to cause a crash on exit as well so we'll just pray that 
+   // the OS reclaims all the memory we allocated
+#ifdef USE_OURMALLOC
+   //MEMDestroyExpHeap(ourHeap);
+   //MEMFreeToDefaultHeap(heapBaseAddr);
+#endif
    return 0;
 }

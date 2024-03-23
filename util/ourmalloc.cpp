@@ -2,13 +2,13 @@
 #include <malloc.h>
 #include <string.h>
 #include <whb/log.h>
-
-#undef DEBUG_OURMALLOC
+#include "../util/ourmalloc.h"
 
 #ifndef DEBUG_OURMALLOC
 #define WHBLogPrintf(...)
 #endif
 
+#ifdef USE_OURMALLOC
 extern MEMHeapHandle ourHeap; // custom heap so that the glsl compiler cannot fuck us up
 
 #ifdef __cplusplus
@@ -62,4 +62,5 @@ extern "C" {
     }
 #ifdef __cplusplus
 }
+#endif
 #endif
