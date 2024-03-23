@@ -63,25 +63,23 @@ int main(int argc, char **argv)
    // Current scene
    int currentScene = -1000;
    SceneBase* scene = nullptr;
-
-   // Scene ID -> Scene mapping array
    WHBLogPrint("Hello World! Logging initialised.");
-   MusicPlayer music("assets/clairvoyance.ogg", 8.1f);
-   Renderer renderer;
+   MusicPlayer* music = new MusicPlayer("assets/clairvoyance.ogg", 8.1f);
+   Renderer* renderer = new Renderer();
    
    WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
    music.play();
 #endif      
-   Sync sync(
+   Sync* sync = new Sync(
       "sync_tracks/", 
       SYNC_IP, 
-      &music, 
+      music, 
       (60.0f / 107.0f) / 8.0f // 107 BPM, 4 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
    );
    while (WHBProcIsRunning()) {
       // Update rocket
-      sync.update();
+      sync->update();
       
       // Scene switcher
       int newScene = syncVal("Global:Scene");
@@ -96,8 +94,8 @@ int main(int argc, char **argv)
       }
 
       // Update scene
-      scene->update(music.currentTime());
-      renderer.renderFrame(*scene);
+      scene->update(music->currentTime());
+      renderer->renderFrame(*scene);
       
       //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
    }
@@ -107,6 +105,9 @@ int main(int argc, char **argv)
    // and in most cases we don't need to recompile shaders so there won't be a need to load the GLSL compiler anyways
    //GLSL_Shutdown();
 
+   // Other things we're not doing: properly deleting... everything
+   // TODO: figure out why cleanup crashes
+
    WHBGfxShutdown();
    AXQuit();
    WHBUnmountSdCard();
@@ -115,9 +116,10 @@ int main(int argc, char **argv)
    WHBLogPrintf("Deinitialising UDP logging...");
    WHBLogUdpDeinit();
 
+
+#ifdef USE_OURMALLOC
    // We should, technically, destroy the heap here, but it seems to cause a crash on exit as well so we'll just pray that 
    // the OS reclaims all the memory we allocated
-#ifdef USE_OURMALLOC
    //MEMDestroyExpHeap(ourHeap);
    //MEMFreeToDefaultHeap(heapBaseAddr);
 #endif

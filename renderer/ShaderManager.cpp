@@ -8,7 +8,7 @@
 #undef CACHE_ONLY
 
 #ifndef CACHE_ONLY
-#include "renderer/CafeGLSLCompiler.h"
+#include "CafeGLSLCompiler.h"
 #endif
 
 // Init GLSL if not inited
