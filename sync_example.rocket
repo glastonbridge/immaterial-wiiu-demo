@@ -15,39 +15,48 @@ color="ffb28050">
 	<track name="Camera:PosX" folded="0" muteKeyCount="0"
 color="ffa9b250">
 		<key row="0" value="10.000000" interpolation="0" />
+		<key row="102" value="-50.000000" interpolation="0" />
 	</track>
 	<track name="Camera:PosY" folded="0" muteKeyCount="0"
 color="ff60b250">
 		<key row="0" value="10.000000" interpolation="1" />
+		<key row="102" value="20.000000" interpolation="1" />
 	</track>
 	<track name="Camera:PosZ" folded="0" muteKeyCount="0"
 color="ff4fb292">
 		<key row="0" value="20.000000" interpolation="1" />
+		<key row="102" value="0.000000" interpolation="1" />
 	</track>
 	<track name="Camera:LookatX" folded="0" muteKeyCount="0"
 color="ff4f71b2">
 		<key row="0" value="0.000000" interpolation="2" />
 		<key row="40" value="2.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:LookatY" folded="0" muteKeyCount="0"
 color="ff8850b2">
 		<key row="0" value="0.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:LookatZ" folded="0" muteKeyCount="0"
 color="ffb25091">
 		<key row="0" value="0.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:UpX" folded="0" muteKeyCount="0"
 color="ffb27474">
 		<key row="0" value="0.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:UpY" folded="0" muteKeyCount="0"
 color="ffb28050">
 		<key row="0" value="1.000000" interpolation="0" />
+		<key row="102" value="1.000000" interpolation="0" />
 	</track>
 	<track name="Camera:UpZ" folded="0" muteKeyCount="0"
 color="ffa9b250">
 		<key row="0" value="0.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:FoV" folded="0" muteKeyCount="0"
 color="ff60b250">
@@ -56,12 +65,14 @@ color="ff60b250">
 		<key row="25" value="20.000000" interpolation="2" />
 		<key row="32" value="90.000000" interpolation="2" />
 		<key row="40" value="45.000000" interpolation="0" />
+		<key row="102" value="45.000000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalDist" folded="0" muteKeyCount="0"
 color="ff4fb292">
 		<key row="0" value="-12.000000" interpolation="0" />
 		<key row="53" value="-12.000000" interpolation="2" />
 		<key row="67" value="-22.000000" interpolation="0" />
+		<key row="102" value="40.000000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalLen" folded="0" muteKeyCount="0"
 color="ff4f71b2">
@@ -69,12 +80,14 @@ color="ff4f71b2">
 		<key row="29" value="4.000000" interpolation="1" />
 		<key row="48" value="0.100000" interpolation="1" />
 		<key row="53" value="4.000000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Camera:Aperture" folded="0" muteKeyCount="0"
 color="ff8850b2">
 		<key row="0" value="2.000000" interpolation="1" />
 		<key row="48" value="20.000000" interpolation="1" />
 		<key row="53" value="0.400000" interpolation="0" />
+		<key row="102" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Global:FresnelPow" folded="0" muteKeyCount="0"
 color="ffb25091">
@@ -82,6 +95,7 @@ color="ffb25091">
 		<key row="64" value="1.500000" interpolation="1" />
 		<key row="72" value="10.000000" interpolation="0" />
 		<key row="80" value="1.500000" interpolation="0" />
+		<key row="102" value="2.000000" interpolation="0" />
 	</track>
 	<track name="TestPart:Object2:RotY" folded="0" muteKeyCount="0"
 color="ffb27474">
