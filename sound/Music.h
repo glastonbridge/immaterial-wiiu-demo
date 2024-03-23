@@ -8,7 +8,7 @@
 // only one of these can exist at a time Or Else, TODO make
 // a getter
 struct MusicPlayer {
-  MusicPlayer(const char* oggFileName);
+  MusicPlayer(const char* oggFileName, float offsetSeconds = 0.0);
   ~MusicPlayer();
   void play();
   void pause();

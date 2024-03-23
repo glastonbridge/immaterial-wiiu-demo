@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-MusicPlayer::MusicPlayer(const char* oggFileName) {
+MusicPlayer::MusicPlayer(const char* oggFileName, float offsetSeconds) {
     AXInitParams init = {AX_INIT_RENDERER_48KHZ, 0, 0}; // possible sample rates are 48k and 32k, rest of parameters doesn't matter
     AXInitWithParams(&init);
 
@@ -23,14 +23,20 @@ MusicPlayer::MusicPlayer(const char* oggFileName) {
     sampleRate = info->rate;
 
     // Read ogg data
-    // TODO put in thread
+    // TODO put in thread, if we care
     long readSize;
     std::vector<int16_t> decodedData;
     int16_t pcmout[2048]; // Temporary buffer for decoded data, half the size since int16_t is 2 bytes
-    int section = 0;    
+    int section = 0;
+    int offsetSamples = offsetSeconds * sampleRate * 2.0;
+    WHBLogPrintf("Offsetting %d samples", offsetSamples);
     do {
         readSize = ov_read(&vorbisDecoderState, (char*)pcmout, sizeof(pcmout), 1, 2, 1, &section);
         for (int i = 0; i < readSize / sizeof(int16_t); i++) {
+            if(offsetSamples > 0) {
+                offsetSamples--;
+                continue;
+            }
             decodedData.push_back(pcmout[i]);
         }
     } while (readSize > 0);
@@ -98,12 +104,11 @@ MusicPlayer::MusicPlayer(const char* oggFileName) {
     memset(&deviceVolumeData, 0, sizeof(deviceVolumeData));
     deviceVolumeData[0].bus[0].volume = 0x8000; // Left channel
     AXSetVoiceDeviceMix(voiceLeft, AX_DEVICE_TYPE_TV, 0, (AXVoiceDeviceMixData*)&deviceVolumeData);
+    AXSetVoiceDeviceMix(voiceLeft, AX_DEVICE_TYPE_DRC, 0, (AXVoiceDeviceMixData*)&deviceVolumeData); // <-- uncomment for gamepad
     deviceVolumeData[0].bus[0].volume = 0; // Left channel
     deviceVolumeData[1].bus[0].volume = 0x8000; // Right channel
     AXSetVoiceDeviceMix(voiceRight, AX_DEVICE_TYPE_TV, 0, (AXVoiceDeviceMixData*)&deviceVolumeData);
-
-
-    // AXSetVoiceDeviceMix(voice, AX_DEVICE_TYPE_DRC, 0, &deviceVolumeData); // <-- uncomment for gamepad
+    AXSetVoiceDeviceMix(voiceRight, AX_DEVICE_TYPE_DRC, 0, (AXVoiceDeviceMixData*)deviceVolumeData); // <-- uncomment for gamepad
 
     // Wiimotes (TODO, WUT doesn't define these)
     //AXSetVoiceDeviceMix(voice, AX_DEVICE_TYPE_RMT, 0, 0, &deviceVolumeData); // <-- uncomment for wiimote 0 

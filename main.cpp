@@ -52,14 +52,19 @@ int main(int argc, char **argv)
    // Scene ID -> Scene mapping array
    WHBLogPrint("Hello World! Logging initialised.");
    {
-      MusicPlayer music("assets/dumdumdiday.ogg");
+      MusicPlayer music("assets/dumdumdiday.ogg", 0.0f);
       Renderer renderer;
       
       WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
       music.play();
 #endif      
-      Sync sync("sync_tracks/", SYNC_IP, &music, 0.1f);
+      Sync sync(
+         "sync_tracks/", 
+         SYNC_IP, 
+         &music, 
+         (60.0f / 107.0f) / 8.0f // 107 BPM, 4 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
+      );
       while (WHBProcIsRunning()) {
          // Update rocket
          sync.update();
