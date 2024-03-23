@@ -55,6 +55,8 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/sync_tracks"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/shader_cache"
+         DESTINATION "${CMAKE_INSTALL_PREFIX}")
 
 # Emulator setup (make test)
 set(CEMU_EXECUTABLE "cemu" CACHE STRING "Path to the emulator executable")
@@ -79,6 +81,7 @@ add_custom_target(deploy
     COMMAND find "${CMAKE_INSTALL_PREFIX}/assets" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/assets/" --ftp-create-dirs '\\;'
     COMMAND find "${CMAKE_INSTALL_PREFIX}/shaders" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/shaders/" --ftp-create-dirs '\\;'
     COMMAND find "${CMAKE_INSTALL_PREFIX}/sync_tracks" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/sync_tracks/" --ftp-create-dirs '\\;'
+    COMMAND find "${CMAKE_INSTALL_PREFIX}/shader_cache" -type f -exec curl -T '{}' "ftp://${WIILOAD_IP}/fs/vol/external01/shader_cache/" --ftp-create-dirs '\\;'
     COMMAND ${CMAKE_COMMAND} --build . --target wiiload
 )
 
