@@ -14,6 +14,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../../util/ourmalloc.h"
+
 // -- Platform
 
 #ifndef UFBX_STDC

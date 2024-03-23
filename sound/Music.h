@@ -1,6 +1,5 @@
 #pragma once
 
-#include <minivorbis.h>
 #include <fstream>
 #include <vector>
 #include <sndcore2/voice.h>

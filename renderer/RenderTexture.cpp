@@ -18,7 +18,8 @@
 #include <gx2/temp.h>
 #include <gx2r/mem.h>
 #include <stdlib.h>
-#include <malloc.h>
+
+#include "../util/ourmalloc.h"
 
 RenderTexture::RenderTexture(const std::string& path) {
     // Load a texture
@@ -76,7 +77,7 @@ RenderTexture::RenderTexture(const std::string& path) {
 
 RenderTexture::~RenderTexture() {
   WHBLogPrint("Freeing a texture");  
-  MEMFreeToDefaultHeap(texture.surface.image);
+  free(texture.surface.image);
 }
 
 void RenderTexture::renderUsing(const WHBGfxShaderGroup* group, int binding) {

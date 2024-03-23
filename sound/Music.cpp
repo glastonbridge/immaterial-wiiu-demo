@@ -1,4 +1,3 @@
-#include <minivorbis.h>
 #include "Music.h"
 #include <whb/log.h>
 #include <coreinit/memdefaultheap.h>
@@ -7,6 +6,7 @@
 #include <cstring>
 #include <stdlib.h>
 #include <malloc.h>
+#include <minivorbis.h>
 
 MusicPlayer::MusicPlayer(const char* oggFileName, float offsetSeconds) {
     AXInitParams init = {AX_INIT_RENDERER_48KHZ, 0, 0}; // possible sample rates are 48k and 32k, rest of parameters doesn't matter
@@ -123,8 +123,8 @@ MusicPlayer::MusicPlayer(const char* oggFileName, float offsetSeconds) {
 MusicPlayer::~MusicPlayer() {
     AXFreeVoice(voiceLeft);
     AXFreeVoice(voiceRight);
-    MEMFreeToDefaultHeap(bufferLeft);
-    MEMFreeToDefaultHeap(bufferRight);
+    free(bufferLeft);
+    free(bufferRight);
 }
 
 void MusicPlayer::play() {

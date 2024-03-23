@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#include "../../util/ourmalloc.h"
+
 struct sync_tcp {
 	SOCKET sock;
 };

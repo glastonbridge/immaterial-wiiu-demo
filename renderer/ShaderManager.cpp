@@ -59,12 +59,12 @@ ShaderManager::ShaderManager() {
     std::vector<AttribSpec> attribs;
     
     attribs.push_back(AttribSpec {"in_position", BufferType::VERTEX, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
-    attribs.push_back(AttribSpec {"in_color", BufferType::COLOR, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
+    attribs.push_back(AttribSpec {"in_texcoord", BufferType::COLOR, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
     shader("shaders/billboard.vert", "shaders/blur.frag", attribs);
     attribs.clear();
 
     attribs.push_back(AttribSpec {"in_position", BufferType::VERTEX, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
-    attribs.push_back(AttribSpec {"in_color", BufferType::COLOR, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
+    attribs.push_back(AttribSpec {"in_texcoord", BufferType::COLOR, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
     shader("shaders/billboard.vert", "shaders/compose.frag", attribs);
     attribs.clear();
 

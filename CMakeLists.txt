@@ -32,6 +32,7 @@ add_executable(wiiu_demo
     renderer/ShaderManager.cpp
     scenes/SceneAssets.cpp
     scenes/Scenes.cpp
+    util/ourmalloc.cpp
 )
 
 # Sync IP

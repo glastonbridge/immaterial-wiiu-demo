@@ -1,6 +1,8 @@
 #ifndef UFBX_UFBX_C_INCLUDED
 #define UFBX_UFBX_C_INCLUDED
 
+#include "../../util/ourmalloc.h"
+
 #if defined(UFBX_HEADER_PATH)
 	#include UFBX_HEADER_PATH
 #else

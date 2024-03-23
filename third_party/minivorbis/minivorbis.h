@@ -39,6 +39,8 @@
 
 #include <whb/log.h>
 
+#include "../../util/ourmalloc.h"
+
 #ifndef _OS_TYPES_H
 #define _OS_TYPES_H
 

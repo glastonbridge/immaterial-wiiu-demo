@@ -20,10 +20,12 @@
 #include <stdlib.h>
 #include <malloc.h>
 
+#include "../util/ourmalloc.h"
+
 RenderBuffer::~RenderBuffer() {
-    MEMFreeToDefaultHeap(texture.surface.image);
-    MEMFreeToDefaultHeap(depthBuffer.surface.image);
-    MEMFreeToDefaultHeap(contextState);
+    free(texture.surface.image);
+    free(depthBuffer.surface.image);
+    free(contextState);
 }
 
 void RenderBuffer::renderUsing(const WHBGfxShaderGroup* group, int binding) {

@@ -1,5 +1,6 @@
 #include "Sync.h"
 #include <sync.h>
+#include <whb/log.h>
 
 // Global variables definition
 float secondsPerRowForCB = 0.0f;

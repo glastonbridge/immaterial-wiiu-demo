@@ -8,6 +8,8 @@
 
 #include <sys/stat.h>
 
+#include "../../util/ourmalloc.h"
+
 #ifdef WIN32
  #include <direct.h>
  #define S_ISDIR(m) (((m)& S_IFMT) == S_IFDIR)
