@@ -61,7 +61,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
          object.getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
          object.setAnimationFrame(instance.anim);
          object.getRenderObject()->render();
-         GX2DrawDone();
+         GX2Flush();
       }
       scene.renderBuffer->unbindTarget();
 
