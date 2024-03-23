@@ -73,6 +73,7 @@ int main(int argc, char **argv)
             }
             scene = getScene(newScene);
             scene->setup();
+            currentScene = newScene;
          }
 
          // Update scene
