@@ -12,7 +12,8 @@ enum objectID : size_t {
     ID_gizmos,
     ID_house2,
     ID_viaduct,
-    ID_duvet_hills
+    ID_duvet_hills,
+    _ID_ASSETS_MAX // keep at end
 };
 
 enum materialID : size_t {

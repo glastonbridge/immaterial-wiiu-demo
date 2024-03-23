@@ -28,11 +28,11 @@ RenderTexture::RenderTexture(const std::string& path) {
     // Load data with lodepng
     unsigned error = lodepng::decode(image, width, height, path);
     if(error) {
-      WHBLogPrintf("PNG load error %u: %s", error, lodepng_error_text(error));
+      WHBLogPrintf("PNG load error on %s: %u: %s", path.c_str(), error, lodepng_error_text(error));
     }
 
     // Set up the texture
-    WHBLogPrintf("Setting up a texture %i %i", width, height);
+    WHBLogPrintf("Setting up a texture from %s: %i x %i", path.c_str(), width, height);
     memset(&texture, 0, sizeof(GX2Texture));
     texture.surface.use = GX2_SURFACE_USE_TEXTURE;
     texture.surface.width = width;
@@ -41,8 +41,14 @@ RenderTexture::RenderTexture(const std::string& path) {
     texture.surface.dim = GX2_SURFACE_DIM_TEXTURE_2D; // there's some fun ones like arrays or 3D textures if we want those
     texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8; // pixel format
     texture.surface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
-    texture.viewNumSlices = 1; // I don't know what this means
-    texture.compMap = 0x00010203; // This swizzles components I think?
+    texture.surface.aa = GX2_AA_MODE1X;
+    texture.surface.mipLevels = 0;
+    texture.surface.swizzle = 0;
+    texture.compMap = 0x00010203; // This also swizzles components I think?
+    texture.viewFirstMip = 0;
+    texture.viewNumMips = 0;
+    texture.viewFirstSlice = 0;
+    texture.viewNumSlices = 1;
     GX2CalcSurfaceSizeAndAlignment(&texture.surface);
     GX2InitTextureRegs(&texture);
     WHBLogPrintf("Allocating %i bytes for texture", texture.surface.imageSize);
@@ -74,7 +80,9 @@ RenderTexture::~RenderTexture() {
 }
 
 void RenderTexture::renderUsing(const WHBGfxShaderGroup* group, int binding) {
-  // WHBLogPrintf("Binding a %p texture for group %p @ %i -> %i", this, group, binding, group->pixelShader->samplerVars[binding].location);
-  GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
-  GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
+  if(binding < group->pixelShader->samplerVarCount) {
+    // WHBLogPrintf("Binding a %p texture for group %p @ %i -> %i", this, group, binding, group->pixelShader->samplerVars[binding].location);
+    GX2SetPixelTexture(&texture, group->pixelShader->samplerVars[binding].location);
+    GX2SetPixelSampler(&sampler, group->pixelShader->samplerVars[binding].location);
+  }
 }

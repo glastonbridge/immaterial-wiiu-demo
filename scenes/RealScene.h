@@ -41,7 +41,7 @@ struct RealScene: public SceneBase {
       instances[4 + i].anim = syncVal("TestPart:Object:Frame");
     }
     // Scale cushion down
-    instances[13].transform = glm::scale(glm::mat4(1.f), glm::vec3(0.01f, 0.01f, 0.01f));
+    // instances[13].transform = glm::scale(glm::mat4(1.f), glm::vec3(0.01f, 0.01f, 0.01f));
   
   }
 

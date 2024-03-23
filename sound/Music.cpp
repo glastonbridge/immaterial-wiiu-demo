@@ -150,10 +150,10 @@ void MusicPlayer::pauseToggle(void) {
 void MusicPlayer::seek(float seconds) {
     AXVoiceOffsets bufferInfo;
     AXGetVoiceOffsets(voiceLeft, &bufferInfo);
-    bufferInfo.currentOffset = (uint32_t)(seconds * sampleRate);
+    bufferInfo.currentOffset = std::min((uint32_t)(seconds * sampleRate), bufferInfo.endOffset - 1);
     AXSetVoiceOffsets(voiceLeft, &bufferInfo);
     AXGetVoiceOffsets(voiceRight, &bufferInfo);
-    bufferInfo.currentOffset = (uint32_t)(seconds * sampleRate);
+    bufferInfo.currentOffset = std::min((uint32_t)(seconds * sampleRate), bufferInfo.endOffset - 1);
     AXSetVoiceOffsets(voiceRight, &bufferInfo);
 }
 

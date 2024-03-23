@@ -32,12 +32,12 @@ int main(int argc, char **argv)
    fprintf(stdout, "hi\n");
    fprintf(stderr, "hello\n");
    
+   WHBMountSdCard();
    WHBLogCafeInit();
    WHBLogUdpInit();
    WHBProcInit();
    WHBGfxInit();
    GLSL_Init();
-   WHBMountSdCard();
 
    // Preheat shader cache
    getShaderManager();
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
    // Scene ID -> Scene mapping array
    WHBLogPrint("Hello World! Logging initialised.");
    {
-      MusicPlayer music("assets/dumdumdiday.ogg", 0.0f);
+      MusicPlayer music("assets/clairvoyance.ogg", 8.1f);
       Renderer renderer;
       
       WHBLogPrintf("Begin updating...");

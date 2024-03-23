@@ -24,10 +24,12 @@ RenderMaterial::RenderMaterial(
 }
 
 void RenderMaterial::renderUsing() const {
+    WHBLogPrintf("RenderMaterial::renderUsing\n");
     GX2SetFetchShader(&group->fetchShader);
     GX2SetVertexShader(group->vertexShader);
     GX2SetPixelShader(group->pixelShader);
     GX2SetShaderMode(GX2_SHADER_MODE_UNIFORM_BLOCK);
+    
     if (texture) {
         texture->renderUsing(group);
     }
