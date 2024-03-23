@@ -94,6 +94,8 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxBeginRenderTV();
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);      
       bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group);
+      scene.renderBuffer->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 1);
+      composeQuad->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Global:Vignette"), 1.0f - syncVal("Global:Fade"), 0.0f, 0.0f));
       composeQuad->getRenderObject()->render();      
       WHBGfxFinishRenderTV();
       
