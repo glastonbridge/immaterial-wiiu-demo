@@ -79,7 +79,12 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
     texture.viewFirstMip = 0;
     texture.viewNumMips = 0;
     texture.viewFirstSlice = 0;
-    texture.viewNumSlices = 1;
+    if(!isCubeMap) {    
+      texture.viewNumSlices = 1;
+    }
+    else {
+      texture.viewNumSlices = 6;
+    }
     GX2CalcSurfaceSizeAndAlignment(&texture.surface);
     GX2InitTextureRegs(&texture);
     WHBLogPrintf("Allocating %i bytes for texture", texture.surface.imageSize);
