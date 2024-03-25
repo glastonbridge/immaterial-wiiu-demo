@@ -55,7 +55,10 @@ static const SplineSegment track[] = {
   {{0.f,0.f,60.f}, {10.f,0.f,0.f}},
   {{60.f,0.f,40.f}, {0.f,0.f,-10.f}},
   {{40.f,0.f,0.f}, {-10.f,0.f,0.f}},
-  {{20.f,0.f,0.f}, {0.f,0.f,-10.f}}
+  {{20.f,0.f,-10.f}, {0.f,0.f,-10.f}},
+  {{50.f,0.f,-40.f}, {0.f,0.f,-15.f}},
+  {{20.f,0.f,-60.f}, {-10.f,0.f,0.f}},
+  {{0.f,0.f,-60.f}, {-10.f,0.f,0.f}}
 };
 
 struct RealScene: public SceneBase {
@@ -75,7 +78,28 @@ struct RealScene: public SceneBase {
     instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f));
 
     instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f), glm::radians(35.f));
+    instances.back().transform = getCushionMat(glm::vec3(40.0f, 0.f, 70.f), glm::radians(35.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(75.0f, 0.f, 40.f), glm::radians(83.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(76.0f, 6.f, 40.f), glm::radians(81.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(30.0f, 0.f, 35.f), glm::radians(12.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(24.0f, 0.f, 18.f), glm::radians(14.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(6.0f, 0.f, -15.f), glm::radians(102.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(26.0f, 0.f, -40.f), glm::radians(17.f));
+
+    instances.emplace_back(ID_cushion);
+    instances.back().transform = getCushionMat(glm::vec3(56.0f, 0.f, -18.f), glm::radians(17.f));
 
     //instances.emplace_back(ID_house1);
     //instances.emplace_back(ID_train);
@@ -87,19 +111,18 @@ struct RealScene: public SceneBase {
   void update(double time) final {
     // Update transforms and whatever else needs updating
     //updateCamera();
+    float t = std::min(float(time)*0.1f, float(std::size(track) - 1));
+    auto const pos = spline(track, t);
+    auto const dir = splineDir(track, t);
 
     cameraProjection = glm::perspective(glm::radians(syncVal("Camera:FoV")), 1920.0f/1080.0f, 0.1f, 2000.f);
     cameraView = glm::lookAt(
-      glm::vec3(0.0f, 180.0f, 0.0f),
-      glm::vec3(0.0f, 0.0f, 0.0f),
-      glm::vec3(0.0f, 0.0f, -1.0f)
+      glm::vec3(pos.x, 20.0f, pos.z + 10.0), pos,
+      glm::vec3(0.0f, 1.0f, 0.0f)
     );
 
     instances[0].transform = glm::mat4(1.0f);
 
-    float t = std::min(float(time)*0.1f, 3.0f);
-    auto const pos = spline(track, t);
-    auto const dir = splineDir(track, t);
     instances[1].transform = glm::translate(glm::mat4(1.f), pos) *
         glm::transpose(glm::lookAt(glm::vec3(0.f), dir, glm::vec3(0.f, 1.f, 0.f)));
     //instances[1].transform = glm::lookAt(pos, dir, glm::vec3(0.f, 1.f, 0.f));
