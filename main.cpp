@@ -64,7 +64,7 @@ int main(int argc, char **argv)
    int currentScene = -1000;
    SceneBase* scene = nullptr;
    WHBLogPrint("Hello World! Logging initialised.");
-   MusicPlayer* music = new MusicPlayer("assets/clairvoyance.ogg", 8.1f);
+   MusicPlayer* music = new MusicPlayer("assets/immaterial.ogg", 0.0f);
    Renderer* renderer = new Renderer();
    
    WHBLogPrintf("Begin updating...");
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
       "sync_tracks/", 
       SYNC_IP, 
       music, 
-      (60.0f / 107.0f) / 8.0f // 107 BPM, 4 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
+      (60.0f / 100.0f) / 6.0f // 100 BPM, 8 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
    );
    while (WHBProcIsRunning()) {
       // Update rocket
