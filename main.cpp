@@ -69,7 +69,7 @@ int main(int argc, char **argv)
    
    WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
-   music.play();
+   music->play();
 #endif      
    Sync* sync = new Sync(
       "sync_tracks/", 
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
       sync->update();
       
       // Scene switcher
-      int newScene = syncVal("Global:Scene");
+      int newScene = 0;//syncVal("Global:Scene");
       if(currentScene != newScene) {
          if (scene != nullptr) {
             scene->teardown();
