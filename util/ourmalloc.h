@@ -1,7 +1,7 @@
 #pragma once
 
-// #define USE_OURMALLOC
-#undef USE_OURMALLOC
+#define USE_OURMALLOC
+//#undef USE_OURMALLOC
 #undef DEBUG_OURMALLOC
 
 #include <stddef.h>
