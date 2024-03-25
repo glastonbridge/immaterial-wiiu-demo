@@ -58,7 +58,7 @@ static const SplineSegment track[] = {
   {{20.f,0.f,-10.f}, {0.f,0.f,-10.f}},
   {{50.f,0.f,-40.f}, {0.f,0.f,-15.f}},
   {{20.f,0.f,-60.f}, {-10.f,0.f,0.f}},
-  {{0.f,0.f,-60.f}, {-10.f,0.f,0.f}}
+  {{-40.f,0.f,-60.f}, {-10.f,0.f,0.f}}
 };
 
 struct RealScene: public SceneBase {
@@ -73,6 +73,9 @@ struct RealScene: public SceneBase {
     // Set up the scene
     instances.emplace_back(ID_skybox);
     instances.emplace_back(ID_train);
+
+    instances.emplace_back(ID_duvet_hills);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(100.f, 0.f, 0.f)), glm::vec3(200.f));
 
     instances.emplace_back(ID_cushion);
     instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f));
@@ -101,6 +104,25 @@ struct RealScene: public SceneBase {
     instances.emplace_back(ID_cushion);
     instances.back().transform = getCushionMat(glm::vec3(56.0f, 0.f, -18.f), glm::radians(17.f));
 
+    for(int i = 0; i < 4; i++) {
+      instances.emplace_back(ID_lampshade);
+      instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f + i * 15.f, 5.f, -75.f)), glm::vec3(5.f));
+    }
+
+    instances.emplace_back(ID_house1);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(60.f, 0.f, -5.f)), glm::vec3(1.f));
+
+    instances.emplace_back(ID_house1);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(70.f, 0.f, 5.f)), glm::vec3(1.f));
+
+    instances.emplace_back(ID_house1);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(80.f, 0.f, 15.f)), glm::vec3(1.f));
+
+    instances.emplace_back(ID_viaduct);
+    instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-25.f, 0.f, -60.f)), glm::vec3(3.f)),
+      glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
+
     //instances.emplace_back(ID_house1);
     //instances.emplace_back(ID_train);
     //for(int i = 0; i < 10; i++) {
@@ -111,8 +133,15 @@ struct RealScene: public SceneBase {
   void update(double time) final {
     // Update transforms and whatever else needs updating
     //updateCamera();
+    auto const beattime = float(time) * (100.f/60.f);
+    auto const beat = std::floor(beattime);
+    auto const frac = float(beattime) - beat;
+    auto const bounce = 1.f - 4.f * (frac - 0.5f) * (frac - 0.5f);
+
+    auto const sway = (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 1.f : -1.f);
+
     float t = std::min(float(time)*0.1f, float(std::size(track) - 1));
-    auto const pos = spline(track, t);
+    auto pos = spline(track, t);
     auto const dir = splineDir(track, t);
 
     cameraProjection = glm::perspective(glm::radians(syncVal("Camera:FoV")), 1920.0f/1080.0f, 0.1f, 2000.f);
@@ -123,8 +152,10 @@ struct RealScene: public SceneBase {
 
     instances[0].transform = glm::mat4(1.0f);
 
+    pos.y += bounce;
     instances[1].transform = glm::translate(glm::mat4(1.f), pos) *
-        glm::transpose(glm::lookAt(glm::vec3(0.f), dir, glm::vec3(0.f, 1.f, 0.f)));
+        glm::transpose(glm::rotate(glm::mat4(1.f), sway * 0.2f, glm::vec3(0.f, 0.f, 1.f)) *
+          glm::lookAt(glm::vec3(0.f), dir, glm::vec3(0.f, 1.f, 0.f)));
     //instances[1].transform = glm::lookAt(pos, dir, glm::vec3(0.f, 1.f, 0.f));
     //instances[2].transform = glm::rotate(glm::mat4(1.0f), glm::radians(float(time)*60.0f), glm::vec3(0.f, 1.f, 0.f));
     // Scale cushion down
