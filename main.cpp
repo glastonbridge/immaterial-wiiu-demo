@@ -38,6 +38,8 @@ MEMHeapHandle ourHeap;
 #endif
 #endif
 
+#define BENCHMARK 1
+
 int main(int argc, char **argv)
 {
    // wiiu homebrew bug workaround (which unfortunately doesn't seem to actually work)
@@ -91,6 +93,8 @@ int main(int argc, char **argv)
       music, 
       (60.0f / 100.0f) / 6.0f // 100 BPM, 8 rows per beat. unsure if FP math would cause drift by being not 100% accurate, should be fine tho
    );
+   size_t frameCounter = 0;
+   float lastTime = 0.0f;
    while (WHBProcIsRunning()) {
       // Update rocket
       sync->update();
@@ -110,8 +114,15 @@ int main(int argc, char **argv)
       // Update scene
       scene->update(music->currentTime());
       renderer->renderFrame(*scene);
-      
-      //WHBLogPrintf("Frame done, playback time is %f", music.currentTime());
+
+#ifdef BENCHMARK
+      frameCounter++;
+      if(frameCounter % 60 == 0) {
+         float currentTime = music->currentTime();
+         WHBLogPrintf("FPS: %f", 60.0f / (currentTime - lastTime));
+         lastTime = currentTime;
+      }
+#endif
    }
    WHBLogPrintf("Done. Quitting...");
 
