@@ -14,6 +14,7 @@
 #include <coreinit/time.h>
 #include <coreinit/filesystem.h>
 #include <coreinit/memexpheap.h>
+#include <coreinit/memblockheap.h>
 #include <sndcore2/core.h>
 
 #include "scenes/SceneBase.h"
@@ -29,7 +30,12 @@
 
 // Non-default heap
 #ifdef USE_OURMALLOC
+#ifdef USE_OURMALLOC_BLOCKHEAP
 MEMHeapHandle ourHeap;
+MEMBlockHeap ourHeapStorage;
+#else
+MEMHeapHandle ourHeap;
+#endif
 #endif
 
 int main(int argc, char **argv)
@@ -52,9 +58,17 @@ int main(int argc, char **argv)
    // wiiu memory management that WHB uses, because it gets fucked up somehow by the GLSL compiler
 #ifdef USE_OURMALLOC
    uint32_t heapSize = int(1024*1024*1025*0.75);
-   void* heapBaseAddr = MEMAllocFromDefaultHeapEx(heapSize, 4);
+   uint8_t* heapBaseAddr = (uint8_t*)MEMAllocFromDefaultHeapEx(heapSize, 4);
    WHBLogPrintf("Allocated heap at %p", heapBaseAddr);
+#ifdef USE_OURMALLOC_BLOCKHEAP
+   size_t trackSize = heapSize/1024;
+   uint8_t* heapEndAddr = heapBaseAddr+heapSize;
+   MEMBlockHeapTracking* blockTrack = (MEMBlockHeapTracking*)MEMAllocFromDefaultHeapEx(trackSize, 4);
+   WHBLogPrintf("Block track at %p, end at %p", blockTrack, heapEndAddr);
+   ourHeap = MEMInitBlockHeap(&ourHeapStorage, heapBaseAddr, heapBaseAddr+heapSize, blockTrack, trackSize, 0);
+#else
    ourHeap = MEMCreateExpHeapEx(heapBaseAddr, heapSize, 0);
+#endif
 #endif
 
    // Load all assets

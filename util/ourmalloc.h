@@ -1,8 +1,11 @@
 #pragma once
 
-#define USE_OURMALLOC
+#define USE_OURMALLOC 1
 //#undef USE_OURMALLOC
+//#define DEBUG_OURMALLOC 1
 #undef DEBUG_OURMALLOC
+
+#define USE_OURMALLOC_BLOCKHEAP 1
 
 #include <stddef.h>
 

@@ -59,7 +59,9 @@ struct SceneObjectImpl: public SceneObject {
 void SceneObject::setAnimationFrame(float frame) {
     // Bail if we don't have any frames
     if (this->animFrames.size() == 0) {
-        return;
+         glm::mat4 boneFrameMat = glm::mat4(1.0f);
+         this->getRenderObject()->setUniformFloatMat(UniformType::BONE_TRANSFORM, glm::value_ptr(boneFrameMat), 4 * 4);
+         return;
     }
     
     // Alloc buffer if we need one

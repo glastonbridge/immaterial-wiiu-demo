@@ -13,7 +13,10 @@ enum materialID : size_t {
     ID_mat_house2,
     ID_mat_viaduct,
     ID_mat_skybox,
-    ID_mat_cloud
+    ID_mat_cloud,
+    ID_mat_egg,
+    ID_mat_building,
+    ID_mat_station_building,
 };
 
 enum objectID : size_t {
@@ -54,6 +57,9 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/viaduct.png"));
         materials.push_back(std::make_unique<SkyboxMaterial>("assets/sky_"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/cloud_basecolour.png"));
+        materials.push_back(std::make_unique<BoneMaterial>("assets/egg.png"));
+        materials.push_back(std::make_unique<BoneMaterial>("assets/building.png"));
+        materials.push_back(std::make_unique<BoneMaterial>("assets/station_building.png"));
         
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
@@ -67,12 +73,12 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/box.fbx", "Cube", materials[ID_mat_skybox].get()));
         objects.push_back(LoadObject("assets/cardboard_cloud.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
         objects.push_back(LoadObject("assets/pillow.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/egg.fbx", "egg", materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/egg.fbx", "egg_hands", materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/egg.fbx", "sausage", materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/egg.fbx", "sausage_leash", materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/building.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
-        objects.push_back(LoadObject("assets/station_building.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
+        objects.push_back(LoadObject("assets/egg.fbx", "egg", materials[ID_mat_egg].get())); 
+        objects.push_back(LoadObject("assets/egg.fbx", "egg_hands", materials[ID_mat_egg].get()));
+        objects.push_back(LoadObject("assets/egg.fbx", "sausage", materials[ID_mat_egg].get())); 
+        objects.push_back(LoadObject("assets/egg.fbx", "sausage_leash", materials[ID_mat_egg].get()));
+        objects.push_back(LoadObject("assets/building.fbx", NULL, materials[ID_mat_building].get()));
+        objects.push_back(LoadObject("assets/station_building.fbx", NULL, materials[ID_mat_station_building].get())); // fbx has wrong UVs currently
         objects.push_back(LoadObject("assets/cloud.fbx", NULL, materials[ID_mat_cloud].get()));
         objects.push_back(LoadObject("assets/sofa.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
     };

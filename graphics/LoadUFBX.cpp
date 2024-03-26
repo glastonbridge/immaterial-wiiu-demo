@@ -202,8 +202,10 @@ int LoadUFBX(
                 ufbx_anim_stack* anim_stack = scene->anim_stacks.data[stack_use];
 
                 // We sample at 60fps
+                #ifdef DEBUG
                 WHBLogPrintf("  * anim time begin: %f", anim_stack->anim.time_begin);
                 WHBLogPrintf("  * anim time end: %f", anim_stack->anim.time_end);
+                #endif
                 float frameDur = 1.0 / 60.0;
                 size_t frameCount = (size_t)((anim_stack->anim.time_end - anim_stack->anim.time_begin) / frameDur + 0.5);
                 size_t boneCount = skin->clusters.count; // TODO return these?
