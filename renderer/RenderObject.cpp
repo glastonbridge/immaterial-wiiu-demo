@@ -13,9 +13,11 @@
 #include <whb/gfx.h>
 #include <whb/log.h>
 
+#define TRANSFORM_BUFFER_NUM_MATS_MAX 512
 
 struct RenderObjectImpl {
   RenderMaterial* material;
+  int transformMatOffset = 0;
 
   // TODO: long overdue some refactoring...
   GX2RBuffer positionBuffer = {};
@@ -25,7 +27,7 @@ struct RenderObjectImpl {
   GX2RBuffer boneIdxBuffer = {};
   GX2RBuffer boneWeightBuffer = {};  
   GX2RBuffer projectionBuffer = {};
-  GX2RBuffer transformBuffer = {};
+  GX2RBuffer transformBuffer[TRANSFORM_BUFFER_NUM_MATS_MAX] = {};
   GX2RBuffer viewBuffer = {};
   GX2RBuffer boneTransformBuffer = {};
   GX2RBuffer extraBuffer = {};
@@ -39,13 +41,15 @@ struct RenderObjectImpl {
     projectionBuffer.elemCount = 1;
     GX2RCreateBuffer(&projectionBuffer);
 
-    transformBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
+    for(int i = 0; i < TRANSFORM_BUFFER_NUM_MATS_MAX; i++) {
+      transformBuffer[i].flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
                              GX2R_RESOURCE_USAGE_CPU_READ |
                              GX2R_RESOURCE_USAGE_CPU_WRITE |
                              GX2R_RESOURCE_USAGE_GPU_READ;
-    transformBuffer.elemSize = 4 * 4 * 4;
-    transformBuffer.elemCount = 1;
-    GX2RCreateBuffer(&transformBuffer);
+      transformBuffer[i].elemSize = 4 * 4 * 4;
+      transformBuffer[i].elemCount = 1;
+      GX2RCreateBuffer(&transformBuffer[i]);
+    }
 
     viewBuffer.flags = GX2R_RESOURCE_BIND_UNIFORM_BLOCK |
                              GX2R_RESOURCE_USAGE_CPU_READ |
@@ -114,7 +118,7 @@ struct RenderObjectImpl {
     if (UniformType::CAMERA_PROJECTION==bt) {
       buffer = &projectionBuffer;
     } else if (UniformType::TRANSFORM==bt) {
-      buffer = &transformBuffer;
+      buffer = &transformBuffer[transformMatOffset];
     } else if (UniformType::CAMERA_VIEW==bt) {
       buffer = &viewBuffer;      
     } else if (UniformType::BONE_TRANSFORM==bt) {
@@ -147,7 +151,7 @@ struct RenderObjectImpl {
   }
       
 
-  void render() {
+  void render(bool shiftTransformMat) {
     void *buffer = NULL;
 
     material->renderUsing();
@@ -171,12 +175,15 @@ struct RenderObjectImpl {
         GX2RSetAttributeBuffer(&boneWeightBuffer, material->getBindingForBuffer(BufferType::BONE_WEIGHT), boneWeightBuffer.elemSize, 0);
     }
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
-    GX2RSetVertexUniformBlock(&transformBuffer, 1, 0);
+    GX2RSetVertexUniformBlock(&transformBuffer[transformMatOffset], 1, 0);
     GX2RSetVertexUniformBlock(&boneTransformBuffer, 2, 0);
     GX2RSetVertexUniformBlock(&viewBuffer, 3, 0);
     GX2RSetVertexUniformBlock(&extraBuffer, 4, 0);
-
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
+
+    if(shiftTransformMat == true) {
+      transformMatOffset = (transformMatOffset + 1) % TRANSFORM_BUFFER_NUM_MATS_MAX;
+    }
 
   }
   ~RenderObjectImpl() {
@@ -187,7 +194,9 @@ struct RenderObjectImpl {
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
-    GX2RDestroyBufferEx(&transformBuffer, GX2R_RESOURCE_BIND_NONE);
+    for(int i = 0; i < TRANSFORM_BUFFER_NUM_MATS_MAX; i++) {
+      GX2RDestroyBufferEx(&transformBuffer[i], GX2R_RESOURCE_BIND_NONE);
+    }
     GX2RDestroyBufferEx(&boneTransformBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_NONE);
   }
@@ -202,7 +211,7 @@ RenderObject::~RenderObject() {
 }
 
 
-void RenderObject::render() { _impl -> render(); }
+void RenderObject::render(bool shiftTransformMat) { _impl -> render(shiftTransformMat); }
 void RenderObject::setAttribBuffer(BufferType bt, const void* data, uint32_t elemSize, uint32_t elemCount)  { 
   _impl->setAttribBuffer(bt, data, elemSize, elemCount);
 }

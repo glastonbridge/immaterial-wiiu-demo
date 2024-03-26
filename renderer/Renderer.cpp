@@ -34,8 +34,8 @@ Renderer::Renderer()
 {
    composeQuad = LoadQuad(new ComposeMaterial());
    blurQuad = LoadQuad(new BlurMaterial());
-   bufferA = std::make_unique<RenderBuffer>(false, 1280, 720);
-   bufferB = std::make_unique<RenderBuffer>(false, 1280, 720);
+   bufferA = std::make_unique<RenderBuffer>(false, 1280/2, 720/2);
+   bufferB = std::make_unique<RenderBuffer>(false, 1280/2, 720/2);
 }
 
 void Renderer::renderFrame(const SceneBase& scene) {
@@ -61,8 +61,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
          // WHBLogPrintf("Rendering object with transform %s", glm::to_string(instance.transform).c_str());
          object.getRenderObject()->setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
          object.setAnimationFrame(instance.anim);
-         object.getRenderObject()->render();
-         GX2DrawDone();
+         object.getRenderObject()->render(true);
       }
       scene.renderBuffer->unbindTarget();
 

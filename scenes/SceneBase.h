@@ -33,7 +33,7 @@ struct SceneBase {
   RenderBuffer* renderBuffer;
 
   SceneBase() {
-    renderBuffer = new RenderBuffer();
+    renderBuffer = new RenderBuffer(false, 1280, 720);
   };
   
   void updateCamera() {

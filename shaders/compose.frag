@@ -15,5 +15,5 @@ void main()
     vignette = clamp(vignette, 0.0, 1.0);
     vec4 blur = texture(tex_sampler_blur, in_texcoord);
     vec4 orig = texture(tex_sampler_orig, in_texcoord);
-    out_color = mix(orig, blur, smoothstep(0.0, 1.0, blur.a)) * vignette * fade;
+    out_color = mix(orig, blur, smoothstep(0.0, 1.0, orig.a)) * vignette * fade;
 }

@@ -31,7 +31,7 @@ enum UniformType {
 struct RenderObject {
   RenderObject();
   ~RenderObject();
-  virtual void render();
+  virtual void render(bool shift_matrix = false);
   virtual void setMaterial(RenderMaterial* material);
   virtual RenderMaterial* getMaterial();
 
