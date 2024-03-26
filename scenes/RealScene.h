@@ -71,11 +71,7 @@ struct RealScene: public SceneBase {
 
   void setup() final {
     // Set up the scene
-    instances.emplace_back(ID_skybox);
     instances.emplace_back(ID_train);
-
-    instances.emplace_back(ID_duvet_hills);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(100.f, 0.f, 0.f)), glm::vec3(200.f));
 
     instances.emplace_back(ID_cushion);
     instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f));
@@ -110,24 +106,23 @@ struct RealScene: public SceneBase {
     }
 
     instances.emplace_back(ID_house1);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(60.f, 0.f, -5.f)), glm::vec3(1.f));
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(60.f, 0.f, -5.f));
 
     instances.emplace_back(ID_house1);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(70.f, 0.f, 5.f)), glm::vec3(1.f));
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(70.f, 0.f, 5.f));
 
     instances.emplace_back(ID_house1);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(80.f, 0.f, 15.f)), glm::vec3(1.f));
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(80.f, 0.f, 15.f));
+
+    instances.emplace_back(ID_duvet_hills);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(100.f, 0.f, 0.f)), glm::vec3(200.f));
 
     instances.emplace_back(ID_viaduct);
     instances.back().transform = glm::rotate(
       glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-25.f, 0.f, -60.f)), glm::vec3(3.f)),
       glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
-
-    //instances.emplace_back(ID_house1);
-    //instances.emplace_back(ID_train);
-    //for(int i = 0; i < 10; i++) {
-    //  instances.emplace_back(ID_lampshade);
-    //}
+  
+    //instances.emplace_back(ID_skybox);
   }
 
   void update(double time) final {
@@ -149,11 +144,13 @@ struct RealScene: public SceneBase {
       glm::vec3(pos.x, 20.0f, pos.z + 10.0), pos,
       glm::vec3(0.0f, 1.0f, 0.0f)
     );
+    cameraOptions = glm::vec4(23.f, 4.f, 0.4f, 1.5f);
+    processOptions = glm::vec4(1.f, 1.0f, 0.0f, 0.0f);
 
     instances[0].transform = glm::mat4(1.0f);
 
     pos.y += bounce;
-    instances[1].transform = glm::translate(glm::mat4(1.f), pos) *
+    instances[0].transform = glm::translate(glm::mat4(1.f), pos) *
         glm::transpose(glm::rotate(glm::mat4(1.f), sway * 0.2f, glm::vec3(0.f, 0.f, 1.f)) *
           glm::lookAt(glm::vec3(0.f), dir, glm::vec3(0.f, 1.f, 0.f)));
     //instances[1].transform = glm::lookAt(pos, dir, glm::vec3(0.f, 1.f, 0.f));

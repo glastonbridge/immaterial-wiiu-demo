@@ -55,7 +55,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
          auto &object = *assets->objects[instance.id];
          object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_PROJECTION, (float*)glm::value_ptr(scene.cameraProjection), 16);
          object.getRenderObject()->setUniformFloatMat(UniformType::CAMERA_VIEW, (float*)glm::value_ptr(scene.cameraView), 16);
-         object.getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow")));
+         object.getRenderObject()->setExtraUniform(0, scene.cameraOptions);
 
          float* mat = (float*)glm::value_ptr(instance.transform);
          // WHBLogPrintf("Rendering object with transform %s", glm::to_string(instance.transform).c_str());
@@ -96,7 +96,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);      
       bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group);
       scene.renderBuffer->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 1);
-      composeQuad->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Global:Vignette"), 1.0f - syncVal("Global:Fade"), 0.0f, 0.0f));
+      composeQuad->getRenderObject()->setExtraUniform(0, scene.processOptions);
       composeQuad->getRenderObject()->render();      
       WHBGfxFinishRenderTV();
       
@@ -104,7 +104,7 @@ void Renderer::renderFrame(const SceneBase& scene) {
       WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
       bufferB->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 0);
       scene.renderBuffer->renderUsing(composeQuad->getRenderObject()->getMaterial()->group, 1);
-      composeQuad->getRenderObject()->setExtraUniform(0, glm::vec4(syncVal("Global:Vignette"), 1.0f - syncVal("Global:Fade"), 0.0f, 0.0f));
+      composeQuad->getRenderObject()->setExtraUniform(0, scene.processOptions);
       composeQuad->getRenderObject()->render();
       WHBGfxFinishRenderDRC();
 

@@ -28,6 +28,8 @@ struct SceneBase {
   std::vector<SceneInstance> instances;
   glm::mat4x4 cameraProjection;
   glm::mat4x4 cameraView;
+  glm::vec4 cameraOptions;
+  glm::vec4 processOptions;
   RenderBuffer* renderBuffer;
 
   SceneBase() {
@@ -41,6 +43,8 @@ struct SceneBase {
         glm::vec3(syncVal("Camera:LookatX"), syncVal("Camera:LookatY"), syncVal("Camera:LookatZ")),
         glm::vec3(syncVal("Camera:UpX"), syncVal("Camera:UpY"), syncVal("Camera:UpZ"))
       );
+      cameraOptions = glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), syncVal("Camera:Aperture"), syncVal("Global:FresnelPow"));
+      processOptions = glm::vec4(syncVal("Global:Vignette"), 1.0f - syncVal("Global:Fade"), 0.0f, 0.0f);
   }
 
   virtual void setup()=0;

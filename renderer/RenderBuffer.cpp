@@ -141,7 +141,7 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
 }
 
 void RenderBuffer::bindTarget(bool clear) {
-    GX2ClearColor(&colorBuffer, 0.5, 0.4, 0.9, 1.0);
+    GX2ClearColor(&colorBuffer, 0.5, 0.8, 1.0, 1.0);
     GX2ClearDepthStencilEx(&depthBuffer, depthBuffer.depthClear, depthBuffer.stencilClear, GX2_CLEAR_FLAGS_DEPTH);
     GX2SetContextState(contextState);
 }
