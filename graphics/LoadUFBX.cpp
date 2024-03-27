@@ -273,3 +273,150 @@ int LoadUFBX(
     free(data);
     return(1);
 }
+
+int LoadTypeUFBX(
+    const std::string &path,
+    std::vector<std::vector<float>> &v_vertices,
+    std::vector<std::vector<float>> &v_texcoords,
+    std::vector<std::vector<float>> &v_normals)
+{
+
+    // Load data
+    ufbx_load_opts opts = {0}; // Optional, pass NULL for defaults
+    ufbx_error error;          // Optional, pass NULL if you don't care about errors
+
+    // sometimes broken mysteriously, so lets grab it all to memory first
+    // ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
+
+    // Variant WHB
+    /*char *sdRootPath = WHBGetSdCardMountPath();
+    char pathWithSd[256];
+    size_t size;
+    sprintf(pathWithSd, "%s/%s", sdRootPath, path.c_str());
+    char* data = WHBReadWholeFile(pathWithSd, &size);*/
+
+    // Variant C Stdlib
+    FILE *file = fopen(path.c_str(), "rb");
+    fseek(file, 0, SEEK_END);
+    size_t size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *data = (char *)malloc(size);
+    fread(data, 1, size, file);
+    fclose(file);
+
+    ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);
+
+    if (!scene)
+    {
+        free(data);
+        WHBLogPrintf("Failed to load: %s", error.description.data);
+        return (0);
+    }
+
+    // Go through all objects in the scene
+    for (size_t i = 0; i < scene->nodes.count; i++)
+    {
+        ufbx_node *node = scene->nodes.data[i];
+        if (node->is_root)
+            continue;
+        
+        std::vector<float> vertices;
+        std::vector<float> texcoords;
+        std::vector<float> normals;
+        float min_x,min_y,min_z = FLT_MAX;
+        float max_x,max_y,max_z = FLT_MIN;
+
+        #ifdef DEBUG
+        WHBLogPrintf("Found object %s\n", node->name.data);
+        WHBLogPrintf("-> Loading\n");
+        #endif
+
+        // We can only load meshes
+        if (node->mesh) {
+            // Mesh and skin objects for convenience
+            ufbx_mesh *mesh = node->mesh;
+            ufbx_skin_deformer *skin = mesh->skin_deformers.data[0];
+
+            // Alloc VBO data struct
+            int totalVerts = mesh->faces.count * 3;
+            #ifdef DEBUG
+            WHBLogPrintf("Allocated %d verts", totalVerts);
+            #endif
+
+            // Go through all faces
+            size_t setVertIdx = 0;
+            for (size_t faceIdx = 0; faceIdx < mesh->faces.count; faceIdx++)
+            {
+                // We support only triangles, please triangulate on export Or Else
+                if (mesh->faces.data[faceIdx].num_indices != 3)
+                {
+                    // Complain and skip
+                    WHBLogPrintf("Yikes! Non-tri face at %ld", faceIdx);
+                    continue;
+                }
+
+                // Get the mesh data
+                size_t faceFirstVertIdx = mesh->faces.data[faceIdx].index_begin;
+                for (size_t vertIdx = faceFirstVertIdx; vertIdx < faceFirstVertIdx + 3; vertIdx++)
+                {
+                    #ifdef DEBUG
+                    WHBLogPrintf("Vertex %ld", vertIdx);
+                    #endif
+
+                    // Standard geometry data
+                    ufbx_vec3 pos = ufbx_get_vertex_vec3(&mesh->vertex_position, vertIdx);
+                    #ifdef DEBUG
+                    WHBLogPrintf("  * pos: %f %f %f", pos.x, pos.y, pos.z);
+                    #endif
+                    ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, vertIdx);
+                    #ifdef DEBUG
+                    WHBLogPrintf("  * normal: %f %f %f", normal.x, normal.y, normal.z);
+                    #endif
+                    ufbx_vec2 uv = ufbx_get_vertex_vec2(&mesh->vertex_uv, vertIdx);
+                    #ifdef DEBUG
+                    WHBLogPrintf("  * uv: %f %f", uv.x, uv.y);
+                    #endif
+
+                    min_x = std::min((float)pos.x, min_x);
+                    max_x = std::max((float)pos.x, max_x);
+                    min_y = std::min((float)pos.y, min_y);
+                    max_y = std::max((float)pos.y, max_y);
+                    min_z = std::min((float)pos.z, min_z);
+                    max_z = std::max((float)pos.z, max_z);
+
+                    vertices.push_back(pos.x);
+                    vertices.push_back(pos.y);
+                    vertices.push_back(pos.z);
+                    texcoords.push_back(uv.x);
+                    texcoords.push_back(1.0 - uv.y);
+                    normals.push_back(normal.x);
+                    normals.push_back(normal.y);
+                    normals.push_back(normal.z);
+                }
+            }
+
+            #ifdef DEBUG
+            WHBLogPrintf("Loaded %ld verts", setVertIdx);
+            #endif
+
+            float center_x = (min_x + max_x) / 2.0;
+            float center_y = (min_y + max_y) / 2.0;
+            float center_z = (min_z + max_z) / 2.0;
+            for (int i=0; i<vertices.size(); i+=3) {
+                vertices[i] -= center_x;
+                vertices[i+1] -= center_y;
+                vertices[i+2] -= center_z;
+            }
+
+            v_vertices.push_back(vertices);
+            v_texcoords.push_back(texcoords);
+            v_normals.push_back(normals);
+        }
+        else {
+            WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!");
+        }
+    }
+    WHBLogPrintf("loaded %i objects from type file", v_vertices.size());
+    free(data);
+    return (1);
+}

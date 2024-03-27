@@ -14,3 +14,10 @@ int LoadUFBX(
     std::vector<float>& boneWeights,
     std::vector<std::vector<glm::mat4>>& animFrames // nested: frame, bone, matrix
 );
+
+int LoadTypeUFBX(
+    const std::string &path,
+    std::vector<std::vector<float>> &vertices,
+    std::vector<std::vector<float>> &texcoords,
+    std::vector<std::vector<float>> &normals
+);
