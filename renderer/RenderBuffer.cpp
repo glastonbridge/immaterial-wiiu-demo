@@ -85,7 +85,7 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
     } else {
         texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8;
     }
-    texture.surface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
+    texture.surface.tileMode = GX2_TILE_MODE_DEFAULT; // probably memory layout stuff?
     texture.surface.aa = GX2_AA_MODE1X; // anti-aliasing off (but we could set it to on?)
     texture.viewNumSlices = 1; // I don't know what this means
     texture.compMap = 0x00010203; // This swizzles components I think?
@@ -105,7 +105,7 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
 
     // Probably we'd also need a depth buffer
     memset(&depthBuffer, 0, sizeof(GX2DepthBuffer));
-    depthBuffer.surface.use = GX2_SURFACE_USE_TEXTURE | GX2_SURFACE_USE_DEPTH_BUFFER; // maybe not okay
+    depthBuffer.surface.use = GX2_SURFACE_USE_DEPTH_BUFFER; // maybe not okay
     depthBuffer.surface.dim = GX2_SURFACE_DIM_TEXTURE_2D;
     depthBuffer.surface.width = width;
     depthBuffer.surface.height = height;
@@ -141,8 +141,10 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
 }
 
 void RenderBuffer::bindTarget(bool clear) {
-    GX2ClearColor(&colorBuffer, 0.5, 0.8, 1.0, 1.0);
-    GX2ClearDepthStencilEx(&depthBuffer, depthBuffer.depthClear, depthBuffer.stencilClear, GX2_CLEAR_FLAGS_DEPTH);
+    if(clear) {
+        GX2ClearColor(&colorBuffer, 0.5, 0.8, 1.0, 1.0);
+        GX2ClearDepthStencilEx(&depthBuffer, depthBuffer.depthClear, depthBuffer.stencilClear, GX2_CLEAR_FLAGS_DEPTH);
+    }
     GX2SetContextState(contextState);
 }
 void RenderBuffer::unbindTarget() {

@@ -29,6 +29,7 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
     // Load data with lodepng
     if(!isCubeMap) {
       unsigned error = lodepng::decode(image, width, height, path);
+      
       WHBLogPrintf("Setting up a texture from %s: %i x %i", path.c_str(), width, height);
       if(error) {
         WHBLogPrintf("PNG load error on %s: %u: %s", path.c_str(), error, lodepng_error_text(error));
@@ -71,7 +72,7 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
       texture.surface.dim = GX2_SURFACE_DIM_TEXTURE_CUBE;
     }
     texture.surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8; // pixel format
-    texture.surface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
+    texture.surface.tileMode = GX2_TILE_MODE_DEFAULT; // GX2_TILE_MODE_LINEAR_ALIGNED; // probably memory layout stuff?
     texture.surface.aa = GX2_AA_MODE1X;
     texture.surface.mipLevels = 0;
     texture.surface.swizzle = 0;
@@ -91,23 +92,38 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
     texture.surface.image = memalign(texture.surface.alignment, texture.surface.imageSize);
     WHBLogPrintf("Allocated %p for texture", texture.surface.image);
     
-    // Continuous to pitched if needed
-    if(texture.surface.pitch != width) {
+    // tile-zorder the image
+    // if you use nonsquare or not power of two images this breaks
+    uint32_t* imageDataPtrLinear = (uint32_t*)image.data();
+    GX2Surface tempSurface = texture.surface;
+    tempSurface.tileMode = GX2_TILE_MODE_LINEAR_ALIGNED;
+    GX2CalcSurfaceSizeAndAlignment(&tempSurface);
+    tempSurface.image = memalign(tempSurface.alignment, tempSurface.imageSize);
+
+    // Continuous to pitched if needed - commented out, we now use tiled
+    if(tempSurface.pitch != width) {
       WHBLogPrintf("Converting pitch and copying %i bytes to texture", width * sizeof(uint32_t));
-      uint32_t* texDataPtrPitched = (uint32_t*)texture.surface.image;
+      uint32_t* texDataPtrPitched = (uint32_t*)tempSurface.image;
       uint32_t* imageDataPtrContinuous = (uint32_t*)image.data();
-      for (int i = 0; i < texture.surface.height; i++) {
-          memcpy((uint32_t*)&texDataPtrPitched[i * texture.surface.pitch], (uint32_t*)&imageDataPtrContinuous[i * width], width * sizeof(uint32_t));
+      for (int i = 0; i < tempSurface.height; i++) {
+          memcpy((uint32_t*)&texDataPtrPitched[i * tempSurface.pitch], (uint32_t*)&imageDataPtrContinuous[i * width], width * sizeof(uint32_t));
       }
     } else {
       WHBLogPrintf("Copyping %i samples to texture", image.size());
-      memcpy(texture.surface.image, image.data(), image.size());
+      memcpy(tempSurface.image, image.data(), image.size());
     }
+
+    GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, tempSurface.image, tempSurface.imageSize);
+    GX2CopySurface(&tempSurface, 0, 0, &texture.surface, 0, 0);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, texture.surface.image, texture.surface.imageSize);
-    
+    GX2Flush();
+
     // Also set up a sampler
     WHBLogPrintf("Setting up a texture sampler");
     GX2InitSampler(&sampler, GX2_TEX_CLAMP_MODE_WRAP, GX2_TEX_XY_FILTER_MODE_LINEAR);
+
+    // clean up image data
+    free(tempSurface.image);
 }
 
 RenderTexture::~RenderTexture() {

@@ -42,12 +42,15 @@ void Renderer::renderFrame(const SceneBase& scene) {
       // Asset loader that just loads all assets at startup
        // we can make this better if it turns out we're low on RAM, but we're probably not
       SceneAssets* assets = getSceneAssets();
-      GX2SetCullOnlyControl(GX2_FRONT_FACE_CCW, GX2_DISABLE, GX2_ENABLE);
 
       // Render to offscreen buffer
       //WHBLogPrint("Binding render target");
       scene.renderBuffer->bindTarget(true);
-
+      
+      // Turn on culling, depth test and write
+      GX2SetCullOnlyControl(GX2_FRONT_FACE_CCW, GX2_DISABLE, GX2_ENABLE);
+      GX2SetDepthOnlyControl(GX2_ENABLE, GX2_ENABLE, GX2_COMPARE_FUNC_LESS);
+      
       float* cameraProjection = (float*)glm::value_ptr(scene.cameraProjection);
 
       for (auto const &instance : scene.instances) {
@@ -70,7 +73,9 @@ void Renderer::renderFrame(const SceneBase& scene) {
          float scale = (float)(1 << (i));
          
          // Horizontal
-         bufferA->bindTarget(true);
+         bufferA->bindTarget(false);
+         GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_FUNC_LESS);
+
          if (i == 0) {
             scene.renderBuffer->renderUsing(blurQuad->getRenderObject()->getMaterial()->group);
          }
@@ -82,7 +87,9 @@ void Renderer::renderFrame(const SceneBase& scene) {
          bufferA->unbindTarget();
 
          // Vertical
-         bufferB->bindTarget(true);
+         bufferB->bindTarget(false);
+         GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_FUNC_LESS);
+         
          bufferA->renderUsing(blurQuad->getRenderObject()->getMaterial()->group);
          blurQuad->getRenderObject()->setExtraUniform(0, glm::vec4(scale, 1.0001f, 0.0f, 0.0f));
          blurQuad->getRenderObject()->render();
