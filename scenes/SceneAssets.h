@@ -32,10 +32,8 @@ enum objectID : size_t {
     ID_skybox,
     ID_cardboard_cloud,
     ID_pillow,
-    ID_egg_egg,
-    ID_egg_hands,
-    ID_egg_sausage,
-    ID_egg_sausageleash,
+    ID_egg,
+    ID_egg_walking_sausage,
     ID_building,
     ID_station_building,
     ID_cloud,
@@ -76,9 +74,7 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/cardboard_cloud.fbx", NULL, materials[ID_mat_cardboard_cloud].get())); 
         objects.push_back(LoadObject("assets/pillow.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
         objects.push_back(LoadObject("assets/egg.fbx", "egg", materials[ID_mat_egg].get())); 
-        objects.push_back(LoadObject("assets/egg.fbx", "egg_hands", materials[ID_mat_egg].get()));
-        objects.push_back(LoadObject("assets/egg.fbx", "sausage", materials[ID_mat_egg].get())); 
-        objects.push_back(LoadObject("assets/egg.fbx", "sausage_leash", materials[ID_mat_egg].get()));
+        objects.push_back(LoadObject("assets/egg.fbx", NULL, materials[ID_mat_egg].get()));
         objects.push_back(LoadObject("assets/building.fbx", NULL, materials[ID_mat_building].get()));
         objects.push_back(LoadObject("assets/station_building.fbx", NULL, materials[ID_mat_station_building].get())); 
         objects.push_back(LoadObject("assets/cloud.fbx", NULL, materials[ID_mat_cloud].get()));
