@@ -194,7 +194,10 @@ struct RealScene: public SceneBase {
     instances.back().transform = glm::rotate(
       glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, 0.f, -60.f)), glm::vec3(3.f)),
       glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
-  
+
+    instances.emplace_back(ID_tablecloth_land);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-98.f, 0.f, -70.f)), glm::vec3(0.89f));
+
     //instances.emplace_back(ID_skybox);
   }
 
