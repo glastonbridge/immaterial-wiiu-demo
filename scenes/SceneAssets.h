@@ -9,10 +9,8 @@ enum materialID : size_t {
     ID_mat_duvet,
     ID_mat_house1,
     ID_mat_lampshade,
-    ID_mat_colorgrid,
     ID_mat_house2,
     ID_mat_viaduct,
-    ID_mat_skybox,
     ID_mat_cloud,
     ID_mat_egg,
     ID_mat_building,
@@ -22,7 +20,8 @@ enum materialID : size_t {
     ID_mat_pillow,
     ID_mat_cushion,
     ID_mat_tablecloth,
-    ID_mat_egg_carton
+    ID_mat_egg_carton,
+    ID_mat_carpet
 };
 
 enum objectID : size_t {
@@ -30,11 +29,9 @@ enum objectID : size_t {
     ID_cushion,
     ID_house1,
     ID_lampshade,
-    ID_gizmos,
     ID_house2,
     ID_viaduct,
     ID_duvet_hills,
-    ID_skybox,
     ID_cardboard_cloud,
     ID_pillow,
     ID_egg,
@@ -45,6 +42,7 @@ enum objectID : size_t {
     ID_sofa,
     ID_tablecloth_land,
     ID_egg_carton,
+    ID_carpet,
     _ID_ASSETS_MAX // keep at end
 };
 
@@ -58,10 +56,8 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/duvet.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/house1_small.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/lampshade_small.png"));
-        materials.push_back(std::make_unique<BoneMaterial>("assets/colorgrid.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/house2_small.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/viaduct.png"));
-        materials.push_back(std::make_unique<SkyboxMaterial>("assets/sky_"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/cloud_basecolour.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/egg.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/building.png"));
@@ -72,17 +68,16 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/cushion.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/tablecloth.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/egg_carton.png"));
+        materials.push_back(std::make_unique<BoneMaterial>("assets/carpet.png"));
 
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
         objects.push_back(LoadObject("assets/cushion.fbx", NULL, materials[ID_mat_cushion].get()));
         objects.push_back(LoadObject("assets/house1.fbx", NULL, materials[ID_mat_house1].get()));
         objects.push_back(LoadObject("assets/lampshade.fbx", NULL, materials[ID_mat_lampshade].get()));
-        objects.push_back(LoadObject("assets/gizmos.fbx", "Cube", materials[ID_mat_colorgrid].get()));
         objects.push_back(LoadObject("assets/house2.fbx", NULL, materials[ID_mat_house2].get()));
         objects.push_back(LoadObject("assets/viaduct.fbx", NULL, materials[ID_mat_viaduct].get()));
         objects.push_back(LoadObject("assets/duvet_hills.fbx", NULL, materials[ID_mat_duvet].get())); 
-        objects.push_back(LoadObject("assets/box.fbx", "Cube", materials[ID_mat_skybox].get()));
         objects.push_back(LoadObject("assets/cardboard_cloud.fbx", NULL, materials[ID_mat_cardboard_cloud].get())); 
         objects.push_back(LoadObject("assets/pillow.fbx", NULL, materials[ID_mat_pillow].get()));
         objects.push_back(LoadObject("assets/egg.fbx", "egg", materials[ID_mat_egg].get())); 
@@ -93,6 +88,7 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/sofa.fbx", NULL, materials[ID_mat_sofa].get()));
         objects.push_back(LoadObject("assets/tablecloth.fbx", NULL, materials[ID_mat_tablecloth].get()));
         objects.push_back(LoadObject("assets/egg_carton.fbx", NULL, materials[ID_mat_egg_carton].get()));
+        objects.push_back(LoadObject("assets/carpet.fbx", NULL, materials[ID_mat_carpet].get()));
     };
 };
 

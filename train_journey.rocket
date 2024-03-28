@@ -5,18 +5,55 @@ beatsPerMin="100">
 	<track name="Camera:FocalDist" folded="0" muteKeyCount="0"
 color="ff4fb292">
 		<key row="0" value="46.000000" interpolation="0" />
+		<key row="120" value="45.000000" interpolation="1" />
+		<key row="138" value="45.000000" interpolation="1" />
+		<key row="150" value="24.500000" interpolation="1" />
+		<key row="162" value="25.000000" interpolation="1" />
+		<key row="168" value="24.000000" interpolation="0" />
+		<key row="216" value="46.000000" interpolation="0" />
+		<key row="264" value="10.000000" interpolation="0" />
+		<key row="312" value="80.000000" interpolation="0" />
+		<key row="360" value="110.000000" interpolation="0" />
+		<key row="408" value="30.000000" interpolation="1" />
+		<key row="431" value="10.000000" interpolation="0" />
+		<key row="432" value="8.000000" interpolation="0" />
+		<key row="448" value="8.000000" interpolation="1" />
+		<key row="452" value="20.000000" interpolation="1" />
+		<key row="456" value="20.000000" interpolation="0" />
+		<key row="492" value="20.000000" interpolation="1" />
+		<key row="498" value="28.000000" interpolation="0" />
+		<key row="528" value="4.000000" interpolation="0" />
+		<key row="576" value="46.000000" interpolation="1" />
+		<key row="624" value="56.500000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalLen" folded="0" muteKeyCount="0"
 color="ff4f71b2">
-		<key row="0" value="4.000000" interpolation="0" />
+		<key row="0" value="2.000000" interpolation="0" />
+		<key row="120" value="5.000000" interpolation="1" />
+		<key row="162" value="10.000000" interpolation="0" />
+		<key row="216" value="4.000000" interpolation="0" />
+		<key row="264" value="2.000000" interpolation="0" />
+		<key row="312" value="2.000000" interpolation="0" />
+		<key row="360" value="5.000000" interpolation="0" />
+		<key row="408" value="2.000000" interpolation="0" />
+		<key row="432" value="1.000000" interpolation="0" />
+		<key row="456" value="4.000000" interpolation="0" />
+		<key row="528" value="3.000000" interpolation="0" />
+		<key row="576" value="4.000000" interpolation="0" />
+		<key row="624" value="4.000000" interpolation="0" />
 	</track>
 	<track name="Camera:Aperture" folded="0" muteKeyCount="0"
 color="ff8850b2">
 		<key row="0" value="0.400000" interpolation="1" />
+		<key row="12" value="20.000000" interpolation="0" />
+		<key row="162" value="1.000000" interpolation="1" />
 	</track>
 	<track name="Global:FresnelPow" folded="0" muteKeyCount="0"
 color="ffb25091">
-		<key row="0" value="1.500000" interpolation="0" />
+		<key row="0" value="5.000000" interpolation="0" />
+		<key row="360" value="12.000000" interpolation="0" />
+		<key row="408" value="5.000000" interpolation="0" />
+		<key row="576" value="10.000000" interpolation="0" />
 	</track>
 	<track name="Scene:CamID" folded="0" muteKeyCount="0"
 color="ff22ff22">
@@ -28,10 +65,10 @@ color="ff22ff22">
 		<key row="360" value="4.000000" interpolation="0" />
 		<key row="408" value="5.000000" interpolation="0" />
 		<key row="432" value="6.000000" interpolation="0" />
-		<key row="456" value="0.000000" interpolation="0" />
+		<key row="456" value="7.000000" interpolation="0" />
 		<key row="528" value="8.000000" interpolation="0" />
-		<key row="552" value="0.000000" interpolation="0" />
-		<key row="576" value="9.000000" interpolation="0" />
+		<key row="576" value="0.000000" interpolation="0" />
+		<key row="624" value="9.000000" interpolation="0" />
 	</track>
 	<track name="Eggton:RunnyEggs" folded="0" muteKeyCount="0"
 color="ff22ff22">
@@ -52,16 +89,21 @@ color="ffff8822">
 		<key row="0" value="0.000000" interpolation="1" />
 		<key row="72" value="0.190000" interpolation="1" />
 		<key row="312" value="4.000000" interpolation="1" />
-		<key row="360" value="5.000000" interpolation="1" />
+		<key row="360" value="5.200000" interpolation="1" />
 		<key row="408" value="5.600000" interpolation="1" />
 		<key row="456" value="5.600000" interpolation="1" />
-		<key row="480" value="6.100000" interpolation="0" />
-		<key row="516" value="6.100000" interpolation="3" />
-		<key row="552" value="6.700000" interpolation="1" />
-		<key row="558" value="7.000000" interpolation="1" />
-		<key row="564" value="8.000000" interpolation="1" />
-		<key row="576" value="8.230000" interpolation="1" />
-		<key row="648" value="9.000000" interpolation="1" />
+		<key row="470" value="5.940000" interpolation="1" />
+		<key row="472" value="6.010000" interpolation="1" />
+		<key row="474" value="6.050000" interpolation="1" />
+		<key row="476" value="6.080000" interpolation="1" />
+		<key row="478" value="6.100000" interpolation="1" />
+		<key row="480" value="6.110000" interpolation="0" />
+		<key row="516" value="6.110000" interpolation="3" />
+		<key row="576" value="6.750000" interpolation="1" />
+		<key row="588" value="7.000000" interpolation="1" />
+		<key row="618" value="8.000000" interpolation="1" />
+		<key row="624" value="8.210000" interpolation="1" />
+		<key row="696" value="9.000000" interpolation="1" />
 	</track>
 	<track name="Scene:CamParam" folded="0" muteKeyCount="0"
 color="ff22ff22">
@@ -80,30 +122,19 @@ color="ff4fb292">
 	<track name="Eggton:Bus" folded="0" muteKeyCount="0"
 color="ff22ff22">
 		<key row="0" value="0.000000" interpolation="0" />
-		<key row="408" value="0.000000" interpolation="1" />
+		<key row="396" value="0.000000" interpolation="1" />
 		<key row="438" value="1.000000" interpolation="1" />
 		<key row="456" value="2.000000" interpolation="1" />
 		<key row="480" value="3.000000" interpolation="1" />
 		<key row="510" value="4.000000" interpolation="0" />
 		<key row="549" value="4.000000" interpolation="0" />
-		<key row="576" value="5.000000" interpolation="0" />
 	</track>
 	<track name="Camera:PosX" folded="0" muteKeyCount="0"
-color="ffa9b250">
-		<key row="0" value="10.000000" interpolation="0" />
-		<key row="102" value="-50.000000" interpolation="0" />
-	</track>
+color="ffa9b250" />
 	<track name="Camera:PosY" folded="0" muteKeyCount="0"
-color="ff60b250">
-		<key row="0" value="10.000000" interpolation="2" />
-		<key row="67" value="0.000000" interpolation="1" />
-		<key row="102" value="20.000000" interpolation="1" />
-	</track>
+color="ff60b250" />
 	<track name="Camera:PosZ" folded="0" muteKeyCount="0"
-color="ff4fb292">
-		<key row="0" value="20.000000" interpolation="1" />
-		<key row="102" value="0.000000" interpolation="1" />
-	</track>
+color="ff4fb292" />
 	<track name="Global:Vignette" folded="0" muteKeyCount="0"
 color="ffa9b250">
 		<key row="0" value="1.000000" interpolation="1" />
@@ -111,6 +142,7 @@ color="ffa9b250">
 	<track name="Global:Fade" folded="0" muteKeyCount="0"
 color="ff60b250">
 		<key row="0" value="0.000000" interpolation="1" />
+		<key row="12" value="1.000000" interpolation="0" />
 	</track>
 	<track name="Scene:LookSausage" folded="0" muteKeyCount="0"
 color="ffb27474">

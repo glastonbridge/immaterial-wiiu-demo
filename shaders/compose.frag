@@ -11,8 +11,8 @@ void main()
 {   
     float vignette_darkness = compose_params.x;
     float fade = compose_params.y;
-    float vignette = max(0.0, vignette_darkness - length(in_texcoord - vec2(0.5)));
-    vignette = clamp(vignette, 0.0, 1.0);
+    vec2 centred = in_texcoord - vec2(0.5);
+    float vignette = max(0.0, 1.0 - vignette_darkness * dot(centred, centred));
     vec4 blur = texture(tex_sampler_blur, in_texcoord);
     vec4 orig = texture(tex_sampler_orig, in_texcoord);
     out_color = mix(orig, blur, smoothstep(0.0, 1.0, orig.a)) * vignette * fade;

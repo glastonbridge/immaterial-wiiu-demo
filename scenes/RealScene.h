@@ -87,7 +87,7 @@ static const SplineSegment busRoute[] = {
   {{-50.f, 0.f, -88.f}, {-4.f, 0.f, 0.f}},
   {{-78.f, 0.f, -88.f}, {-6.f, 0.f, 0.f}},
   {{-90.f, 0.f, -100.f}, {-4.f, 0.f, 2.f}},
-  {{-100.f, 0.f, -90.f}, {0.5f, 0.f, 4.f}},
+  {{-102.f, 0.f, -80.f}, {0.5f, 0.f, 4.f}},
   {{-100.f, 0.f, -70.f}, {0.f, 0.f, 2.f}},
   {{-100.f, 0.f, 0.f}, {0.f, 0.f, 12.f}}
 };
@@ -196,6 +196,9 @@ struct RealScene: public SceneBase {
     instances.emplace_back(ID_sofa);
     instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -78.f)), glm::vec3(8.f));
 
+    instances.emplace_back(ID_carpet);
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -60.f));
+
     instances.emplace_back(ID_house2);
     instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-173.f, -9.5f, -73.f)), glm::vec3(1.f)) * rot90;
 
@@ -212,6 +215,14 @@ struct RealScene: public SceneBase {
     instances.back().transform = glm::rotate(
       glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, 0.f, -60.f)), glm::vec3(3.f)),
       glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_viaduct);
+    instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -18.f, -60.f)), glm::vec3(3.f)),
+      glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_carpet);
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -30.f, -100.f));
 
     instances.emplace_back(ID_tablecloth_land);
     instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -70.f)), glm::vec3(0.89f));
@@ -255,7 +266,7 @@ struct RealScene: public SceneBase {
                               syncVal("Camera:FocalLen"),
                               syncVal("Camera:Aperture"),
                               syncVal("Global:FresnelPow"));
-    processOptions = glm::vec4(1.f, 1.0f, 0.0f, 0.0f);
+    processOptions = glm::vec4(syncVal("Global:Vignette"), syncVal("Global:Fade"), 0.0f, 0.0f);
 
     auto const pEggRun = glm::vec3(-80.f, 0.f, -95.f + syncVal("Eggton:RunnyEggs"));
     auto const pSausage = glm::vec3(-75.f, 0.f, -110.f + syncVal("Eggton:Sausage"));
@@ -320,7 +331,7 @@ struct RealScene: public SceneBase {
         auto const p = (pos + pos2)*.5f;
         cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
         cameraView = glm::lookAt(
-          p + glm::vec3(0.f, 15.f, 20.f), p + glm::vec3(0.f, 0.f, -20.f),
+          p + glm::vec3(0.f, 8.f, 20.f), p + glm::vec3(0.f, 0.f, -20.f),
           glm::vec3(0.0f, 1.0f, 0.0f));
       } break;
 
