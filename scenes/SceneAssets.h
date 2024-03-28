@@ -17,7 +17,8 @@ enum materialID : size_t {
     ID_mat_egg,
     ID_mat_building,
     ID_mat_station_building,
-    ID_mat_cardboard_cloud
+    ID_mat_cardboard_cloud,
+    ID_mat_sofa
 };
 
 enum objectID : size_t {
@@ -60,7 +61,8 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/building.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/station_building.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/cardboard_cloud.png"));
-        
+        materials.push_back(std::make_unique<BoneMaterial>("assets/sofa.png"));
+
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
         objects.push_back(LoadObject("assets/cushion.fbx", NULL, materials[ID_mat_duvet].get()));  // placeholder mat
@@ -78,7 +80,7 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/building.fbx", NULL, materials[ID_mat_building].get()));
         objects.push_back(LoadObject("assets/station_building.fbx", NULL, materials[ID_mat_station_building].get())); 
         objects.push_back(LoadObject("assets/cloud.fbx", NULL, materials[ID_mat_cloud].get()));
-        objects.push_back(LoadObject("assets/sofa.fbx", NULL, materials[ID_mat_duvet].get())); // placeholder mat
+        objects.push_back(LoadObject("assets/sofa.fbx", NULL, materials[ID_mat_sofa].get()));
     };
 };
 
