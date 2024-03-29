@@ -67,6 +67,7 @@ void SceneObject::setAnimationFrame(float frame) {
     // Alloc buffer if we need one
     size_t numBones = this->animFrames[0].size();
     if(this->boneMatInterpBuffer == nullptr) {
+      WHBLogPrintf("Allocating bone interp buffer for %d bones", numBones);
       this->boneMatInterpBuffer = (float*)malloc(4 * 4 * numBones * sizeof(float));
     }
 
@@ -76,6 +77,7 @@ void SceneObject::setAnimationFrame(float frame) {
     float animPosRemainder = frame - (float)animPos;
     animPos = animPos % numFrames;
     int animPosNext = (animPos + 1) % numFrames;
+   WHBLogPrintf("animPos: %d, animPosNext: %d, animPosRemainder: %f", animPos, animPosNext, animPosRemainder);
 
     // Copy all the bone mats into the array, interpolating linearly between two adjacent frames
     for(int i = 0; i < numBones; i++) {
@@ -84,6 +86,7 @@ void SceneObject::setAnimationFrame(float frame) {
     }
 
     // Bones to shader buffer 
+    WHBLogPrintf("Setting bone transform uniform");
     this->getRenderObject()->setUniformFloatMat(UniformType::BONE_TRANSFORM, this->boneMatInterpBuffer, 4 * 4 * numBones);
 }
 

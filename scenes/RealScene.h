@@ -317,6 +317,9 @@ struct RealScene: public SceneBase {
         glm::translate(glm::mat4(1.f),
             glm::vec3(11.f, 40.f, -75.f)),
             glm::vec3(0.4f));
+
+    // Temporary: Sleepytime duvet
+    //instances.emplace_back(ID_eepytime);
   }
 
   void update(double time) final {
@@ -417,6 +420,11 @@ struct RealScene: public SceneBase {
 
       busPos = pos;
     }
+
+
+    // Temporary: Sleepytimt duvez
+    //instances.back().transform = glm::scale(instances[0].transform, glm::vec3(5.0f));
+    //instances.back().anim = float(time) * 24.0f;
 
     auto const cam = unsigned(syncVal("Scene:CamID"));
     switch (cam) {

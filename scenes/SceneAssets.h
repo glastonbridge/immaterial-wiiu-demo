@@ -55,6 +55,8 @@ enum objectID : size_t {
     ID_string_vurpo,
     ID_string_halcy,
     ID_string_violet,
+
+    ID_eepytime,
     _ID_ASSETS_MAX // keep at end
 };
 
@@ -120,6 +122,8 @@ struct SceneAssets {
         objects.push_back(LoadText(materials[ID_mat_text].get(), "vurpo", text_vertices, text_normals));
         objects.push_back(LoadText(materials[ID_mat_text].get(), "halcy", text_vertices, text_normals));
         objects.push_back(LoadText(materials[ID_mat_text].get(), "violet", text_vertices, text_normals));
+
+        objects.push_back(LoadObject("assets/eepytime.fbx", "Cube", materials[ID_mat_duvet].get()));
     };
 };
 
