@@ -142,13 +142,13 @@ std::unique_ptr<SceneObject> LoadQuad(SceneMaterial* material) {
 // this is not real kerning, so it's always going to look at least a bit janky
 // this is just the offset from the start of one character to the start of the next one
 // Adjust if necessary
-const float x_widths[46] = {
+const float x_widths[47] = {
    // the letters
    22.f, 19.f, 21.f, 21.f, 18.f, 17.f, 24.f, 22.f, 11.f, 17.f, 21.f, 17.f, 28.f, 23.f, 24.f, 19.f, 25.f, 20.f, 19.f, 19.f, 23.f, 22.f, 30.f, 21.f, 22.f, 22.f,
    // the numbers
    16.f, 19.f, 19.f, 21.f, 19.f, 19.f, 19.f, 19.f, 19.f, 19.f,
    // the symbols
-   13.f, 13.f, 20.f, 13.f, 16.f, 13.f, 15.f, 10.f, 16.f, 18.f
+   13.f, 13.f, 20.f, 13.f, 16.f, 13.f, 15.f, 10.f, 16.f, 18.f, 20.f
 };
 
 /**
@@ -315,6 +315,9 @@ LoadText(SceneMaterial * material, std::string text, std::vector<std::vector<flo
             break;
          case '~':
             character_index = 45;
+            break;
+         case '&':
+            character_index = 46;
             break;
          default:
             WHBLogPrintf("We don't have character %c in our font! skipping", c);

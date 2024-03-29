@@ -101,10 +101,10 @@ struct SceneAssets {
         std::vector<std::vector<float>> text_normals;
         LoadTypeUFBX("assets/type.fbx", text_vertices, text_normals);
 
-        // Our "font" has the following characters: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~
+        // Our "font" has the following characters: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~&
         // all letters will be drawn in uppercase
         // more characters can be added if really necessary
-        objects.push_back(LoadText(materials[ID_mat_text].get(), "We have text now!", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "Eggs & spam & ham", text_vertices, text_normals));
         objects.push_back(LoadText(materials[ID_mat_text].get(), "2-3 bananas is a snack.", text_vertices, text_normals));
     };
 };

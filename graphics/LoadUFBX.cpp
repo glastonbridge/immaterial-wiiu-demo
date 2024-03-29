@@ -325,7 +325,7 @@ int LoadTypeUFBX(
         float max_x = -FLT_MAX, max_y = -FLT_MAX, max_z = -FLT_MAX;
 
         #ifdef DEBUG
-        WHBLogPrintf("Found object %s\n", node->name.data);
+        WHBLogPrintf("Found object %s", node->name.data);
         WHBLogPrintf("-> Loading\n");
         #endif
 
