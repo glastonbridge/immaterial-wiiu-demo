@@ -227,6 +227,12 @@ struct RealScene: public SceneBase {
     instances.emplace_back(ID_tablecloth_land);
     instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -70.f)), glm::vec3(0.89f));
 
+    instances.emplace_back(ID_string_1);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 10.f, 50.f)), glm::vec3(0.15f));
+
+    instances.emplace_back(ID_string_2);
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f, 3.f, 45.f)), glm::vec3(0.1f));
+
     //instances.emplace_back(ID_skybox);
   }
 

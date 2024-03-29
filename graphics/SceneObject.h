@@ -28,3 +28,4 @@ protected:
 
 std::unique_ptr<SceneObject> LoadObject(const char* path, const char* name, SceneMaterial* material = nullptr);
 std::unique_ptr<SceneObject> LoadQuad(SceneMaterial* material = nullptr);
+std::unique_ptr<SceneObject> LoadText(SceneMaterial *material, std::string text, std::vector<std::vector<float>> vertices, std::vector<std::vector<float>> normals);

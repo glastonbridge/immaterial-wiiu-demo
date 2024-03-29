@@ -3,6 +3,7 @@
 #include "../renderer/RenderObject.h"
 #include "../graphics/SceneObject.h"
 #include "../graphics/MaterialCollection.h"
+#include "../graphics/LoadUFBX.h"
 
 enum materialID : size_t {
     ID_mat_train,
@@ -21,7 +22,8 @@ enum materialID : size_t {
     ID_mat_cushion,
     ID_mat_tablecloth,
     ID_mat_egg_carton,
-    ID_mat_carpet
+    ID_mat_carpet,
+    ID_mat_text
 };
 
 enum objectID : size_t {
@@ -43,6 +45,9 @@ enum objectID : size_t {
     ID_tablecloth_land,
     ID_egg_carton,
     ID_carpet,
+
+    ID_string_1,
+    ID_string_2,
     _ID_ASSETS_MAX // keep at end
 };
 
@@ -69,6 +74,7 @@ struct SceneAssets {
         materials.push_back(std::make_unique<BoneMaterial>("assets/tablecloth.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/egg_carton.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/carpet.png"));
+        materials.push_back(std::make_unique<TextureMaterial>("assets/viaduct.png"));
 
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
@@ -89,6 +95,17 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/tablecloth.fbx", NULL, materials[ID_mat_tablecloth].get()));
         objects.push_back(LoadObject("assets/egg_carton.fbx", NULL, materials[ID_mat_egg_carton].get()));
         objects.push_back(LoadObject("assets/carpet.fbx", NULL, materials[ID_mat_carpet].get()));
+
+        // load the 3d font fbx once to be reused for text objects:
+        std::vector<std::vector<float>> text_vertices;
+        std::vector<std::vector<float>> text_normals;
+        LoadTypeUFBX("assets/type.fbx", text_vertices, text_normals);
+
+        // Our "font" has the following characters: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~
+        // all letters will be drawn in uppercase
+        // more characters can be added if really necessary
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "We have text now!", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "2-3 bananas is a snack.", text_vertices, text_normals));
     };
 };
 

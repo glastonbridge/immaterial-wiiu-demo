@@ -277,7 +277,7 @@ int LoadUFBX(
 int LoadTypeUFBX(
     const std::string &path,
     std::vector<std::vector<float>> &v_vertices,
-    std::vector<std::vector<float>> &v_texcoords,
+    //std::vector<std::vector<float>> &v_texcoords,
     std::vector<std::vector<float>> &v_normals)
 {
 
@@ -319,12 +319,13 @@ int LoadTypeUFBX(
         ufbx_node *node = scene->nodes.data[i];
         if (node->is_root)
             continue;
+        WHBLogPrintf("Found character object %s", node->name.data);
         
         std::vector<float> vertices;
-        std::vector<float> texcoords;
+        //std::vector<float> texcoords;
         std::vector<float> normals;
-        float min_x,min_y,min_z = FLT_MAX;
-        float max_x,max_y,max_z = FLT_MIN;
+        float min_x = FLT_MAX, min_y = FLT_MAX, min_z = FLT_MAX;
+        float max_x = -FLT_MAX, max_y = -FLT_MAX, max_z = -FLT_MAX;
 
         #ifdef DEBUG
         WHBLogPrintf("Found object %s\n", node->name.data);
@@ -379,16 +380,18 @@ int LoadTypeUFBX(
 
                     min_x = std::min((float)pos.x, min_x);
                     max_x = std::max((float)pos.x, max_x);
+
                     min_y = std::min((float)pos.y, min_y);
                     max_y = std::max((float)pos.y, max_y);
+
                     min_z = std::min((float)pos.z, min_z);
                     max_z = std::max((float)pos.z, max_z);
 
                     vertices.push_back(pos.x);
                     vertices.push_back(pos.y);
                     vertices.push_back(pos.z);
-                    texcoords.push_back(uv.x);
-                    texcoords.push_back(1.0 - uv.y);
+                    // texcoords.push_back(uv.x);
+                    // texcoords.push_back(1.0 - uv.y);
                     normals.push_back(normal.x);
                     normals.push_back(normal.y);
                     normals.push_back(normal.z);
@@ -399,7 +402,7 @@ int LoadTypeUFBX(
             WHBLogPrintf("Loaded %ld verts", setVertIdx);
             #endif
 
-            float center_x = (min_x + max_x) / 2.0;
+            float center_x = min_x;
             float center_y = (min_y + max_y) / 2.0;
             float center_z = (min_z + max_z) / 2.0;
             for (int i=0; i<vertices.size(); i+=3) {
@@ -409,7 +412,7 @@ int LoadTypeUFBX(
             }
 
             v_vertices.push_back(vertices);
-            v_texcoords.push_back(texcoords);
+            //v_texcoords.push_back(texcoords);
             v_normals.push_back(normals);
         }
         else {

@@ -52,7 +52,7 @@ struct TextureMaterial: public SceneMaterial {
     attribs.push_back(AttribSpec {"in_normal", BufferType::NORMAL, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
     renderMaterial.reset(new RenderMaterial(
       "shaders/projected.vert",
-      "shaders/textured.frag",
+      "shaders/bones.frag",
       attribs
     ));
     renderMaterial->setTexture(new RenderTexture(path_str));
