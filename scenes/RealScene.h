@@ -17,6 +17,10 @@ enum Cameras {
   CAM_station,
   CAM_crossing,
   CAM_sofa,
+  CAM_platform,
+  CAM_follow_bus,
+  CAM_power_station3,
+  CAM_titles,
 };
 
 struct SplineSegment {
@@ -78,18 +82,31 @@ static const SplineSegment track[] = {
   {{50.f,0.f,-40.f}, {0.f,0.f,-15.f}},
   {{20.f,0.f,-60.f}, {-10.f,0.f,0.f}},
   {{-80.f,0.f,-60.f}, {-10.f,0.f,0.f}},
-  {{-146.f,0.f,-60.f}, {-1.f,0.f,0.f}},
-  {{-156.f,-9.5f,-60.f}, {-1.f,0.f,0.f}},
-  {{-236.f,-9.5f,-60.f}, {-10.f,0.f,0.f}}
+  {{-146.f,0.f,-60.f}, {-2.f,0.f,0.f}},
+  {{-156.f,-9.5f,-60.f}, {-2.f,0.f,0.f}},
+  {{-220.f,-9.5f,-60.f}, {-10.f,0.f,0.f}},
+  {{-220.f,-9.5f,-79.f}, {10.f,0.f,0.f}},
+  {{-176.f,-4.5f,-79.f}, {8.f,0.f,0.f}},
+  {{-156.f,-9.5f,-70.f}, {2.f,0.f,0.f}},
+  {{-146.f,0.f,-70.f}, {4.f,0.f,0.f}},
+  {{-80.f,0.f,-60.f}, {10.f,0.f,0.f}},
+  {{20.f,0.f,-60.f}, {20.f,0.f,0.f}},
+  {{50.f,0.f,-40.f}, {0.f,0.f,15.f}},
+  {{20.f,0.f,-10.f}, {0.f,0.f,10.f}},
+  {{40.f,0.f,0.f}, {10.f,0.f,0.f}},
+  {{60.f,0.f,40.f}, {0.f,0.f,10.f}},
+  {{0.f,0.f,60.f}, {-10.f,0.f,0.f}}
 };
 
 static const SplineSegment busRoute[] = {
-  {{-50.f, 0.f, -88.f}, {-4.f, 0.f, 0.f}},
-  {{-78.f, 0.f, -88.f}, {-6.f, 0.f, 0.f}},
+  {{-55.f, 0.f, -88.f}, {-4.f, 0.f, 0.f}},
+  {{-80.f, 0.f, -88.f}, {-6.f, 0.f, 0.f}},
   {{-90.f, 0.f, -100.f}, {-4.f, 0.f, 2.f}},
   {{-102.f, 0.f, -80.f}, {0.5f, 0.f, 4.f}},
-  {{-100.f, 0.f, -70.f}, {0.f, 0.f, 2.f}},
-  {{-100.f, 0.f, 0.f}, {0.f, 0.f, 12.f}}
+  {{-100.f, 0.f, -69.f}, {0.f, 0.f, 2.f}},
+  {{-120.f, 0.f, 0.f}, {0.f, 0.f, 12.f}},
+  {{-105.f, 0.f, 40.f}, {8.f, 0.f, 0.f}},
+  {{-55.f, 0.f, 30.f}, {10.f, 0.f, 0.f}}
 };
 
 static const glm::vec3 RunnyEggs[] = {
@@ -225,15 +242,74 @@ struct RealScene: public SceneBase {
     instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -30.f, -100.f));
 
     instances.emplace_back(ID_tablecloth_land);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -70.f)), glm::vec3(0.89f));
+    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -40.f)), glm::vec3(0.89f));
 
-    instances.emplace_back(ID_string_1);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 10.f, 50.f)), glm::vec3(0.15f));
+    instances.emplace_back(ID_cardboard_cloud);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(65.f, 42.f, 50.f)),
+            glm::vec3(1.f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_2);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f, 3.f, 45.f)), glm::vec3(0.1f));
+    instances.emplace_back(ID_cardboard_cloud);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(70.f, 26.f, 70.f)),
+            glm::vec3(1.f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    //instances.emplace_back(ID_skybox);
+    instances.emplace_back(ID_string_slipstream);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(50.f, 42.f, 40.f)),
+            glm::vec3(0.2f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_string_presents);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(50.f, 36.f, 50.f)),
+            glm::vec3(0.14f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_string_title);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(50.f, 20.f, 45.f)),
+            glm::vec3(0.3f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_string_beanbag);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(-217.f, -26.f, -23.f)),
+            glm::vec3(0.19f)),
+            glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+
+    instances.emplace_back(ID_string_aldroid);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(-209.f, -26.f, -17.f)),
+            glm::vec3(0.19f)),
+            glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+
+    instances.emplace_back(ID_string_vurpo);
+    instances.back().transform = glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(-95.f, 2.f, 30.f)),
+            glm::vec3(0.19f));
+
+    instances.emplace_back(ID_string_halcy);
+    instances.back().transform = glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(-40.f, -28.f, -50.f)),
+            glm::vec3(0.19f));
+
+    instances.emplace_back(ID_string_violet);
+    instances.back().transform = glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(11.f, 40.f, -75.f)),
+            glm::vec3(0.4f));
   }
 
   void update(double time) final {
@@ -243,8 +319,9 @@ struct RealScene: public SceneBase {
     auto const beat = std::floor(beattime);
     auto const frac = beattime - beat;
 
-    auto const bounce = 1.f - 4.f * (frac - 0.5f) * (frac - 0.5f);
-    auto const sway = (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 1.f : -1.f);
+    auto const bamp = syncVal("Train:Bounce");
+    auto const bounce = bamp * (1.f - 4.f * (frac - 0.5f) * (frac - 0.5f));
+    auto const sway = bamp * (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 0.2f : -0.2f);
 
     auto const t1 = std::min(syncVal("Train:Car1"), float(std::size(track) - 1));
     auto const pos = spline(track, t1);
@@ -252,7 +329,7 @@ struct RealScene: public SceneBase {
 
     instances[0].transform = glm::translate(glm::mat4(1.f), pos + glm::vec3(0.f, bounce, 0.f)) *
         glm::transpose(glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), sway * 0.2f, glm::vec3(0.f, 0.f, 1.f));
+        glm::rotate(glm::mat4(1.f), sway, glm::vec3(0.f, 0.f, 1.f));
 
     auto const couple = std::min(1.f, 0.5f / glm::length(dir));
     auto t2 = t1 - couple;
@@ -266,7 +343,7 @@ struct RealScene: public SceneBase {
     auto const dir2 = splineDir(track, t2);
     instances[1].transform = glm::translate(glm::mat4(1.f), pos2 + glm::vec3(0.f, bounce, 0.f)) *
         glm::transpose(glm::lookAt(glm::vec3(0.f), dir2, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), sway * -0.2f, glm::vec3(0.f, 0.f, 1.f));
+        glm::rotate(glm::mat4(1.f), -sway, glm::vec3(0.f, 0.f, 1.f));
 
     cameraOptions = glm::vec4(syncVal("Camera:FocalDist"),
                               syncVal("Camera:FocalLen"),
@@ -277,85 +354,6 @@ struct RealScene: public SceneBase {
     auto const pEggRun = glm::vec3(-80.f, 0.f, -95.f + syncVal("Eggton:RunnyEggs"));
     auto const pSausage = glm::vec3(-75.f, 0.f, -110.f + syncVal("Eggton:Sausage"));
 
-    auto const cam = unsigned(syncVal("Scene:CamID"));
-    switch (cam) {
-      default: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(pos.x, 20.0f, pos.z + 40.0), pos,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_houses: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(27.f, 12.0f, 15.f), glm::vec3(67.f, 0.8f, 3.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_power_station: {
-        float const t = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(40.f - t, 0.2f, -62.f), glm::vec3(50.f - t, 8.f, -75.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_power_station2: {
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-80.f, 16.0f, -60.f), glm::vec3(50.f, 0.5f, -80.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_bridge: {
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-26.f, 0.0f, 50.f), glm::vec3(-26.f, 0.0f, -80.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_eggton: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-90.f, 8.f, -75.f), pEggRun,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_sausage: {
-        cameraProjection = glm::perspective(glm::radians(syncVal("Scene:CamParam")), 1920.0f/1080.0f, 0.1f, 2000.f);
-
-        auto const weight = syncVal("Scene:LookSausage");
-        auto const target = (1.f - weight) * glm::vec3(-70.f, 2.f, -88.f) +
-            weight * (pSausage + glm::vec3(0.f, 1.f, 1.f));
-        cameraView = glm::lookAt(
-          glm::vec3(-90.f, 8.f, -86.f), target,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_station: {
-        auto const p = (pos + pos2)*.5f;
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          p + glm::vec3(0.f, 8.f, 20.f), p + glm::vec3(0.f, 0.f, -20.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_crossing: {
-        cameraProjection = glm::perspective(glm::radians(60.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          pos + glm::vec3(0.f, 2.f, -2.f), pos + glm::vec3(1.f, 2.f, -4.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-
-      case CAM_sofa: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-200.f, -6.f, 0.f), glm::vec3(-200.f, -6.f, -78.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-    }
-
     // Cooling tower clouds
     for(int i = 0; i < 8; i++) {
       auto const beattime = float(time) * (25.f/60.f) + float(i)*.25f;
@@ -365,6 +363,7 @@ struct RealScene: public SceneBase {
       instances[i + 2].transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f + (i & 3) * 15.f, y, -75.f)), glm::vec3(s));
     }
 
+    glm::vec3 busPos;
     // Runny eggs
     {
       auto const t = syncVal("Eggton:RunnyEggs");
@@ -408,8 +407,126 @@ struct RealScene: public SceneBase {
 
       instances[19].transform = glm::translate(glm::mat4(1.f), pos) *
           glm::transpose(glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) * eggmat;
+
+      busPos = pos;
     }
 
+    auto const cam = unsigned(syncVal("Scene:CamID"));
+    switch (cam) {
+      default: {
+        auto const view = glm::vec3(syncVal("Camera:Pos:X"),
+                                    syncVal("Camera:Pos:Y"),
+                                    syncVal("Camera:Pos:Z"));
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(pos + view), pos + glm::vec3(0.f, 1.f, 0.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_houses: {
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(27.f, 12.0f, 15.f), glm::vec3(67.f, 0.8f, 3.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_power_station: {
+        float const t = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(40.f - t, 0.2f, -62.f), glm::vec3(50.f - t, 8.f, -75.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_power_station2: {
+        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-80.f, 16.0f, -60.f), glm::vec3(50.f, 0.5f, -80.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_bridge: {
+        auto const lookdown = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-26.f, 0.0f, 50.f), glm::vec3(-26.f, -lookdown, -80.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_eggton: {
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-90.f, 8.f, -75.f), pEggRun,
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_sausage: {
+        cameraProjection = glm::perspective(glm::radians(syncVal("Scene:CamParam")), 1920.0f/1080.0f, 0.1f, 2000.f);
+
+        auto const weight = syncVal("Scene:LookSausage");
+        auto const target = (1.f - weight) * glm::vec3(-70.f, 2.f, -88.f) +
+            weight * (pSausage + glm::vec3(0.f, 1.f, 1.f));
+        cameraView = glm::lookAt(
+          glm::vec3(-90.f, 8.f, -86.f), target,
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_station: {
+        auto const p = (pos + pos2)*.5f;
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          p + glm::vec3(0.f, 8.f, 20.f), p + glm::vec3(0.f, 0.f, -20.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_crossing: {
+        cameraProjection = glm::perspective(glm::radians(60.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          pos + glm::vec3(0.f, 2.f, -2.f), pos + glm::vec3(1.f, 2.f, -4.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_sofa: {
+        auto const lookdown = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-196.f, -6.f, 0.f), glm::vec3(-196.f, -6.f - lookdown, -78.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_platform: {
+        cameraProjection = glm::perspective(glm::radians(60.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-74.f, 1.5f, -64.f), glm::vec3(-80.f, 1.5f, -62.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_follow_bus: {
+        auto const view = glm::vec3(syncVal("Camera:Pos:X"),
+                                    syncVal("Camera:Pos:Y"),
+                                    syncVal("Camera:Pos:Z"));
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(busPos + view), busPos,
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_power_station3: {
+        auto const lookup = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(40.f, 3.0f, 0.f), glm::vec3(32.5f, 2.f + lookup, -75.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_titles: {
+        auto const lookdown = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-40.f, 40.f, 60.f), glm::vec3(40.f - lookdown, 40.f - lookdown, 60.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+    }
   }
 
   void teardown() final {

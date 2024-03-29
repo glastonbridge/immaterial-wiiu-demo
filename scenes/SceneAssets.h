@@ -46,8 +46,15 @@ enum objectID : size_t {
     ID_egg_carton,
     ID_carpet,
 
-    ID_string_1,
-    ID_string_2,
+    ID_string_slipstream,
+    ID_string_svatg,
+    ID_string_presents,
+    ID_string_title,
+    ID_string_beanbag,
+    ID_string_aldroid,
+    ID_string_vurpo,
+    ID_string_halcy,
+    ID_string_violet,
     _ID_ASSETS_MAX // keep at end
 };
 
@@ -104,8 +111,15 @@ struct SceneAssets {
         // Our "font" has the following characters: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~&
         // all letters will be drawn in uppercase
         // more characters can be added if really necessary
-        objects.push_back(LoadText(materials[ID_mat_text].get(), "Eggs & spam & ham", text_vertices, text_normals));
-        objects.push_back(LoadText(materials[ID_mat_text].get(), "2-3 bananas is a snack.", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "slipstream", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "& svatg", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "present", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "immaterial", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "mrs beanbag", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "aldroid", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "vurpo", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "halcy", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "violet", text_vertices, text_normals));
     };
 };
 
