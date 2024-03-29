@@ -18,6 +18,5 @@ int LoadUFBX(
 int LoadTypeUFBX(
     const std::string &path,
     std::vector<std::vector<float>> &vertices,
-    //std::vector<std::vector<float>> &texcoords,
     std::vector<std::vector<float>> &normals
 );

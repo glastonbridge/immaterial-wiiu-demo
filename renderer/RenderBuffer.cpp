@@ -95,7 +95,7 @@ RenderBuffer::RenderBuffer(bool highPrecision, int width_override, int height_ov
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, texture.surface.image, texture.surface.imageSize);
 
     // Also set up a sampler
-    GX2InitSampler(&sampler, GX2_TEX_CLAMP_MODE_WRAP, GX2_TEX_XY_FILTER_MODE_LINEAR); // TODO can be point unless we do stupid tricks for cheap blur in shader
+    GX2InitSampler(&sampler, GX2_TEX_CLAMP_MODE_CLAMP, GX2_TEX_XY_FILTER_MODE_LINEAR); // TODO can be point unless we do stupid tricks for cheap blur in shader
 
     // Color buffer
     memset(&colorBuffer, 0, sizeof(GX2ColorBuffer));    

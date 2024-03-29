@@ -277,7 +277,6 @@ int LoadUFBX(
 int LoadTypeUFBX(
     const std::string &path,
     std::vector<std::vector<float>> &v_vertices,
-    //std::vector<std::vector<float>> &v_texcoords,
     std::vector<std::vector<float>> &v_normals)
 {
 
@@ -319,10 +318,8 @@ int LoadTypeUFBX(
         ufbx_node *node = scene->nodes.data[i];
         if (node->is_root)
             continue;
-        WHBLogPrintf("Found character object %s", node->name.data);
         
         std::vector<float> vertices;
-        //std::vector<float> texcoords;
         std::vector<float> normals;
         float min_x = FLT_MAX, min_y = FLT_MAX, min_z = FLT_MAX;
         float max_x = -FLT_MAX, max_y = -FLT_MAX, max_z = -FLT_MAX;
@@ -390,8 +387,6 @@ int LoadTypeUFBX(
                     vertices.push_back(pos.x);
                     vertices.push_back(pos.y);
                     vertices.push_back(pos.z);
-                    // texcoords.push_back(uv.x);
-                    // texcoords.push_back(1.0 - uv.y);
                     normals.push_back(normal.x);
                     normals.push_back(normal.y);
                     normals.push_back(normal.z);
@@ -412,14 +407,12 @@ int LoadTypeUFBX(
             }
 
             v_vertices.push_back(vertices);
-            //v_texcoords.push_back(texcoords);
             v_normals.push_back(normals);
         }
         else {
             WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!");
         }
     }
-    WHBLogPrintf("loaded %i objects from type file", v_vertices.size());
     free(data);
     return (1);
 }
