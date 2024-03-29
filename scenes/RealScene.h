@@ -247,36 +247,43 @@ struct RealScene: public SceneBase {
     instances.emplace_back(ID_cardboard_cloud);
     instances.back().transform = glm::rotate(glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(65.f, 42.f, 50.f)),
+            glm::vec3(65.f, 43.f, 48.f)),
             glm::vec3(1.f)),
             glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
     instances.emplace_back(ID_cardboard_cloud);
     instances.back().transform = glm::rotate(glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(70.f, 26.f, 70.f)),
+            glm::vec3(70.f, 26.f, 72.f)),
             glm::vec3(1.f)),
             glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
     instances.emplace_back(ID_string_slipstream);
     instances.back().transform = glm::rotate(glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 42.f, 40.f)),
+            glm::vec3(50.f, 44.f, 40.f)),
+            glm::vec3(0.2f)),
+            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+
+    instances.emplace_back(ID_string_svatg);
+    instances.back().transform = glm::rotate(glm::scale(
+        glm::translate(glm::mat4(1.f),
+            glm::vec3(50.f, 39.f, 46.f)),
             glm::vec3(0.2f)),
             glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
     instances.emplace_back(ID_string_presents);
     instances.back().transform = glm::rotate(glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 36.f, 50.f)),
+            glm::vec3(50.f, 35.f, 50.f)),
             glm::vec3(0.14f)),
             glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
     instances.emplace_back(ID_string_title);
     instances.back().transform = glm::rotate(glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 20.f, 45.f)),
-            glm::vec3(0.3f)),
+            glm::vec3(60.f, 20.f, 42.f)),
+            glm::vec3(0.2f)),
             glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
     instances.emplace_back(ID_string_beanbag);
