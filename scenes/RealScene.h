@@ -82,7 +82,7 @@ static const SplineSegment track[] = {
   {{50.f,0.f,-40.f}, {0.f,0.f,-15.f}},
   {{20.f,0.f,-60.f}, {-10.f,0.f,0.f}},
   {{-80.f,0.f,-60.f}, {-10.f,0.f,0.f}},
-  {{-146.f,0.f,-60.f}, {-2.f,0.f,0.f}},
+  {{-146.f,0.f,-60.f}, {-4.f,0.f,0.f}},
   {{-156.f,-9.5f,-60.f}, {-2.f,0.f,0.f}},
   {{-220.f,-9.5f,-60.f}, {-10.f,0.f,0.f}},
   {{-220.f,-9.5f,-79.f}, {10.f,0.f,0.f}},
@@ -309,8 +309,8 @@ struct RealScene: public SceneBase {
     instances.emplace_back(ID_string_halcy);
     instances.back().transform = glm::scale(
         glm::translate(glm::mat4(1.f),
-            glm::vec3(-40.f, -28.f, -50.f)),
-            glm::vec3(0.19f));
+            glm::vec3(-45.f, -26.f, -50.f)),
+            glm::vec3(0.34f));
 
     instances.emplace_back(ID_string_violet);
     instances.back().transform = glm::scale(
