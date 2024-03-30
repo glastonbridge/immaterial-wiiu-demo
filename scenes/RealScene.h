@@ -21,6 +21,7 @@ enum Cameras {
   CAM_follow_bus,
   CAM_power_station3,
   CAM_titles,
+  CAM_crossing2,
 };
 
 struct SplineSegment {
@@ -104,6 +105,7 @@ static const SplineSegment busRoute[] = {
   {{-90.f, 0.f, -100.f}, {-4.f, 0.f, 2.f}},
   {{-102.f, 0.f, -80.f}, {0.5f, 0.f, 4.f}},
   {{-100.f, 0.f, -69.f}, {0.f, 0.f, 2.f}},
+  {{-100.f, 0.f, -30.f}, {0.f, 0.f, 10.f}},
   {{-120.f, 0.f, 0.f}, {0.f, 0.f, 12.f}},
   {{-105.f, 0.f, 40.f}, {8.f, 0.f, 0.f}},
   {{-55.f, 0.f, 30.f}, {10.f, 0.f, 0.f}}
@@ -153,6 +155,8 @@ struct RealScene: public SceneBase {
 
     instances.emplace_back(ID_egg_carton);
     instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-110.f, 0.f, -70.f)) * eggmat;
+
+    instances.emplace_back(ID_toast);
 
     for(int i = 0; i < 4; i++) {
       instances.emplace_back(ID_lampshade);
@@ -209,6 +213,29 @@ struct RealScene: public SceneBase {
 
     instances.emplace_back(ID_station_building);
     instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-80.f, 0.f, -70.f)) * rot90;
+
+    instances.emplace_back(ID_crossing_signs);
+    instances.back().transform = glm::scale(
+      glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -57.f)), glm::vec3(0.4f));
+
+    instances.emplace_back(ID_crossing_signs);
+    instances.back().transform = glm::scale(
+      glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -57.f)), glm::vec3(0.4f));
+
+    instances.emplace_back(ID_crossing_signs);
+    instances.back().transform = glm::scale(
+      glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -63.f)), glm::vec3(-.4f, .4, -.4f));
+
+    instances.emplace_back(ID_crossing_signs);
+    instances.back().transform = glm::scale(
+      glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -63.f)), glm::vec3(-.4f, .4, -.4f));
+
+
+    instances.emplace_back(ID_house1);
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-91.f, 0.f, -20.f));
+
+    instances.emplace_back(ID_house1);
+    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -8.f));
 
     instances.emplace_back(ID_sofa);
     instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -78.f)), glm::vec3(8.f));
@@ -357,7 +384,7 @@ struct RealScene: public SceneBase {
 
     cameraOptions = glm::vec4(syncVal("Camera:FocalDist"),
                               syncVal("Camera:FocalLen"),
-                              syncVal("Camera:Aperture"),
+                              0.f,
                               syncVal("Global:FresnelPow"));
     processOptions = glm::vec4(syncVal("Global:Vignette"), syncVal("Global:Fade"), 0.0f, 0.0f);
 
@@ -373,11 +400,11 @@ struct RealScene: public SceneBase {
       instances[i + 2].transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f + (i & 3) * 15.f, y, -75.f)), glm::vec3(s));
     }
 
+    auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
     glm::vec3 busPos;
     // Runny eggs
     {
       auto const t = syncVal("Eggton:RunnyEggs");
-      auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
       auto const eggmat = glm::scale(glm::transpose(rot90), glm::vec3(0.75f));
       for(int i = 0; i < 6; i++) {
         auto const beattime = (float(time) * 10.f + float(i)) / 3.f;
@@ -421,6 +448,12 @@ struct RealScene: public SceneBase {
       busPos = pos;
     }
 
+    // Toast
+    {
+      auto const t = syncVal("Eggton:Toast");
+      instances[20].transform = glm::scale(
+        glm::translate(glm::mat4(1.f), glm::vec3(-106.f, 0.f, -52.f - t)) * glm::transpose(rot90), glm::vec3(0.9f));
+    }
 
     // Temporary: Sleepytimt duvez
     //instances.back().transform = glm::scale(instances[0].transform, glm::vec3(5.0f));
@@ -539,6 +572,14 @@ struct RealScene: public SceneBase {
         cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
         cameraView = glm::lookAt(
           glm::vec3(-40.f, 40.f, 60.f), glm::vec3(40.f - lookdown, 40.f - lookdown, 60.f),
+          glm::vec3(0.0f, 1.0f, 0.0f));
+      } break;
+
+      case CAM_crossing2: {
+        auto const height = syncVal("Scene:CamParam");
+        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
+        cameraView = glm::lookAt(
+          glm::vec3(-104.f, 4.f + height, -80.f), glm::vec3(-104.f, height, -60.f),
           glm::vec3(0.0f, 1.0f, 0.0f));
       } break;
     }
