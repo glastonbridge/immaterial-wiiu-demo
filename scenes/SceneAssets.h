@@ -130,7 +130,7 @@ struct SceneAssets {
         objects.push_back(LoadText(materials[ID_mat_text].get(), "aldroid", text_vertices, text_normals));
         objects.push_back(LoadText(materials[ID_mat_text].get(), "vurpo", text_vertices, text_normals));
         objects.push_back(LoadText(materials[ID_mat_text].get(), "halcy", text_vertices, text_normals));
-        objects.push_back(LoadText(materials[ID_mat_text].get(), "violet", text_vertices, text_normals));
+        objects.push_back(LoadText(materials[ID_mat_text].get(), "raccoonviolet", text_vertices, text_normals));
 
         objects.push_back(LoadObject("assets/eepytime.fbx", "Cube", materials[ID_mat_duvet].get()));
         objects.push_back(LoadObject("assets/toast_rack_with_toast.fbx", NULL, materials[ID_mat_toast].get()));

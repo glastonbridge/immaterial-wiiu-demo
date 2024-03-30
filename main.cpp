@@ -100,7 +100,7 @@ int main(int argc, char **argv)
       sync->update();
       
       // Scene switcher
-      int newScene = 0;//syncVal("Global:Scene");
+      int newScene = syncVal("Global:Scene");
       if(currentScene != newScene) {
          if (scene != nullptr) {
             scene->teardown();

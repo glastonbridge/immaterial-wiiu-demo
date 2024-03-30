@@ -15,8 +15,11 @@ color="ff4fb292">
 		<key row="924" value="0.000000" interpolation="0" />
 		<key row="936" value="0.000000" interpolation="2" />
 		<key row="942" value="1.000000" interpolation="0" />
-		<key row="1218" value="1.000000" interpolation="2" />
-		<key row="1224" value="0.000000" interpolation="0" />
+		<key row="1206" value="1.000000" interpolation="1" />
+		<key row="1212" value="0.000000" interpolation="0" />
+		<key row="1224" value="1.000000" interpolation="2" />
+		<key row="1236" value="0.100000" interpolation="0" />
+		<key row="1278" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Train:Car1" folded="0" muteKeyCount="0"
 color="ffff8822">
@@ -51,7 +54,12 @@ color="ffff8822">
 		<key row="1080" value="17.000000" interpolation="1" />
 		<key row="1128" value="18.000000" interpolation="1" />
 		<key row="1176" value="19.000000" interpolation="1" />
-		<key row="1224" value="20.000000" interpolation="1" />
+		<key row="1212" value="20.000000" interpolation="0" />
+		<key row="1224" value="0.200000" interpolation="1" />
+		<key row="1260" value="2.000000" interpolation="1" />
+		<key row="1272" value="2.340000" interpolation="1" />
+		<key row="1274" value="2.380000" interpolation="1" />
+		<key row="1276" value="2.400000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalDist" folded="0" muteKeyCount="0"
 color="ff4fb292">
@@ -67,7 +75,7 @@ color="ff4fb292">
 		<key row="150" value="24.500000" interpolation="0" />
 		<key row="162" value="23.000000" interpolation="1" />
 		<key row="168" value="12.000000" interpolation="0" />
-		<key row="216" value="46.000000" interpolation="0" />
+		<key row="216" value="43.000000" interpolation="0" />
 		<key row="264" value="10.000000" interpolation="0" />
 		<key row="312" value="80.000000" interpolation="0" />
 		<key row="360" value="110.000000" interpolation="0" />
@@ -104,6 +112,7 @@ color="ff4fb292">
 		<key row="1128" value="26.000000" interpolation="0" />
 		<key row="1176" value="20.000000" interpolation="0" />
 		<key row="1200" value="12.000000" interpolation="0" />
+		<key row="1224" value="50.000000" interpolation="0" />
 	</track>
 	<track name="Camera:FocalLen" folded="0" muteKeyCount="0"
 color="ff4f71b2">
@@ -131,6 +140,7 @@ color="ff4f71b2">
 		<key row="1032" value="2.000000" interpolation="0" />
 		<key row="1080" value="2.000000" interpolation="0" />
 		<key row="1200" value="4.000000" interpolation="0" />
+		<key row="1224" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Global:FresnelPow" folded="0" muteKeyCount="0"
 color="ffb25091">
@@ -145,15 +155,18 @@ color="ffb25091">
 	<track name="Global:Vignette" folded="0" muteKeyCount="0"
 color="ffa9b250">
 		<key row="0" value="1.000000" interpolation="0" />
-		<key row="1248" value="1.000000" interpolation="3" />
-		<key row="1272" value="100.000000" interpolation="0" />
+		<key row="1284" value="1.000000" interpolation="3" />
+		<key row="1308" value="100.000000" interpolation="0" />
 	</track>
 	<track name="Global:Fade" folded="0" muteKeyCount="0"
 color="ff60b250">
 		<key row="0" value="0.000000" interpolation="1" />
 		<key row="12" value="1.000000" interpolation="0" />
-		<key row="1248" value="1.000000" interpolation="1" />
-		<key row="1272" value="0.000000" interpolation="0" />
+		<key row="1218" value="1.000000" interpolation="1" />
+		<key row="1224" value="0.000000" interpolation="1" />
+		<key row="1230" value="1.000000" interpolation="0" />
+		<key row="1284" value="1.000000" interpolation="1" />
+		<key row="1308" value="0.000000" interpolation="0" />
 	</track>
 	<track name="Eggton:RunnyEggs" folded="0" muteKeyCount="0"
 color="ff22ff22">
@@ -230,7 +243,7 @@ color="ff60b250">
 		<key row="0" value="20.000000" interpolation="0" />
 		<key row="72" value="10.000000" interpolation="0" />
 		<key row="168" value="3.500000" interpolation="0" />
-		<key row="216" value="40.000000" interpolation="0" />
+		<key row="216" value="34.000000" interpolation="0" />
 		<key row="588" value="30.000000" interpolation="0" />
 		<key row="696" value="22.000000" interpolation="0" />
 		<key row="888" value="6.000000" interpolation="0" />
@@ -281,6 +294,7 @@ color="ff22ff22">
 	<track name="Global:Scene" folded="0" muteKeyCount="0"
 color="ff4fb292">
 		<key row="0" value="0.000000" interpolation="0" />
+		<key row="1224" value="1.000000" interpolation="0" />
 	</track>
 	<track name="Scene:LookSausage" folded="0" muteKeyCount="0"
 color="ffb27474">
@@ -293,6 +307,15 @@ color="ffa9b250">
 		<key row="570" value="0.000000" interpolation="3" />
 		<key row="588" value="30.000000" interpolation="1" />
 		<key row="606" value="60.000000" interpolation="0" />
+	</track>
+	<track name="Eepy:Duvet" folded="0" muteKeyCount="0"
+color="ffa9b250">
+		<key row="1224" value="0.000000" interpolation="1" />
+		<key row="1236" value="0.000000" interpolation="2" />
+		<key row="1239" value="27.000000" interpolation="0" />
+		<key row="1255" value="27.000000" interpolation="1" />
+		<key row="1276" value="26.000000" interpolation="2" />
+		<key row="1278" value="24.200001" interpolation="0" />
 	</track>
 </tracks>
 	</rootElement>
