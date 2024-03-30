@@ -25,7 +25,8 @@ enum materialID : size_t {
     ID_mat_carpet,
     ID_mat_text,
     ID_mat_toast,
-    ID_mat_crossing_signs
+    ID_mat_crossing_signs,
+    ID_mat_mattress
 };
 
 enum objectID : size_t {
@@ -61,6 +62,7 @@ enum objectID : size_t {
     ID_eepytime,
     ID_toast,
     ID_crossing_signs,
+    ID_mattress,
     _ID_ASSETS_MAX // keep at end
 };
 
@@ -90,6 +92,7 @@ struct SceneAssets {
         materials.push_back(std::make_unique<TextureMaterial>("assets/viaduct.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/toast_rack_with_toast.png"));
         materials.push_back(std::make_unique<BoneMaterial>("assets/crossing_signs.png"));
+        materials.push_back(std::make_unique<BoneMaterial>("assets/mattress.png"));
 
         // Load objects
         objects.push_back(LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
@@ -132,6 +135,7 @@ struct SceneAssets {
         objects.push_back(LoadObject("assets/eepytime.fbx", "Cube", materials[ID_mat_duvet].get()));
         objects.push_back(LoadObject("assets/toast_rack_with_toast.fbx", NULL, materials[ID_mat_toast].get()));
         objects.push_back(LoadObject("assets/crossing_signs.fbx", NULL, materials[ID_mat_crossing_signs].get()));
+        objects.push_back(LoadObject("assets/tablecloth.fbx", NULL, materials[ID_mat_mattress].get()));
     };
 };
 
