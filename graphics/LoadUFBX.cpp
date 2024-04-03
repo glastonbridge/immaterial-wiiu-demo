@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "../util/ourmalloc.h"
+#include "../util/wuhbsupport.h"
 
 // #define DEBUG 1
 #undef DEBUG
@@ -33,16 +34,9 @@ int LoadUFBX(
     
     // sometimes broken mysteriously, so lets grab it all to memory first
     //ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
-    
-    // Variant WHB
-    /*char *sdRootPath = WHBGetSdCardMountPath();
-    char pathWithSd[256];
-    size_t size;
-    sprintf(pathWithSd, "%s/%s", sdRootPath, path.c_str());
-    char* data = WHBReadWholeFile(pathWithSd, &size);*/
 
     // Variant C Stdlib
-    FILE* file = fopen(path.c_str(), "rb");
+    FILE* file = fopen((WIIU_PATH_PREFIX + path).c_str(), "rb");
     fseek(file, 0, SEEK_END);
     size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);
@@ -287,15 +281,8 @@ int LoadTypeUFBX(
     // sometimes broken mysteriously, so lets grab it all to memory first
     // ufbx_scene *scene = ufbx_load_file(path.c_str(), &opts, &error);
 
-    // Variant WHB
-    /*char *sdRootPath = WHBGetSdCardMountPath();
-    char pathWithSd[256];
-    size_t size;
-    sprintf(pathWithSd, "%s/%s", sdRootPath, path.c_str());
-    char* data = WHBReadWholeFile(pathWithSd, &size);*/
-
     // Variant C Stdlib
-    FILE *file = fopen(path.c_str(), "rb");
+    FILE *file = fopen((WIIU_PATH_PREFIX + path).c_str(), "rb");
     fseek(file, 0, SEEK_END);
     size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);

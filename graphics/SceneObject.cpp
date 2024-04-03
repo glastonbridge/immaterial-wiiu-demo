@@ -3,12 +3,12 @@
 #include <memory>
 #include <malloc.h>
 #include <gx2/enum.h>
-#include "NastyObjLoader.h"
 #include "LoadUFBX.h"
 
 #include "../renderer/RenderObject.h"
 #include "SceneObject.h"
 #include "MaterialCollection.h"
+#include <whb/log.h>
 
 static const float sPositionDataQuad[] =
 {

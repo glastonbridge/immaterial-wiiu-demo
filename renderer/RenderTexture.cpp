@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include "../util/ourmalloc.h"
+#include "../util/wuhbsupport.h"
 
 RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
     // Load a texture
@@ -28,7 +29,7 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
 
     // Load data with lodepng
     if(!isCubeMap) {
-      unsigned error = lodepng::decode(image, width, height, path);
+      unsigned error = lodepng::decode(image, width, height, WIIU_PATH_PREFIX + path);
       
       WHBLogPrintf("Setting up a texture from %s: %i x %i", path.c_str(), width, height);
       if(error) {
@@ -47,7 +48,7 @@ RenderTexture::RenderTexture(const std::string& path, bool isCubeMap) {
       for(int i = 0; i < 6; i++) {
         std::string cubeMapPath = path + faces[i];
         image_load.clear();
-        unsigned error = lodepng::decode(image_load, width, height, cubeMapPath);
+        unsigned error = lodepng::decode(image_load, width, height, WIIU_PATH_PREFIX + cubeMapPath);
         WHBLogPrintf("Setting up a cube face texture from %s: %i x %i", path.c_str(), width, height);
         if(error) {
           WHBLogPrintf("PNG load error on %s: %u: %s", cubeMapPath.c_str(), error, lodepng_error_text(error));

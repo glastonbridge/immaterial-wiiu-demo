@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 project(wiiu_demo C CXX)
 
+# WUHB metadata
+set(WUHB_TITLE "Immaterial" CACHE STRING "Title of the WUHB package")
+set(WUHB_LONGTITLE "Immaterial" CACHE STRING "Long title of the WUHB package")
+set(WUHB_AUTHOR "Slipstream and SVatG" CACHE STRING "Author of the WUHB package")
+set(WUHB_ICON "../icon.png" CACHE STRING "Icon of the WUHB package (128x128)")
+# TODO:
+# set(WUHB_TV_IMAGE "tv.png" CACHE STRING "TV image of the WUHB package (1280x720)")
+# set(WUHB_GAMEPAD_IMAGE "gamepad.png" CACHE STRING "Gamepad image of the WUHB package (854x480)")
+
 # If adding more third party libs, you'll want to add them here
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lodepng
@@ -91,3 +100,57 @@ if(EMULATOR_FIXES)
     target_compile_definitions(wiiu_demo PRIVATE UFBX_TRACE=1)
     target_compile_definitions(wiiu_demo PRIVATE EMU_KLUDGES=1)
 endif()
+
+# target that clears the install directory for a fresh install
+add_custom_target(clean_install
+    COMMAND rm -rf "${CMAKE_INSTALL_PREFIX}/*"
+)
+
+# passthrough for SHADER_BUILD
+set(SHADER_BUILD "false" CACHE BOOL "Set to true to build shaders and quit")
+if(SHADER_BUILD)
+    target_compile_definitions(wiiu_demo PRIVATE SHADER_BUILD=1)
+endif()
+
+# passthrough for WUHB_BUILD
+set(WUHB_BUILD "false" CACHE BOOL "Set to true to build for WUHB package")
+if(WUHB_BUILD)
+    target_compile_definitions(wiiu_demo PRIVATE WUHB_BUILD=1)
+endif()
+
+# target that builds the wuhb package
+# sorry about using cmake as a shell script
+add_custom_target(wuhb
+    # 1) make clean_install to clear out install directory
+    COMMAND ${CMAKE_COMMAND} --build . --target clean_install
+
+    # 2) make test, to build shader cache, define -DSHADER_BUILD=1 so it does that and then quits
+    COMMAND ${CMAKE_COMMAND} -DSHADER_BUILD=ON -DWUHB_BUILD=OFF . 
+    COMMAND ${CMAKE_COMMAND} --build . --target clean
+    COMMAND ${CMAKE_COMMAND} --build . --target test
+    COMMAND ${CMAKE_COMMAND} -DSHADER_BUILD=OFF -DWUHB_BUILD=OFF .
+
+    # 3) make install, with WUHB_BUILD=1 defined, which changes paths to point to romfs and disables the shader compiler
+    COMMAND ${CMAKE_COMMAND} -DSHADER_BUILD=OFF -DWUHB_BUILD=ON .
+    COMMAND ${CMAKE_COMMAND} --build . --target clean
+    COMMAND ${CMAKE_COMMAND} --build . --target install 
+    COMMAND ${CMAKE_COMMAND} -DSHADER_BUILD=OFF -DWUHB_BUILD=OFF .
+
+    # 4) copy assets, sync_tracks, shaders and shader_cache from install directory to a new directory called "content"
+    COMMAND mkdir -p "${CMAKE_CURRENT_BINARY_DIR}/content"
+    COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/assets" "${CMAKE_CURRENT_BINARY_DIR}/content"
+    COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/content"
+    COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/sync_tracks" "${CMAKE_CURRENT_BINARY_DIR}/content"
+    COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/shader_cache" "${CMAKE_CURRENT_BINARY_DIR}/content"
+
+    # 5) now we can build the wuhb package
+    COMMAND wuhbtool --content content --short-name '${WUHB_TITLE}' --name '${WUHB_LONGTITLE}' --author '${WUHB_AUTHOR}' --icon '${WUHB_ICON}' "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb"
+
+    # 6) clean up the content directory
+    COMMAND rm -rf "${CMAKE_CURRENT_BINARY_DIR}/content"
+)
+
+add_custom_target(wuhb_deploy
+    COMMAND ${CMAKE_COMMAND} --build . --target wuhb
+    COMMAND curl -T "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb" "ftp://${WIILOAD_IP}/fs/vol/external01/wiiu/apps/"
+)

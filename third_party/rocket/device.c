@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 
 #include "../../util/ourmalloc.h"
+#include "../../util/wuhbsupport.h"
 
 #ifdef WIN32
  #include <direct.h>
@@ -69,8 +70,9 @@ static const char *path_encode(const char *path)
 static const char *sync_track_path(const char *base, const char *name)
 {
 	static char temp[FILENAME_MAX];
-	strncpy(temp, base, sizeof(temp) - 1);
+	strncpy(temp, WIIU_PATH_PREFIX, sizeof(temp) - 1);
 	temp[sizeof(temp) - 1] = '\0';
+	strncat(temp, base, sizeof(temp) - 1);
 	strncat(temp, "_", sizeof(temp) - strlen(temp) - 1);
 	strncat(temp, path_encode(name), sizeof(temp) - strlen(temp) - 1);
 	strncat(temp, ".track", sizeof(temp) - strlen(temp) - 1);

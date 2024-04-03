@@ -3,9 +3,9 @@
 #include "CRC32.h"
 #include <malloc.h>
 #include <gx2/mem.h>
+#include "../util/wuhbsupport.h"
 
 // #define CACHE_ONLY 1
-#undef CACHE_ONLY
 
 #ifndef CACHE_ONLY
 #include "CafeGLSLCompiler.h"
@@ -45,7 +45,9 @@ GX2VertexShader* loadVertexShaderFromCache(const char* filename, const char* sou
 
     // Load the cache
     WHBLogPrintf("Looking for shader cache %s", key);
-    FILE* file = fopen(key, "rb");
+
+    std::string prefixedPath = WIIU_PATH_PREFIX + std::string(key);
+    FILE* file = fopen(prefixedPath.c_str(), "rb");
     if (!file) {
         WHBLogPrintf("Shader cache not found");
         return nullptr;
@@ -124,7 +126,8 @@ GX2PixelShader* loadPixelShaderFromCache(const char* filename, const char* sourc
 
     // Load the cache
     WHBLogPrintf("Looking for shader cache %s", key);
-    FILE* file = fopen(key, "rb");
+    std::string prefixedPath = WIIU_PATH_PREFIX + std::string(key);
+    FILE* file = fopen(prefixedPath.c_str(), "rb");
     if (!file) {
         WHBLogPrintf("Shader cache not found");
         return nullptr;
@@ -199,7 +202,8 @@ bool saveVertexShaderToCache(const char* filename, const char* source, GX2Vertex
     getShaderCacheFileName(filename, source, key); // Assuming a function to generate the filename from shader's metadata
 
     WHBLogPrintf("Saving shader cache %s", key);
-    FILE* file = fopen(key, "wb");
+    std::string prefixedPath = WIIU_PATH_PREFIX + std::string(key);
+    FILE* file = fopen(prefixedPath.c_str(), "wb");
     if (!file) {
         WHBLogPrintf("Failed to create shader cache");
         return false;
@@ -257,7 +261,8 @@ bool savePixelShaderToCache(const char* filename, const char* source, GX2PixelSh
     getShaderCacheFileName(filename, source, key); // Assuming a function to generate the filename from shader's metadata
 
     WHBLogPrintf("Saving shader cache %s", key);
-    FILE* file = fopen(key, "wb");
+    std::string prefixedPath = WIIU_PATH_PREFIX + std::string(key);
+    FILE* file = fopen(prefixedPath.c_str(), "wb");
     if (!file) {
         WHBLogPrintf("Failed to create shader cache");
         return false;
@@ -346,17 +351,10 @@ WHBGfxShaderGroup* compileOrLoadShader(const char* vsPath, const char* psPath, c
 }
 
 char* loadShader(const char* filename) {
-    // TODO: these WHB file operations are deprecated and should have been replaced with standard C++
-    // file operations. But using the C++ file operations somehow causes our app to not quit properly
-    // and the console crashes when trying to quit to menu. Why??
-
-    char *sdRootPath = WHBGetSdCardMountPath();
-    char path[256];
-    sprintf(path, "%s/%s", sdRootPath, filename);
-    WHBLogPrintf("Loading shader %s", path);
-
     // just use the C file operations for now
-    FILE* file = fopen(path, "rb");
+    std::string prefixedPath = WIIU_PATH_PREFIX + std::string(filename);
+    WHBLogPrintf("Loading shader code from %s", prefixedPath.c_str());
+    FILE* file = fopen(prefixedPath.c_str(), "rb");
     fseek(file, 0, SEEK_END);
     size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);

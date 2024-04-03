@@ -40,25 +40,42 @@ MEMHeapHandle ourHeap;
 
 #define BENCHMARK 1
 
+#include "util/wuhbsupport.h"
+
 int main(int argc, char **argv)
 {
    // wiiu homebrew bug workaround (which unfortunately doesn't seem to actually work)
    fprintf(stdout, "hi\n");
    fprintf(stderr, "hello\n");
-   
+
+#ifndef WUHB_BUILD
    WHBLogCafeInit();
    WHBLogUdpInit();
+#endif
+#ifndef SHADER_BUILD
    WHBProcInit();
+#endif
    WHBGfxInit();
+#ifndef WUHB_BUILD
    WHBMountSdCard();
+#endif
 
    // Preheat shader cache
    getShaderManager();
 
-   // Init the heap, 750mb
+#if SHADER_BUILD
+   // if we're in "build shader cache" mode, quit here
+   WHBGfxShutdown();
+   WHBUnmountSdCard();
+   WHBLogCafeDeinit();
+   WHBLogUdpDeinit();
+   return 0;
+#endif
+
+   // Init the heap, 750mb, more than enough to store all assets
    // this is explicitly and intentionally NOT used as the default heap, to isolate us from the base
-   // wiiu memory management that WHB uses, because it gets fucked up somehow by the GLSL compiler
-#ifdef USE_OURMALLOC
+   // wiiu memory management that WHB uses, because it gets fucked up somehow at some point (maybe due to
+   // glsl compiler)
    uint32_t heapSize = int(1024*1024*1025*0.75);
    uint8_t* heapBaseAddr = (uint8_t*)MEMAllocFromDefaultHeapEx(heapSize, 4);
    WHBLogPrintf("Allocated heap at %p", heapBaseAddr);
@@ -70,7 +87,6 @@ int main(int argc, char **argv)
    ourHeap = MEMInitBlockHeap(&ourHeapStorage, heapBaseAddr, heapBaseAddr+heapSize, blockTrack, trackSize, 0);
 #else
    ourHeap = MEMCreateExpHeapEx(heapBaseAddr, heapSize, 0);
-#endif
 #endif
 
    // Load all assets
@@ -86,7 +102,7 @@ int main(int argc, char **argv)
    WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
    music->play();
-#endif      
+#endif
    Sync* sync = new Sync(
       "sync_tracks/", 
       SYNC_IP, 
@@ -116,6 +132,7 @@ int main(int argc, char **argv)
       renderer->renderFrame(*scene);
 
 #ifdef BENCHMARK
+      // if you're in synctool mode you can mage the FPS go negative lol
       frameCounter++;
       if(frameCounter % 60 == 0) {
          float currentTime = music->currentTime();
@@ -135,12 +152,15 @@ int main(int argc, char **argv)
 
    WHBGfxShutdown();
    AXQuit();
+#ifndef WUHB_BUILD      
    WHBUnmountSdCard();
    WHBLogCafeDeinit();
+#endif
    WHBProcShutdown();
+#ifndef WUHB_BUILD
    WHBLogPrintf("Deinitialising UDP logging...");
    WHBLogUdpDeinit();
-
+#endif
 
 #ifdef USE_OURMALLOC
    // We should, technically, destroy the heap here, but it seems to cause a crash on exit as well so we'll just pray that 
