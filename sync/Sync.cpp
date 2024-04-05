@@ -32,6 +32,9 @@ int isPlaying(void* musicPlayerP) {
 // Sync class member functions implementation
 Sync::Sync(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, float secondsPerRow) : syncIP(syncIP), musicPlayer(musicPlayer), secondsPerRow(secondsPerRow) {
   WHBLogPrintf("Creating sync device with track path %s", basePath);
+
+  // saves on a bit of rehashing
+  this->tracks.reserve(20);
   this->rocket = sync_create_device(basePath);
   #ifndef SYNC_PLAYER
     this->rocketCallbacks.pause = toggleMusicPause;
@@ -64,9 +67,12 @@ float Sync::v(const char* track) {
 }
 
 const sync_track* Sync::getTrack(const char* trackName) {
-  if (tracks.find(trackName) != tracks.end()) return tracks[trackName];
-  const sync_track* track = sync_get_track(rocket, trackName);
-  tracks[trackName] = track;
+  auto const found = tracks.try_emplace(trackName);
+  if (!found.second) {
+    return found.first->second;
+  }
+  auto *track = sync_get_track(rocket, trackName);
+  found.first->second = track;
   return track;
 }
 

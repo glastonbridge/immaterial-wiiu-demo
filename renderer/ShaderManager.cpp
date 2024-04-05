@@ -382,7 +382,9 @@ void destroyShaderManager() {
 
 ShaderManager::ShaderManager() {
     // Preheat the shader cache
+    shaders.reserve(5);
     std::vector<AttribSpec> attribs;
+    attribs.reserve(5);
     
     attribs.push_back(AttribSpec {"in_position", BufferType::VERTEX, GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
     attribs.push_back(AttribSpec {"in_texcoord", BufferType::COLOR, GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
@@ -475,9 +477,11 @@ WHBGfxShaderGroup* ShaderManager::shader(const char* vsPath, const char* psPath,
     }
 
     WHBLogPrintf("Looking for shader %s", key.c_str());
-    if (shaders.find(key) != shaders.end()) {
-        WHBLogPrintf("Found shader %s = %p", key.c_str(), shaders[key]);
-        return shaders[key];
+    auto const found = shaders.try_emplace(key);
+    if (!found.second) {
+        auto const shader = found.first->second;
+        WHBLogPrintf("Found shader %s = %p", key.c_str(), shader);
+        return shader;
     }
 
     // Load the shaders
@@ -500,7 +504,7 @@ WHBGfxShaderGroup* ShaderManager::shader(const char* vsPath, const char* psPath,
     WHBGfxInitFetchShader(group);
 
     // Store the shaders
-    shaders[key] = group;
+    found.first->second = group;
     free(vsCode);
     free(psCode);
     WHBLogPrintf("Stored shader %s = %p", key.c_str(), group);

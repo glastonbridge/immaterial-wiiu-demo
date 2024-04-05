@@ -1,15 +1,9 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <math.h>
 
 #include <sync.h>
-#include "../sound/Music.h"
-
-#pragma once
-
-#include <map>
-#include <math.h>
 #include "../sound/Music.h"
 
 // Global variables declaration
@@ -33,7 +27,7 @@ private:
   sync_device* rocket;
   MusicPlayer* musicPlayer;
   float secondsPerRow;
-  std::map<const char*, const sync_track*> tracks;
+  std::unordered_map<const char*, const sync_track*> tracks;
   #ifndef SYNC_PLAYER
     sync_cb rocketCallbacks;
   #endif

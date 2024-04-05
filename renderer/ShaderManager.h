@@ -1,5 +1,5 @@
 
-#include <map>
+#include <unordered_map>
 #include "RenderMaterial.h"
 #include <coreinit/memdefaultheap.h>
 #include <whb/file.h>
@@ -16,7 +16,7 @@ struct ShaderManager {
     WHBGfxShaderGroup* shader(const char* vsPath, const char* psPath, const std::vector<AttribSpec>& attribs);
     
     private:
-        std::map<std::string, WHBGfxShaderGroup*> shaders;
+        std::unordered_map<std::string, WHBGfxShaderGroup*> shaders;
 };
 
 ShaderManager* getShaderManager();
