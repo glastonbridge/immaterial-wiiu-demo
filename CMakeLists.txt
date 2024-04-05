@@ -6,9 +6,10 @@ set(WUHB_TITLE "Immaterial" CACHE STRING "Title of the WUHB package")
 set(WUHB_LONGTITLE "Immaterial" CACHE STRING "Long title of the WUHB package")
 set(WUHB_AUTHOR "Slipstream and SVatG" CACHE STRING "Author of the WUHB package")
 set(WUHB_ICON "../icon.png" CACHE STRING "Icon of the WUHB package (128x128)")
-# TODO:
-# set(WUHB_TV_IMAGE "tv.png" CACHE STRING "TV image of the WUHB package (1280x720)")
-# set(WUHB_GAMEPAD_IMAGE "gamepad.png" CACHE STRING "Gamepad image of the WUHB package (854x480)")
+
+# We don't use these, we just let the banner during load be the icon, which looks cute
+#set(WUHB_TV_IMAGE "../banner_tv.png" CACHE STRING "TV image of the WUHB package (1280x720)")
+#set(WUHB_DRC_IMAGE "../banner_drc.png" CACHE STRING "Gamepad image of the WUHB package (854x480)")
 
 # If adding more third party libs, you'll want to add them here
 include_directories(
@@ -148,7 +149,7 @@ add_custom_target(wuhb
     COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/shader_cache" "${CMAKE_CURRENT_BINARY_DIR}/content"
 
     # 5) now we can build the wuhb package
-    COMMAND wuhbtool --content content --short-name '${WUHB_TITLE}' --name '${WUHB_LONGTITLE}' --author '${WUHB_AUTHOR}' --icon '${WUHB_ICON}' "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb"
+    COMMAND wuhbtool --content content --short-name '${WUHB_TITLE}' --name '${WUHB_LONGTITLE}' --author '${WUHB_AUTHOR}' --icon '${WUHB_ICON}' "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb" 
 
     # 6) clean up the content directory
     COMMAND rm -rf "${CMAKE_CURRENT_BINARY_DIR}/content"
