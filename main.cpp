@@ -8,7 +8,7 @@
 #include <whb/log_cafe.h>
 #include <whb/proc.h>
 #include <whb/sdcard.h>
-
+#include <sysapp/launch.h>
 #include <coreinit/filesystem.h>
 #include <coreinit/memblockheap.h>
 #include <coreinit/memexpheap.h>
@@ -134,6 +134,13 @@ int main(int argc, char **argv) {
         renderer.renderFrame(*scene);
       }
 
+#ifdef SYNC_PLAYER
+      if(music.isDone()) {
+        WHBLogPrintf("Music done, quitting...");
+        SYSLaunchMenu(); // this tells the proc loop to quit
+      }
+#endif
+      
 #ifdef BENCHMARK
       // if you're in synctool mode you can make the FPS go negative lol
       frameCounter++;
@@ -165,16 +172,18 @@ int main(int argc, char **argv) {
   // Deinit WHBProc
   WHBProcShutdown();
 
+#ifdef USE_OURMALLOC
+  // Kill custom heap, if we were using that
+  WHBLogPrintf("Killing heap...");
+  MEMDestroyExpHeap(ourHeap);
+  MEMFreeToDefaultHeap(heapBaseAddr);
+#endif
+  
 #ifndef WUHB_BUILD
   // Deinit UDP log
   WHBLogPrintf("Deinitialising UDP logging...");
   WHBLogUdpDeinit();
 #endif
 
-#ifdef USE_OURMALLOC
-  // Kill custom heap, if we were using that
-  MEMDestroyExpHeap(ourHeap);
-  MEMFreeToDefaultHeap(heapBaseAddr);
-#endif
   return 0;
 }

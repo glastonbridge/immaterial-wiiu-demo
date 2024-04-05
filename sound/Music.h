@@ -13,6 +13,7 @@ struct MusicPlayer {
   void pause();
   void pauseToggle(void);
   bool isPlaying();
+  bool isDone();
   void seek(float seconds);
   float currentTime();
 
