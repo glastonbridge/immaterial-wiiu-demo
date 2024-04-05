@@ -14,11 +14,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    void* __our_malloc( size_t size );
-    void* __our_memalign(size_t alignment, size_t size);
-    void* __our_calloc( size_t num, size_t size );
-    void __our_free( void *ptr );
-    void* __our_realloc( void *ptr, size_t new_size );
+void *__our_malloc(size_t size);
+void *__our_memalign(size_t alignment, size_t size);
+void *__our_calloc(size_t num, size_t size);
+void __our_free(void *ptr);
+void *__our_realloc(void *ptr, size_t new_size);
 #ifdef __cplusplus
 }
 #endif

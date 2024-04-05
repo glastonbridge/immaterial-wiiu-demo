@@ -11,7 +11,7 @@ glm::vec3 spline(SplineSegment const *seg, float t) {
   auto g = t - f;
 
   auto const &seg0 = seg[h];
-  auto const &seg1 = seg[h+1];
+  auto const &seg1 = seg[h + 1];
   auto const x0 = seg0.pos;
   auto const x1 = seg0.pos + seg0.dir;
   auto const x2 = seg1.pos - seg1.dir;
@@ -33,7 +33,7 @@ glm::vec3 splineDir(SplineSegment const *seg, float t) {
   auto g = t - f;
 
   auto const &seg0 = seg[h];
-  auto const &seg1 = seg[h+1];
+  auto const &seg1 = seg[h + 1];
   auto const x0 = seg0.pos;
   auto const x1 = seg0.pos + seg0.dir;
   auto const x2 = seg1.pos - seg1.dir;

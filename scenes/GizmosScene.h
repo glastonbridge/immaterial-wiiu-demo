@@ -19,7 +19,10 @@ struct GizmosScene : public SceneBase {
     // just a bunch of random stuff to test the sync system
     auto rotY = syncVal("GizmosPart:Gizmos:RotY");
     auto scale = syncVal("GizmosPart:Gizmos:Scale");
-    instances[0].transform = glm::scale(glm::rotate(glm::mat4(1.f), glm::radians(rotY), glm::vec3(0.f, 1.f, 0.f)), glm::vec3(scale, scale, scale));
+    instances[0].transform =
+        glm::scale(glm::rotate(glm::mat4(1.f), glm::radians(rotY),
+                               glm::vec3(0.f, 1.f, 0.f)),
+                   glm::vec3(scale, scale, scale));
     instances[0].anim = syncVal("GizmosPart:Gizmos:Frame");
   }
 

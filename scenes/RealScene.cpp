@@ -27,506 +27,584 @@ enum Cameras {
 };
 
 static const SplineSegment track[] = {
-  {{0.f,0.f,60.f}, {10.f,0.f,0.f}},
-  {{60.f,0.f,40.f}, {0.f,0.f,-10.f}},
-  {{40.f,0.f,0.f}, {-10.f,0.f,0.f}},
-  {{20.f,0.f,-10.f}, {0.f,0.f,-10.f}},
-  {{50.f,0.f,-40.f}, {0.f,0.f,-15.f}},
-  {{20.f,0.f,-60.f}, {-10.f,0.f,0.f}},
-  {{-80.f,0.f,-60.f}, {-10.f,0.f,0.f}},
-  {{-146.f,0.f,-60.f}, {-4.f,0.f,0.f}},
-  {{-156.f,-9.5f,-60.f}, {-2.f,0.f,0.f}},
-  {{-220.f,-9.5f,-60.f}, {-10.f,0.f,0.f}},
-  {{-220.f,-9.5f,-79.f}, {10.f,0.f,0.f}},
-  {{-176.f,-4.5f,-79.f}, {8.f,0.f,0.f}},
-  {{-156.f,-9.5f,-70.f}, {2.f,0.f,0.f}},
-  {{-146.f,0.f,-70.f}, {4.f,0.f,0.f}},
-  {{-80.f,0.f,-60.f}, {10.f,0.f,0.f}},
-  {{20.f,0.f,-60.f}, {20.f,0.f,0.f}},
-  {{50.f,0.f,-40.f}, {0.f,0.f,15.f}},
-  {{20.f,0.f,-10.f}, {0.f,0.f,10.f}},
-  {{40.f,0.f,0.f}, {10.f,0.f,0.f}},
-  {{60.f,0.f,40.f}, {0.f,0.f,10.f}},
-  {{0.f,0.f,60.f}, {-10.f,0.f,0.f}}
-};
+    {{0.f, 0.f, 60.f}, {10.f, 0.f, 0.f}},
+    {{60.f, 0.f, 40.f}, {0.f, 0.f, -10.f}},
+    {{40.f, 0.f, 0.f}, {-10.f, 0.f, 0.f}},
+    {{20.f, 0.f, -10.f}, {0.f, 0.f, -10.f}},
+    {{50.f, 0.f, -40.f}, {0.f, 0.f, -15.f}},
+    {{20.f, 0.f, -60.f}, {-10.f, 0.f, 0.f}},
+    {{-80.f, 0.f, -60.f}, {-10.f, 0.f, 0.f}},
+    {{-146.f, 0.f, -60.f}, {-4.f, 0.f, 0.f}},
+    {{-156.f, -9.5f, -60.f}, {-2.f, 0.f, 0.f}},
+    {{-220.f, -9.5f, -60.f}, {-10.f, 0.f, 0.f}},
+    {{-220.f, -9.5f, -79.f}, {10.f, 0.f, 0.f}},
+    {{-176.f, -4.5f, -79.f}, {8.f, 0.f, 0.f}},
+    {{-156.f, -9.5f, -70.f}, {2.f, 0.f, 0.f}},
+    {{-146.f, 0.f, -70.f}, {4.f, 0.f, 0.f}},
+    {{-80.f, 0.f, -60.f}, {10.f, 0.f, 0.f}},
+    {{20.f, 0.f, -60.f}, {20.f, 0.f, 0.f}},
+    {{50.f, 0.f, -40.f}, {0.f, 0.f, 15.f}},
+    {{20.f, 0.f, -10.f}, {0.f, 0.f, 10.f}},
+    {{40.f, 0.f, 0.f}, {10.f, 0.f, 0.f}},
+    {{60.f, 0.f, 40.f}, {0.f, 0.f, 10.f}},
+    {{0.f, 0.f, 60.f}, {-10.f, 0.f, 0.f}}};
 
 static const SplineSegment busRoute[] = {
-  {{-55.f, 0.f, -88.f}, {-4.f, 0.f, 0.f}},
-  {{-80.f, 0.f, -88.f}, {-6.f, 0.f, 0.f}},
-  {{-90.f, 0.f, -100.f}, {-4.f, 0.f, 2.f}},
-  {{-102.f, 0.f, -80.f}, {0.5f, 0.f, 4.f}},
-  {{-100.f, 0.f, -69.f}, {0.f, 0.f, 2.f}},
-  {{-100.f, 0.f, -30.f}, {0.f, 0.f, 10.f}},
-  {{-120.f, 0.f, 0.f}, {0.f, 0.f, 12.f}},
-  {{-105.f, 0.f, 40.f}, {8.f, 0.f, 0.f}},
-  {{-55.f, 0.f, 30.f}, {10.f, 0.f, 0.f}}
-};
+    {{-55.f, 0.f, -88.f}, {-4.f, 0.f, 0.f}},
+    {{-80.f, 0.f, -88.f}, {-6.f, 0.f, 0.f}},
+    {{-90.f, 0.f, -100.f}, {-4.f, 0.f, 2.f}},
+    {{-102.f, 0.f, -80.f}, {0.5f, 0.f, 4.f}},
+    {{-100.f, 0.f, -69.f}, {0.f, 0.f, 2.f}},
+    {{-100.f, 0.f, -30.f}, {0.f, 0.f, 10.f}},
+    {{-120.f, 0.f, 0.f}, {0.f, 0.f, 12.f}},
+    {{-105.f, 0.f, 40.f}, {8.f, 0.f, 0.f}},
+    {{-55.f, 0.f, 30.f}, {10.f, 0.f, 0.f}}};
 
-static const glm::vec3 RunnyEggs[] = {
-  {-1.0f, 0.f, -4.f},
-  { 1.2f, 0.f, -2.5f},
-  {-0.3f, 0.f, -1.7f},
-  { 0.8f, 0.f, 0.2f},
-  {-1.2f, 0.f, 2.3f},
-  { 0.6f, 0.f, 4.f}
-};
+static const glm::vec3 RunnyEggs[] = {{-1.0f, 0.f, -4.f},  {1.2f, 0.f, -2.5f},
+                                      {-0.3f, 0.f, -1.7f}, {0.8f, 0.f, 0.2f},
+                                      {-1.2f, 0.f, 2.3f},  {0.6f, 0.f, 4.f}};
 
-glm::mat4 getCushionMat(glm::vec3 p, float ry = 0.0f, float rx = 0.0f, float rz = 0.0f) {
-  return glm::scale(glm::translate(glm::mat4(1.f), p), glm::vec3(5.0f))
-    * glm::rotate(glm::mat4(1.f), ry, glm::vec3(0.f, 1.f, 0.f))
-    * glm::rotate(glm::mat4(1.f), rx, glm::vec3(1.f, 0.f, 0.f))
-    * glm::rotate(glm::mat4(1.f), rz, glm::vec3(0.f, 0.f, 1.f));
+glm::mat4 getCushionMat(glm::vec3 p, float ry = 0.0f, float rx = 0.0f,
+                        float rz = 0.0f) {
+  return glm::scale(glm::translate(glm::mat4(1.f), p), glm::vec3(5.0f)) *
+         glm::rotate(glm::mat4(1.f), ry, glm::vec3(0.f, 1.f, 0.f)) *
+         glm::rotate(glm::mat4(1.f), rx, glm::vec3(1.f, 0.f, 0.f)) *
+         glm::rotate(glm::mat4(1.f), rz, glm::vec3(0.f, 0.f, 1.f));
 }
-}  // namespace
+} // namespace
 
 void RealScene::setup() {
-    // Set up the scene
-    auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  // Set up the scene
+  auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f),
+                                 glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_train);
-    instances.emplace_back(ID_train);
+  instances.emplace_back(ID_train);
+  instances.emplace_back(ID_train);
 
-    for(int i = 0; i < 8; i++) {
-      instances.emplace_back(ID_cloud);
-    }
+  for (int i = 0; i < 8; i++) {
+    instances.emplace_back(ID_cloud);
+  }
 
-    for(int i = 0; i < 6; i++) {
-      instances.emplace_back(ID_egg);
-    }
-
-    instances.emplace_back(ID_egg_walking_sausage);
-
-    auto const eggmat = glm::scale(glm::transpose(rot90), glm::vec3(0.75f));
-
+  for (int i = 0; i < 6; i++) {
     instances.emplace_back(ID_egg);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-88.f, 0.f, -64.f)) * eggmat;
+  }
 
-    instances.emplace_back(ID_egg);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-85.f, 0.f, -65.f)) * eggmat;
+  instances.emplace_back(ID_egg_walking_sausage);
 
-    instances.emplace_back(ID_egg_carton);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-110.f, 0.f, -70.f)) * eggmat;
+  auto const eggmat = glm::scale(glm::transpose(rot90), glm::vec3(0.75f));
 
-    instances.emplace_back(ID_toast);
+  instances.emplace_back(ID_egg);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-88.f, 0.f, -64.f)) * eggmat;
 
-    for(int i = 0; i < 4; i++) {
-      instances.emplace_back(ID_lampshade);
-      instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f + i * 15.f, 0.f, -75.f)), glm::vec3(5.f)) * rot90;
-    }
+  instances.emplace_back(ID_egg);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-85.f, 0.f, -65.f)) * eggmat;
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f));
+  instances.emplace_back(ID_egg_carton);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-110.f, 0.f, -70.f)) * eggmat;
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(40.0f, 0.f, 70.f), glm::radians(35.f));
+  instances.emplace_back(ID_toast);
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(75.0f, 0.f, 40.f), glm::radians(83.f));
+  for (int i = 0; i < 4; i++) {
+    instances.emplace_back(ID_lampshade);
+    instances.back().transform =
+        glm::scale(glm::translate(glm::mat4(1.f),
+                                  glm::vec3(10.f + i * 15.f, 0.f, -75.f)),
+                   glm::vec3(5.f)) *
+        rot90;
+  }
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(76.0f, 6.f, 40.f), glm::radians(81.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform = getCushionMat(glm::vec3(10.0f, 0.f, 70.f));
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(30.0f, 0.f, 35.f), glm::radians(12.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(40.0f, 0.f, 70.f), glm::radians(35.f));
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(24.0f, 0.f, 18.f), glm::radians(14.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(75.0f, 0.f, 40.f), glm::radians(83.f));
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(6.0f, 0.f, -15.f), glm::radians(102.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(76.0f, 6.f, 40.f), glm::radians(81.f));
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(26.0f, 0.f, -40.f), glm::radians(17.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(30.0f, 0.f, 35.f), glm::radians(12.f));
 
-    instances.emplace_back(ID_cushion);
-    instances.back().transform = getCushionMat(glm::vec3(56.0f, 0.f, -18.f), glm::radians(17.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(24.0f, 0.f, 18.f), glm::radians(14.f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(60.f, 0.f, -5.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(6.0f, 0.f, -15.f), glm::radians(102.f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(67.f, 0.8f, 5.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(26.0f, 0.f, -40.f), glm::radians(17.f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(74.f, 2.2f, 15.f));
+  instances.emplace_back(ID_cushion);
+  instances.back().transform =
+      getCushionMat(glm::vec3(56.0f, 0.f, -18.f), glm::radians(17.f));
 
-    instances.emplace_back(ID_building);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(12.f, 0.f, -94.f)),
-      glm::vec3(-1.f, 1.f, -1.f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(60.f, 0.f, -5.f));
 
-    instances.emplace_back(ID_duvet_hills);
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(67.f, 0.8f, 5.f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-68.f, 0.f, -96.f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(74.f, 2.2f, 15.f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-66.f, 0.f, -80.f));
+  instances.emplace_back(ID_building);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(12.f, 0.f, -94.f)),
+                 glm::vec3(-1.f, 1.f, -1.f));
 
-    instances.emplace_back(ID_station_building);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-80.f, 0.f, -70.f)) * rot90;
+  instances.emplace_back(ID_duvet_hills);
 
-    instances.emplace_back(ID_crossing_signs);
-    instances.back().transform = glm::scale(
-      glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -57.f)), glm::vec3(0.4f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-68.f, 0.f, -96.f));
 
-    instances.emplace_back(ID_crossing_signs);
-    instances.back().transform = glm::scale(
-      glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -57.f)), glm::vec3(0.4f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-66.f, 0.f, -80.f));
 
-    instances.emplace_back(ID_crossing_signs);
-    instances.back().transform = glm::scale(
-      glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -63.f)), glm::vec3(-.4f, .4, -.4f));
+  instances.emplace_back(ID_station_building);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-80.f, 0.f, -70.f)) * rot90;
 
-    instances.emplace_back(ID_crossing_signs);
-    instances.back().transform = glm::scale(
-      glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -63.f)), glm::vec3(-.4f, .4, -.4f));
+  instances.emplace_back(ID_crossing_signs);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -57.f)),
+                 glm::vec3(0.4f));
 
+  instances.emplace_back(ID_crossing_signs);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -57.f)),
+                 glm::vec3(0.4f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-91.f, 0.f, -20.f));
+  instances.emplace_back(ID_crossing_signs);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-96.f, 0.f, -63.f)),
+                 glm::vec3(-.4f, .4, -.4f));
 
-    instances.emplace_back(ID_house1);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -8.f));
+  instances.emplace_back(ID_crossing_signs);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-112.f, 0.f, -63.f)),
+                 glm::vec3(-.4f, .4, -.4f));
 
-    instances.emplace_back(ID_sofa);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -78.f)), glm::vec3(8.f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-91.f, 0.f, -20.f));
 
-    instances.emplace_back(ID_carpet);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -60.f));
+  instances.emplace_back(ID_house1);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -8.f));
 
-    instances.emplace_back(ID_house2);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-173.f, -9.5f, -73.f)), glm::vec3(1.f)) * rot90;
+  instances.emplace_back(ID_sofa);
+  instances.back().transform = glm::scale(
+      glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -78.f)),
+      glm::vec3(8.f));
 
-    instances.emplace_back(ID_house2);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-184.f, -6.f, -71.f)), glm::vec3(1.f)) * rot90;
+  instances.emplace_back(ID_carpet);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-196.f, -30.f, -60.f));
 
-    instances.emplace_back(ID_house2);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-198.f, -6.f, -72.f)), glm::vec3(1.f)) * rot90;
+  instances.emplace_back(ID_house2);
+  instances.back().transform =
+      glm::scale(
+          glm::translate(glm::mat4(1.f), glm::vec3(-173.f, -9.5f, -73.f)),
+          glm::vec3(1.f)) *
+      rot90;
 
-    instances.emplace_back(ID_house2);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-218.f, -9.5f, -69.f)), glm::vec3(1.f)) * rot90;
+  instances.emplace_back(ID_house2);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-184.f, -6.f, -71.f)),
+                 glm::vec3(1.f)) *
+      rot90;
 
-    instances.emplace_back(ID_viaduct);
-    instances.back().transform = glm::rotate(
-      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, 0.f, -60.f)), glm::vec3(3.f)),
+  instances.emplace_back(ID_house2);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-198.f, -6.f, -72.f)),
+                 glm::vec3(1.f)) *
+      rot90;
+
+  instances.emplace_back(ID_house2);
+  instances.back().transform =
+      glm::scale(
+          glm::translate(glm::mat4(1.f), glm::vec3(-218.f, -9.5f, -69.f)),
+          glm::vec3(1.f)) *
+      rot90;
+
+  instances.emplace_back(ID_viaduct);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, 0.f, -60.f)),
+                 glm::vec3(3.f)),
       glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_viaduct);
-    instances.back().transform = glm::rotate(
-      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -18.f, -60.f)), glm::vec3(3.f)),
+  instances.emplace_back(ID_viaduct);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -18.f, -60.f)),
+                 glm::vec3(3.f)),
       glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_carpet);
-    instances.back().transform = glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -30.f, -100.f));
+  instances.emplace_back(ID_carpet);
+  instances.back().transform =
+      glm::translate(glm::mat4(1.f), glm::vec3(-26.f, -30.f, -100.f));
 
-    instances.emplace_back(ID_tablecloth_land);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -40.f)), glm::vec3(0.89f));
+  instances.emplace_back(ID_tablecloth_land);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 0.f, -40.f)),
+                 glm::vec3(0.89f));
 
-    instances.emplace_back(ID_cardboard_cloud);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(65.f, 43.f, 48.f)),
-            glm::vec3(1.f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_cardboard_cloud);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(65.f, 43.f, 48.f)),
+                 glm::vec3(1.f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_cardboard_cloud);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(70.f, 26.f, 72.f)),
-            glm::vec3(1.f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_cardboard_cloud);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(70.f, 26.f, 72.f)),
+                 glm::vec3(1.f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_slipstream);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 44.f, 40.f)),
-            glm::vec3(0.2f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_string_slipstream);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(50.f, 44.f, 40.f)),
+                 glm::vec3(0.2f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_svatg);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 39.f, 46.f)),
-            glm::vec3(0.2f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_string_svatg);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(50.f, 39.f, 46.f)),
+                 glm::vec3(0.2f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_presents);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(50.f, 35.f, 50.f)),
-            glm::vec3(0.14f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_string_presents);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(50.f, 35.f, 50.f)),
+                 glm::vec3(0.14f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_title);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(60.f, 20.f, 42.f)),
-            glm::vec3(0.2f)),
-            glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
+  instances.emplace_back(ID_string_title);
+  instances.back().transform = glm::rotate(
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(60.f, 20.f, 42.f)),
+                 glm::vec3(0.2f)),
+      glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
-    instances.emplace_back(ID_string_beanbag);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(-217.f, -26.f, -23.f)),
-            glm::vec3(0.19f)),
-            glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+  instances.emplace_back(ID_string_beanbag);
+  instances.back().transform =
+      glm::rotate(glm::scale(glm::translate(glm::mat4(1.f),
+                                            glm::vec3(-217.f, -26.f, -23.f)),
+                             glm::vec3(0.19f)),
+                  glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
 
-    instances.emplace_back(ID_string_aldroid);
-    instances.back().transform = glm::rotate(glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(-209.f, -26.f, -17.f)),
-            glm::vec3(0.19f)),
-            glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
+  instances.emplace_back(ID_string_aldroid);
+  instances.back().transform =
+      glm::rotate(glm::scale(glm::translate(glm::mat4(1.f),
+                                            glm::vec3(-209.f, -26.f, -17.f)),
+                             glm::vec3(0.19f)),
+                  glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
 
-    instances.emplace_back(ID_string_vurpo);
-    instances.back().transform = glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(-95.f, 2.f, 30.f)),
-            glm::vec3(0.19f));
+  instances.emplace_back(ID_string_vurpo);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-95.f, 2.f, 30.f)),
+                 glm::vec3(0.19f));
 
-    instances.emplace_back(ID_string_halcy);
-    instances.back().transform = glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(-45.f, -26.f, -50.f)),
-            glm::vec3(0.34f));
+  instances.emplace_back(ID_string_halcy);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(-45.f, -26.f, -50.f)),
+                 glm::vec3(0.34f));
 
-    instances.emplace_back(ID_string_violet);
-    instances.back().transform = glm::scale(
-        glm::translate(glm::mat4(1.f),
-            glm::vec3(5.5f, 44.f, -75.f)),
-            glm::vec3(0.2f));
+  instances.emplace_back(ID_string_violet);
+  instances.back().transform =
+      glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(5.5f, 44.f, -75.f)),
+                 glm::vec3(0.2f));
 }
 
 void RealScene::update(double time) {
-    auto const beattime = float(time) * (100.f/60.f);
-    auto const beat = std::floor(beattime);
-    auto const frac = beattime - beat;
+  auto const beattime = float(time) * (100.f / 60.f);
+  auto const beat = std::floor(beattime);
+  auto const frac = beattime - beat;
 
-    auto const bamp = syncVal("Train:Bounce");
-    auto const bounce = bamp * (1.f - 4.f * (frac - 0.5f) * (frac - 0.5f));
-    auto const sway = bamp * (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 0.2f : -0.2f);
+  auto const bamp = syncVal("Train:Bounce");
+  auto const bounce = bamp * (1.f - 4.f * (frac - 0.5f) * (frac - 0.5f));
+  auto const sway =
+      bamp * (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 0.2f : -0.2f);
 
-    auto const t1 = std::min(syncVal("Train:Car1"), float(std::size(track) - 1));
-    auto const pos = spline(track, t1);
-    auto const dir = splineDir(track, t1);
+  auto const t1 = std::min(syncVal("Train:Car1"), float(std::size(track) - 1));
+  auto const pos = spline(track, t1);
+  auto const dir = splineDir(track, t1);
 
-    instances[0].transform = glm::translate(glm::mat4(1.f), pos + glm::vec3(0.f, bounce, 0.f)) *
-        glm::transpose(glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), sway, glm::vec3(0.f, 0.f, 1.f));
+  instances[0].transform =
+      glm::translate(glm::mat4(1.f), pos + glm::vec3(0.f, bounce, 0.f)) *
+      glm::transpose(
+          glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) *
+      glm::rotate(glm::mat4(1.f), sway, glm::vec3(0.f, 0.f, 1.f));
 
-    auto const couple = std::min(1.f, 0.5f / glm::length(dir));
-    auto t2 = t1 - couple;
-    for (int i = 0; i < 18; ++i) {
-      auto const tdir = splineDir(track, t2);
-      auto const couple = std::min(1.f, 0.5f / glm::length(tdir));
-      t2 -= couple;
-    }
+  auto const couple = std::min(1.f, 0.5f / glm::length(dir));
+  auto t2 = t1 - couple;
+  for (int i = 0; i < 18; ++i) {
+    auto const tdir = splineDir(track, t2);
+    auto const couple = std::min(1.f, 0.5f / glm::length(tdir));
+    t2 -= couple;
+  }
 
-    auto const pos2 = spline(track, t2);
-    auto const dir2 = splineDir(track, t2);
-    instances[1].transform = glm::translate(glm::mat4(1.f), pos2 + glm::vec3(0.f, bounce, 0.f)) *
-        glm::transpose(glm::lookAt(glm::vec3(0.f), dir2, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), -sway, glm::vec3(0.f, 0.f, 1.f));
+  auto const pos2 = spline(track, t2);
+  auto const dir2 = splineDir(track, t2);
+  instances[1].transform =
+      glm::translate(glm::mat4(1.f), pos2 + glm::vec3(0.f, bounce, 0.f)) *
+      glm::transpose(
+          glm::lookAt(glm::vec3(0.f), dir2, glm::vec3(0.f, 1.f, 0.f))) *
+      glm::rotate(glm::mat4(1.f), -sway, glm::vec3(0.f, 0.f, 1.f));
 
-    cameraOptions = glm::vec4(syncVal("Camera:FocalDist"),
-                              syncVal("Camera:FocalLen"),
-                              0.f,
-                              syncVal("Global:FresnelPow"));
-    processOptions = glm::vec4(syncVal("Global:Vignette"), syncVal("Global:Fade"), 0.0f, 0.0f);
+  cameraOptions =
+      glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), 0.f,
+                syncVal("Global:FresnelPow"));
+  processOptions =
+      glm::vec4(syncVal("Global:Vignette"), syncVal("Global:Fade"), 0.0f, 0.0f);
 
-    auto const pEggRun = glm::vec3(-80.f, 0.f, -95.f + syncVal("Eggton:RunnyEggs"));
-    auto const pSausage = glm::vec3(-75.f, 0.f, -110.f + syncVal("Eggton:Sausage"));
+  auto const pEggRun =
+      glm::vec3(-80.f, 0.f, -95.f + syncVal("Eggton:RunnyEggs"));
+  auto const pSausage =
+      glm::vec3(-75.f, 0.f, -110.f + syncVal("Eggton:Sausage"));
 
-    // Cooling tower clouds
-    for(int i = 0; i < 8; i++) {
-      auto const beattime = float(time) * (25.f/60.f) + float(i)*.25f;
-      auto const a = std::sqrt(beattime - std::floor(beattime) + float(i >> 2));
-      auto const y = a * 12.f + 7.f;
-      auto const s = a * 3.0f + 2.0f;
-      instances[i + 2].transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(10.f + (i & 3) * 15.f, y, -75.f)), glm::vec3(s));
-    }
+  // Cooling tower clouds
+  for (int i = 0; i < 8; i++) {
+    auto const beattime = float(time) * (25.f / 60.f) + float(i) * .25f;
+    auto const a = std::sqrt(beattime - std::floor(beattime) + float(i >> 2));
+    auto const y = a * 12.f + 7.f;
+    auto const s = a * 3.0f + 2.0f;
+    instances[i + 2].transform =
+        glm::scale(glm::translate(glm::mat4(1.f),
+                                  glm::vec3(10.f + (i & 3) * 15.f, y, -75.f)),
+                   glm::vec3(s));
+  }
 
-    auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
-    glm::vec3 busPos;
-    // Runny eggs
-    {
-      auto const t = syncVal("Eggton:RunnyEggs");
-      auto const eggmat = glm::scale(glm::transpose(rot90), glm::vec3(0.75f));
-      for(int i = 0; i < 6; i++) {
-        auto const beattime = (float(time) * 10.f + float(i)) / 3.f;
-        auto const beat = std::floor(beattime);
-        auto const frac = beattime - beat;
-
-        auto const bounce = 1.f - 4.f * (frac - 0.5f) * (frac - 0.5f);
-        auto const sway = (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 1.f : -1.f);
-
-        auto const eggPos = RunnyEggs[i] + glm::vec3(0.f, bounce * .25f, 0.f) + pEggRun;
-        instances[i + 10].transform = glm::translate(glm::mat4(1.f), eggPos) *
-          glm::rotate(glm::mat4(1.f), sway * -0.2f, glm::vec3(0.f, 0.f, 1.f)) * eggmat;
-      }
-
-      // Egg walking sausage
-      auto const beattime = float(time) * (10.f / 3.f);
+  auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f),
+                                 glm::vec3(0.f, 1.f, 0.f));
+  glm::vec3 busPos;
+  // Runny eggs
+  {
+    auto const t = syncVal("Eggton:RunnyEggs");
+    auto const eggmat = glm::scale(glm::transpose(rot90), glm::vec3(0.75f));
+    for (int i = 0; i < 6; i++) {
+      auto const beattime = (float(time) * 10.f + float(i)) / 3.f;
       auto const beat = std::floor(beattime);
       auto const frac = beattime - beat;
+
       auto const bounce = 1.f - 4.f * (frac - 0.5f) * (frac - 0.5f);
+      auto const sway =
+          (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 1.f : -1.f);
 
-      auto const sausage = float(time) * ((5.f * glm::pi<float>()) / 3.f);
-      instances[16].transform = glm::translate(glm::mat4(1.f), pSausage) *
-          glm::rotate(glm::mat4(1.f), std::sin(sausage) * 0.3f, glm::vec3(0.f, 1.f, 0.f)) *
-          glm::rotate(glm::mat4(1.f), bounce * -0.4f, glm::vec3(1.f, 0.f, 0.f)) *
-          glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 1.f)) * eggmat;
-
-      // Station eggs
-      instances[17].transform = glm::translate(glm::mat4(1.f), glm::vec3(-88.f, 0.f, -64.f)) *
-              glm::transpose(glm::lookAt(glm::vec3(0.f), glm::vec3(-88.f, 0.f, -64.f) - pos, glm::vec3(0.f, 1.f, 0.f))) * eggmat;
-      instances[18].transform = glm::translate(glm::mat4(1.f), glm::vec3(-85.f, 0.f, -65.f)) *
-              glm::transpose(glm::lookAt(glm::vec3(0.f), glm::vec3(-85.f, 0.f, -65.f) - pos, glm::vec3(0.f, 1.f, 0.f))) * eggmat;
-
-      // Egg bus
-      auto const t1 = std::min(syncVal("Eggton:Bus"), float(std::size(busRoute) - 1));
-      auto const pos = spline(busRoute, t1);
-      auto const dir = splineDir(busRoute, t1);
-
-      instances[19].transform = glm::translate(glm::mat4(1.f), pos) *
-          glm::transpose(glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) * eggmat;
-
-      busPos = pos;
+      auto const eggPos =
+          RunnyEggs[i] + glm::vec3(0.f, bounce * .25f, 0.f) + pEggRun;
+      instances[i + 10].transform =
+          glm::translate(glm::mat4(1.f), eggPos) *
+          glm::rotate(glm::mat4(1.f), sway * -0.2f, glm::vec3(0.f, 0.f, 1.f)) *
+          eggmat;
     }
 
-    // Toast
-    {
-      auto const t = syncVal("Eggton:Toast");
-      instances[20].transform = glm::scale(
-        glm::translate(glm::mat4(1.f), glm::vec3(-106.f, 0.f, -52.f - t)) * glm::transpose(rot90), glm::vec3(0.9f));
-    }
+    // Egg walking sausage
+    auto const beattime = float(time) * (10.f / 3.f);
+    auto const beat = std::floor(beattime);
+    auto const frac = beattime - beat;
+    auto const bounce = 1.f - 4.f * (frac - 0.5f) * (frac - 0.5f);
 
-    auto const cam = unsigned(syncVal("Scene:CamID"));
-    switch (cam) {
-      default: {
-        auto const view = glm::vec3(syncVal("Camera:Pos:X"),
-                                    syncVal("Camera:Pos:Y"),
-                                    syncVal("Camera:Pos:Z"));
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(pos + view), pos + glm::vec3(0.f, 1.f, 0.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    auto const sausage = float(time) * ((5.f * glm::pi<float>()) / 3.f);
+    instances[16].transform =
+        glm::translate(glm::mat4(1.f), pSausage) *
+        glm::rotate(glm::mat4(1.f), std::sin(sausage) * 0.3f,
+                    glm::vec3(0.f, 1.f, 0.f)) *
+        glm::rotate(glm::mat4(1.f), bounce * -0.4f, glm::vec3(1.f, 0.f, 0.f)) *
+        glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 1.f)) * eggmat;
 
-      case CAM_houses: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(27.f, 12.0f, 15.f), glm::vec3(67.f, 0.8f, 3.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    // Station eggs
+    instances[17].transform =
+        glm::translate(glm::mat4(1.f), glm::vec3(-88.f, 0.f, -64.f)) *
+        glm::transpose(glm::lookAt(glm::vec3(0.f),
+                                   glm::vec3(-88.f, 0.f, -64.f) - pos,
+                                   glm::vec3(0.f, 1.f, 0.f))) *
+        eggmat;
+    instances[18].transform =
+        glm::translate(glm::mat4(1.f), glm::vec3(-85.f, 0.f, -65.f)) *
+        glm::transpose(glm::lookAt(glm::vec3(0.f),
+                                   glm::vec3(-85.f, 0.f, -65.f) - pos,
+                                   glm::vec3(0.f, 1.f, 0.f))) *
+        eggmat;
 
-      case CAM_power_station: {
-        float const t = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(40.f - t, 0.2f, -62.f), glm::vec3(50.f - t, 8.f, -75.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    // Egg bus
+    auto const t1 =
+        std::min(syncVal("Eggton:Bus"), float(std::size(busRoute) - 1));
+    auto const pos = spline(busRoute, t1);
+    auto const dir = splineDir(busRoute, t1);
 
-      case CAM_power_station2: {
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-80.f, 16.0f, -60.f), glm::vec3(50.f, 0.5f, -80.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    instances[19].transform =
+        glm::translate(glm::mat4(1.f), pos) *
+        glm::transpose(
+            glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) *
+        eggmat;
 
-      case CAM_bridge: {
-        auto const lookdown = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-26.f, 0.0f, 50.f), glm::vec3(-26.f, -lookdown, -80.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    busPos = pos;
+  }
 
-      case CAM_eggton: {
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-90.f, 8.f, -75.f), pEggRun,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  // Toast
+  {
+    auto const t = syncVal("Eggton:Toast");
+    instances[20].transform = glm::scale(
+        glm::translate(glm::mat4(1.f), glm::vec3(-106.f, 0.f, -52.f - t)) *
+            glm::transpose(rot90),
+        glm::vec3(0.9f));
+  }
 
-      case CAM_sausage: {
-        cameraProjection = glm::perspective(glm::radians(syncVal("Scene:CamParam")), 1920.0f/1080.0f, 0.1f, 2000.f);
+  auto const cam = unsigned(syncVal("Scene:CamID"));
+  switch (cam) {
+  default: {
+    auto const view =
+        glm::vec3(syncVal("Camera:Pos:X"), syncVal("Camera:Pos:Y"),
+                  syncVal("Camera:Pos:Z"));
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView =
+        glm::lookAt(glm::vec3(pos + view), pos + glm::vec3(0.f, 1.f, 0.f),
+                    glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-        auto const weight = syncVal("Scene:LookSausage");
-        auto const target = (1.f - weight) * glm::vec3(-70.f, 2.f, -88.f) +
-            weight * (pSausage + glm::vec3(0.f, 1.f, 1.f));
-        cameraView = glm::lookAt(
-          glm::vec3(-90.f, 8.f, -86.f), target,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_houses: {
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView =
+        glm::lookAt(glm::vec3(27.f, 12.0f, 15.f), glm::vec3(67.f, 0.8f, 3.f),
+                    glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_station: {
-        auto const p = (pos + pos2)*.5f;
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          p + glm::vec3(0.f, 8.f, 20.f), p + glm::vec3(0.f, 0.f, -20.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_power_station: {
+    float const t = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(40.f - t, 0.2f, -62.f),
+                             glm::vec3(50.f - t, 8.f, -75.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_crossing: {
-        cameraProjection = glm::perspective(glm::radians(60.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          pos + glm::vec3(0.f, 2.f, -2.f), pos + glm::vec3(1.f, 2.f, -4.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_power_station2: {
+    cameraProjection =
+        glm::perspective(glm::radians(20.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView =
+        glm::lookAt(glm::vec3(-80.f, 16.0f, -60.f),
+                    glm::vec3(50.f, 0.5f, -80.f), glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_sofa: {
-        auto const lookdown = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-196.f, -6.f, 0.f), glm::vec3(-196.f, -6.f - lookdown, -78.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_bridge: {
+    auto const lookdown = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(20.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(-26.f, 0.0f, 50.f),
+                             glm::vec3(-26.f, -lookdown, -80.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_platform: {
-        cameraProjection = glm::perspective(glm::radians(60.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-74.f, 1.5f, -64.f), glm::vec3(-80.f, 1.5f, -62.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_eggton: {
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(-90.f, 8.f, -75.f), pEggRun,
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_follow_bus: {
-        auto const view = glm::vec3(syncVal("Camera:Pos:X"),
-                                    syncVal("Camera:Pos:Y"),
-                                    syncVal("Camera:Pos:Z"));
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(busPos + view), busPos,
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_sausage: {
+    cameraProjection = glm::perspective(glm::radians(syncVal("Scene:CamParam")),
+                                        1920.0f / 1080.0f, 0.1f, 2000.f);
 
-      case CAM_power_station3: {
-        auto const lookup = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(40.f, 3.0f, 0.f), glm::vec3(32.5f, 2.f + lookup, -75.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+    auto const weight = syncVal("Scene:LookSausage");
+    auto const target = (1.f - weight) * glm::vec3(-70.f, 2.f, -88.f) +
+                        weight * (pSausage + glm::vec3(0.f, 1.f, 1.f));
+    cameraView = glm::lookAt(glm::vec3(-90.f, 8.f, -86.f), target,
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_titles: {
-        auto const lookdown = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(20.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-40.f, 40.f, 60.f), glm::vec3(40.f - lookdown, 40.f - lookdown, 60.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
+  case CAM_station: {
+    auto const p = (pos + pos2) * .5f;
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(p + glm::vec3(0.f, 8.f, 20.f),
+                             p + glm::vec3(0.f, 0.f, -20.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
 
-      case CAM_crossing2: {
-        auto const height = syncVal("Scene:CamParam");
-        cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-        cameraView = glm::lookAt(
-          glm::vec3(-104.f, 4.f + height, -80.f), glm::vec3(-104.f, height, -60.f),
-          glm::vec3(0.0f, 1.0f, 0.0f));
-      } break;
-    }
+  case CAM_crossing: {
+    cameraProjection =
+        glm::perspective(glm::radians(60.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(pos + glm::vec3(0.f, 2.f, -2.f),
+                             pos + glm::vec3(1.f, 2.f, -4.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_sofa: {
+    auto const lookdown = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(-196.f, -6.f, 0.f),
+                             glm::vec3(-196.f, -6.f - lookdown, -78.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_platform: {
+    cameraProjection =
+        glm::perspective(glm::radians(60.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView =
+        glm::lookAt(glm::vec3(-74.f, 1.5f, -64.f),
+                    glm::vec3(-80.f, 1.5f, -62.f), glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_follow_bus: {
+    auto const view =
+        glm::vec3(syncVal("Camera:Pos:X"), syncVal("Camera:Pos:Y"),
+                  syncVal("Camera:Pos:Z"));
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(busPos + view), busPos,
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_power_station3: {
+    auto const lookup = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(20.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(40.f, 3.0f, 0.f),
+                             glm::vec3(32.5f, 2.f + lookup, -75.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_titles: {
+    auto const lookdown = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(20.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(-40.f, 40.f, 60.f),
+                             glm::vec3(40.f - lookdown, 40.f - lookdown, 60.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+
+  case CAM_crossing2: {
+    auto const height = syncVal("Scene:CamParam");
+    cameraProjection =
+        glm::perspective(glm::radians(45.f), 1920.0f / 1080.0f, 0.1f, 2000.f);
+    cameraView = glm::lookAt(glm::vec3(-104.f, 4.f + height, -80.f),
+                             glm::vec3(-104.f, height, -60.f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+  } break;
+  }
 }
 
 void RealScene::teardown() {
-    // nothing to do
+  // nothing to do
 }

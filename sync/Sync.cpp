@@ -6,67 +6,67 @@
 float secondsPerRowForCB = 0.0f;
 
 // Functions implementation
-void toggleMusicPause(void* musicPlayerP, int pause) {
-  MusicPlayer* musicPlayer = static_cast<MusicPlayer*>(musicPlayerP);
+void toggleMusicPause(void *musicPlayerP, int pause) {
+  MusicPlayer *musicPlayer = static_cast<MusicPlayer *>(musicPlayerP);
   if (pause) {
     WHBLogPrintf("Pausing music");
     musicPlayer->pause();
-  }
-  else {
+  } else {
     WHBLogPrintf("Resuming music");
     musicPlayer->play();
   }
 }
 
-void seekByRow(void* musicPlayerP, int row) {
-  MusicPlayer* musicPlayer = static_cast<MusicPlayer*>(musicPlayerP);
+void seekByRow(void *musicPlayerP, int row) {
+  MusicPlayer *musicPlayer = static_cast<MusicPlayer *>(musicPlayerP);
   WHBLogPrintf("Seeking to row %d", row);
   musicPlayer->seek(secondsPerRowForCB * row);
 }
 
-int isPlaying(void* musicPlayerP) {
-  MusicPlayer* musicPlayer = static_cast<MusicPlayer*>(musicPlayerP);
+int isPlaying(void *musicPlayerP) {
+  MusicPlayer *musicPlayer = static_cast<MusicPlayer *>(musicPlayerP);
   return musicPlayer->isPlaying();
 }
 
 // Sync class member functions implementation
-Sync::Sync(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, float secondsPerRow) : syncIP(syncIP), musicPlayer(musicPlayer), secondsPerRow(secondsPerRow) {
+Sync::Sync(const char *basePath, const char *syncIP, MusicPlayer *musicPlayer,
+           float secondsPerRow)
+    : syncIP(syncIP), musicPlayer(musicPlayer), secondsPerRow(secondsPerRow) {
   WHBLogPrintf("Creating sync device with track path %s", basePath);
 
   // saves on a bit of rehashing
   this->tracks.reserve(20);
   this->rocket = sync_create_device(basePath);
-  #ifndef SYNC_PLAYER
-    this->rocketCallbacks.pause = toggleMusicPause;
-    this->rocketCallbacks.set_row = seekByRow;
-    this->rocketCallbacks.is_playing = isPlaying;
-    connect();
-  #endif
+#ifndef SYNC_PLAYER
+  this->rocketCallbacks.pause = toggleMusicPause;
+  this->rocketCallbacks.set_row = seekByRow;
+  this->rocketCallbacks.is_playing = isPlaying;
+  connect();
+#endif
   update();
 }
 
-Sync::~Sync() {
-  sync_destroy_device(rocket);
-}
+Sync::~Sync() { sync_destroy_device(rocket); }
 
 void Sync::update() {
   float row = musicPlayer->currentTime() / secondsPerRow;
   secondsPerRowForCB = secondsPerRow;
-  #ifndef SYNC_PLAYER
-    //WHBLogPrintf("Upd. start");
-    if(sync_update(rocket, (int)floor(row), &rocketCallbacks, musicPlayer)) {
-      WHBLogPrintf("Sync update failed, reconnecting if in tool mode");
-      connect();
-    };
-    //WHBLogPrintf("Upd. end");
-  #endif
+#ifndef SYNC_PLAYER
+  // WHBLogPrintf("Upd. start");
+  if (sync_update(rocket, (int)floor(row), &rocketCallbacks, musicPlayer)) {
+    WHBLogPrintf("Sync update failed, reconnecting if in tool mode");
+    connect();
+  };
+    // WHBLogPrintf("Upd. end");
+#endif
 }
 
-float Sync::v(const char* track) {
-  return sync_get_val(getTrack(track), musicPlayer->currentTime() / secondsPerRow);
+float Sync::v(const char *track) {
+  return sync_get_val(getTrack(track),
+                      musicPlayer->currentTime() / secondsPerRow);
 }
 
-const sync_track* Sync::getTrack(const char* trackName) {
+const sync_track *Sync::getTrack(const char *trackName) {
   auto const found = tracks.try_emplace(trackName);
   if (!found.second) {
     return found.first->second;
@@ -78,35 +78,34 @@ const sync_track* Sync::getTrack(const char* trackName) {
 
 void Sync::connect() {
   WHBLogPrintf("Connecting to sync server at %s", syncIP);
-  #ifndef SYNC_PLAYER
-    while (sync_tcp_connect(rocket, syncIP, SYNC_DEFAULT_PORT)) {
-      WHBLogPrintf("Failed to connect to sync server, retrying...");
-      sync_tcp_connect(rocket, syncIP, SYNC_DEFAULT_PORT);
-    }
-  #endif
+#ifndef SYNC_PLAYER
+  while (sync_tcp_connect(rocket, syncIP, SYNC_DEFAULT_PORT)) {
+    WHBLogPrintf("Failed to connect to sync server, retrying...");
+    sync_tcp_connect(rocket, syncIP, SYNC_DEFAULT_PORT);
+  }
+#endif
 }
-
 
 // Global sync object
-static Sync* syncHandler = nullptr;
-void createSyncHandler(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, float secondsPerRow) {
-    if (syncHandler == nullptr) {
-        syncHandler = new Sync(basePath, syncIP, musicPlayer, secondsPerRow);
-    }
+static Sync *syncHandler = nullptr;
+void createSyncHandler(const char *basePath, const char *syncIP,
+                       MusicPlayer *musicPlayer, float secondsPerRow) {
+  if (syncHandler == nullptr) {
+    syncHandler = new Sync(basePath, syncIP, musicPlayer, secondsPerRow);
+  }
 }
 
-Sync* getSyncHandler() {
-    return syncHandler;
-}
+Sync *getSyncHandler() { return syncHandler; }
 
 void destroySyncHandler() {
-    if (syncHandler != nullptr) {
-        delete syncHandler;
-        syncHandler = nullptr;
-    }
+  if (syncHandler != nullptr) {
+    delete syncHandler;
+    syncHandler = nullptr;
+  }
 }
 
-float syncVal(const char* track) {
-  if(syncHandler == nullptr) return 0.0f;
+float syncVal(const char *track) {
+  if (syncHandler == nullptr)
+    return 0.0f;
   return syncHandler->v(track);
 }
