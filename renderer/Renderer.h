@@ -11,8 +11,8 @@ public:
   void renderFrame(const SceneBase &scene);
 
 private:
-  std::unique_ptr<SceneObject> composeQuad;
-  std::unique_ptr<SceneObject> blurQuad;
+  std::unique_ptr<RenderObject> composeQuad;
+  std::unique_ptr<RenderObject> blurQuad;
   std::unique_ptr<RenderBuffer> bufferA;
   std::unique_ptr<RenderBuffer> bufferB;
 };

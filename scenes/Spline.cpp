@@ -40,7 +40,7 @@ glm::vec3 splineDir(SplineSegment const *seg, float t) {
   auto const &seg0 = seg[h];
   if (g == 0.f) {
     // Otherwise it might dereference past the end of the array
-    return seg0.dir;
+    return 3.f * seg0.dir;
   }
 
   auto const &seg1 = seg[h + 1];

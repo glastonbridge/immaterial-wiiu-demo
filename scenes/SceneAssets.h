@@ -2,7 +2,7 @@
 
 #include "../graphics/LoadUFBX.h"
 #include "../graphics/MaterialCollection.h"
-#include "../graphics/SceneObject.h"
+#include "../graphics/ObjectFactory.h"
 #include "../renderer/RenderObject.h"
 
 enum materialID : size_t {
@@ -67,7 +67,7 @@ enum objectID : size_t {
 };
 
 struct SceneAssets {
-  std::vector<std::unique_ptr<SceneObject>> objects;
+  std::vector<std::unique_ptr<RenderObject>> objects;
   std::vector<std::unique_ptr<SceneMaterial>> materials;
 
   SceneAssets() {
@@ -108,41 +108,41 @@ struct SceneAssets {
 
     // Load objects
     objects.push_back(
-        LoadObject("assets/train.fbx", NULL, materials[ID_mat_train].get()));
-    objects.push_back(LoadObject("assets/cushion.fbx", NULL,
-                                 materials[ID_mat_cushion].get()));
+        ObjectFactory::load("assets/train.fbx", NULL, materials[ID_mat_train]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/cushion.fbx", NULL,
+                                 materials[ID_mat_cushion]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/house1.fbx", NULL, materials[ID_mat_house1].get()));
-    objects.push_back(LoadObject("assets/lampshade.fbx", NULL,
-                                 materials[ID_mat_lampshade].get()));
+        ObjectFactory::load("assets/house1.fbx", NULL, materials[ID_mat_house1]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/lampshade.fbx", NULL,
+                                 materials[ID_mat_lampshade]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/house2.fbx", NULL, materials[ID_mat_house2].get()));
-    objects.push_back(LoadObject("assets/viaduct.fbx", NULL,
-                                 materials[ID_mat_viaduct].get()));
-    objects.push_back(LoadObject("assets/duvet_hills.fbx", NULL,
-                                 materials[ID_mat_duvet].get()));
-    objects.push_back(LoadObject("assets/cardboard_cloud.fbx", NULL,
-                                 materials[ID_mat_cardboard_cloud].get()));
+        ObjectFactory::load("assets/house2.fbx", NULL, materials[ID_mat_house2]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/viaduct.fbx", NULL,
+                                 materials[ID_mat_viaduct]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/duvet_hills.fbx", NULL,
+                                 materials[ID_mat_duvet]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/cardboard_cloud.fbx", NULL,
+                                 materials[ID_mat_cardboard_cloud]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/pillow.fbx", NULL, materials[ID_mat_pillow].get()));
+        ObjectFactory::load("assets/pillow.fbx", NULL, materials[ID_mat_pillow]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/egg.fbx", "egg", materials[ID_mat_egg].get()));
+        ObjectFactory::load("assets/egg.fbx", "egg", materials[ID_mat_egg]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/egg.fbx", NULL, materials[ID_mat_egg].get()));
-    objects.push_back(LoadObject("assets/building.fbx", NULL,
-                                 materials[ID_mat_building].get()));
-    objects.push_back(LoadObject("assets/station_building.fbx", NULL,
-                                 materials[ID_mat_station_building].get()));
+        ObjectFactory::load("assets/egg.fbx", NULL, materials[ID_mat_egg]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/building.fbx", NULL,
+                                 materials[ID_mat_building]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/station_building.fbx", NULL,
+                                 materials[ID_mat_station_building]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/cloud.fbx", NULL, materials[ID_mat_cloud].get()));
+        ObjectFactory::load("assets/cloud.fbx", NULL, materials[ID_mat_cloud]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/sofa.fbx", NULL, materials[ID_mat_sofa].get()));
-    objects.push_back(LoadObject("assets/tablecloth.fbx", NULL,
-                                 materials[ID_mat_tablecloth].get()));
-    objects.push_back(LoadObject("assets/egg_carton.fbx", NULL,
-                                 materials[ID_mat_egg_carton].get()));
+        ObjectFactory::load("assets/sofa.fbx", NULL, materials[ID_mat_sofa]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/tablecloth.fbx", NULL,
+                                 materials[ID_mat_tablecloth]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/egg_carton.fbx", NULL,
+                                 materials[ID_mat_egg_carton]->getRenderMaterial()));
     objects.push_back(
-        LoadObject("assets/carpet.fbx", NULL, materials[ID_mat_carpet].get()));
+        ObjectFactory::load("assets/carpet.fbx", NULL, materials[ID_mat_carpet]->getRenderMaterial()));
 
     // load the 3d font fbx once to be reused for text objects:
     std::vector<std::vector<float>> text_vertices;
@@ -152,33 +152,33 @@ struct SceneAssets {
     // Our "font" has the following characters:
     // ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~& all letters will be drawn
     // in uppercase more characters can be added if really necessary
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "slipstream",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "slipstream",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "& svatg",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "& svatg",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "present",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "present",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "immaterial",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "immaterial",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "mrs beanbag",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "mrs beanbag",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "aldroid",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "aldroid",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "vurpo",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "vurpo",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "halcy",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "halcy",
                                text_vertices, text_normals));
-    objects.push_back(LoadText(materials[ID_mat_text].get(), "raccoonviolet",
+    objects.push_back(ObjectFactory::createText(materials[ID_mat_text]->getRenderMaterial(), "raccoonviolet",
                                text_vertices, text_normals));
 
-    objects.push_back(LoadObject("assets/eepytime.fbx", "Cube",
-                                 materials[ID_mat_duvet].get()));
-    objects.push_back(LoadObject("assets/toast_rack_with_toast.fbx", NULL,
-                                 materials[ID_mat_toast].get()));
-    objects.push_back(LoadObject("assets/crossing_signs.fbx", NULL,
-                                 materials[ID_mat_crossing_signs].get()));
-    objects.push_back(LoadObject("assets/tablecloth.fbx", NULL,
-                                 materials[ID_mat_mattress].get()));
+    objects.push_back(ObjectFactory::load("assets/eepytime.fbx", "Cube",
+                                 materials[ID_mat_duvet]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/toast_rack_with_toast.fbx", NULL,
+                                 materials[ID_mat_toast]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/crossing_signs.fbx", NULL,
+                                 materials[ID_mat_crossing_signs]->getRenderMaterial()));
+    objects.push_back(ObjectFactory::load("assets/tablecloth.fbx", NULL,
+                                 materials[ID_mat_mattress]->getRenderMaterial()));
   };
 };
 

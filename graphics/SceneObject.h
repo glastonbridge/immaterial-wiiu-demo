@@ -15,20 +15,18 @@ struct RenderObject;
  * renderobject. Separation of concerns unlocked. In practice: lol. lmao.
  */
 struct SceneObject {
-  SceneObject();
-  ~SceneObject();
+  SceneObject(size_t id) : id(id), transform(glm::mat4(1.0f)), anim(0.0f) {}
+  SceneObject(size_t id, glm::mat4 m) : id(id), transform(m), anim(0.0f) {}
+  SceneObject(SceneObject &&) = default;
+  ~SceneObject() = default;
+
+  size_t id;
+  glm::mat4 transform;
+  float anim;
+
   RenderObject *getRenderObject();
-  std::vector<std::vector<glm::mat4>> animFrames;
-  void setAnimationFrame(float frame);
+  void applyAnimation(RenderObject &obj) const;
 
-protected:
-  std::unique_ptr<RenderObject> renderObject;
-  std::unique_ptr<float[]> boneMatInterpBuffer;
+  // Naughty keyword is naughty but whatever lmao
+  mutable std::unique_ptr<float[]> boneMatInterpBuffer;
 };
-
-std::unique_ptr<SceneObject> LoadObject(const char *path, const char *name,
-                                        SceneMaterial *material = nullptr);
-std::unique_ptr<SceneObject> LoadQuad(SceneMaterial *material = nullptr);
-std::unique_ptr<SceneObject> LoadText(SceneMaterial *material, std::string text,
-                                      std::vector<std::vector<float>> vertices,
-                                      std::vector<std::vector<float>> normals);

@@ -15,7 +15,7 @@
 
 #define TRANSFORM_BUFFER_NUM_MATS_MAX 128
 
-struct RenderObjectImpl {
+struct RenderObjectImpl : RenderObject {
   RenderMaterial *material;
   int transformMatOffset = 0;
 
@@ -76,7 +76,7 @@ struct RenderObjectImpl {
   }
 
   void setAttribBuffer(BufferType bt, const void *data, uint32_t elemSize,
-                       size_t elemCount) {
+                       size_t elemCount) final {
     GX2RBuffer *buffer;
     if (BufferType::VERTEX == bt) {
       buffer = &positionBuffer;
@@ -94,11 +94,7 @@ struct RenderObjectImpl {
       WHBLogPrintf("Not an attribute buffer type");
       return;
     }
-    setAttribBuffer(data, elemSize, elemCount, buffer);
-  }
 
-  void setAttribBuffer(const void *data, uint32_t elemSize, size_t elemCount,
-                       GX2RBuffer *buffer) {
     if (!GX2RBufferExists(buffer)) {
       buffer->flags = static_cast<GX2RResourceFlags>(
           GX2R_RESOURCE_BIND_VERTEX_BUFFER | GX2R_RESOURCE_USAGE_CPU_READ |
@@ -112,7 +108,7 @@ struct RenderObjectImpl {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  void setUniformFloatMat(UniformType bt, const float *mat, size_t numFloats) {
+  void setUniformFloatMat(UniformType bt, const float *mat, size_t numFloats) final {
     GX2RBuffer *buffer;
     if (UniformType::CAMERA_PROJECTION == bt) {
       buffer = &projectionBuffer;
@@ -126,22 +122,18 @@ struct RenderObjectImpl {
       WHBLogPrintf("Not a matrix uniform type");
       return;
     }
-    setUniformFloatMat(mat, numFloats, buffer);
-  }
 
-  void setUniformFloatMat(const float *matPtr, size_t numFloats,
-                          GX2RBuffer *buffer) {
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                   (void *)buffer, numFloats * 4);
     void *bufferData =
         GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                   (void *)buffer, numFloats * 4);
-    swap_memcpy(bufferData, matPtr, numFloats * 4);
+    swap_memcpy(bufferData, mat, numFloats * 4);
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
 
-  void setExtraUniform(int index, glm::vec4 data) {
+  void setExtraUniform(int index, glm::vec4 data) final {
     if (index >= 4) {
       WHBLogPrintf("Extra uniform index out of range");
       return;
@@ -156,7 +148,7 @@ struct RenderObjectImpl {
     GX2RUnlockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
 
-  void render(bool shiftTransformMat) {
+  void render(bool shiftTransformMat) final {
     void *buffer = NULL;
 
     material->renderUsing();
@@ -204,8 +196,13 @@ struct RenderObjectImpl {
           (transformMatOffset + 1) % TRANSFORM_BUFFER_NUM_MATS_MAX;
     }
   }
-  ~RenderObjectImpl() {
 
+  void setMaterial(RenderMaterial *p_material) final {
+    material = p_material;
+  }
+  RenderMaterial *getMaterial() final { return material; }
+  
+  ~RenderObjectImpl() {
     WHBLogPrintf("Destroying RenderObject");
     GX2RDestroyBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
@@ -220,25 +217,33 @@ struct RenderObjectImpl {
   }
 };
 
-RenderObject::RenderObject() { _impl = new RenderObjectImpl(); }
+std::unique_ptr<RenderObject> RenderObject::create() {
+  return std::make_unique<RenderObjectImpl>();
+}
 
-RenderObject::~RenderObject() { delete _impl; }
+void RenderObject::getAnimFrame(float frame, float *boneBuffer) const {
+  // Bail if we don't have any frames
+  if (animFrames.empty()) {
+    return;
+  }
 
-void RenderObject::render(bool shiftTransformMat) {
-  _impl->render(shiftTransformMat);
+  // Figure out where in the animation we are
+  size_t numFrames = animFrames.size();
+  int animPos = (int)frame;
+  float animPosRemainder = frame - (float)animPos;
+  animPos = animPos % numFrames;
+  int animPosNext = (animPos + 1) % numFrames;
+  WHBLogPrintf("animPos: %d, animPosNext: %d, animPosRemainder: %f", animPos,
+               animPosNext, animPosRemainder);
+
+  // Copy all the bone mats into the array, interpolating linearly between two
+  // adjacent frames
+  size_t numBones = animFrames[0].size();
+  for (int i = 0; i < numBones; i++) {
+    glm::mat4 boneFrameMat =
+        animFrames[animPos][i] * (1.0f - animPosRemainder) +
+        animFrames[animPosNext][i] * animPosRemainder;
+    memcpy(boneBuffer + (i * 4 * 4),
+           glm::value_ptr(boneFrameMat), 4 * 4 * sizeof(float));
+  }
 }
-void RenderObject::setAttribBuffer(BufferType bt, const void *data,
-                                   uint32_t elemSize, uint32_t elemCount) {
-  _impl->setAttribBuffer(bt, data, elemSize, elemCount);
-}
-void RenderObject::setUniformFloatMat(UniformType bt, const float *mat,
-                                      size_t numFloats) {
-  _impl->setUniformFloatMat(bt, mat, numFloats);
-}
-void RenderObject::setExtraUniform(int index, glm::vec4 data) {
-  _impl->setExtraUniform(index, data);
-}
-void RenderObject::setMaterial(RenderMaterial *material) {
-  _impl->material = material;
-}
-RenderMaterial *RenderObject::getMaterial() { return _impl->material; }
