@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 #ifdef SYNC_PLAYER
    music->play();
 #endif
-   Sync* sync = new Sync(
+   createSyncHandler(
       "sync_tracks/", 
       SYNC_IP, 
       music, 
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
    float lastTime = 0.0f;
    while (WHBProcIsRunning()) {
       // Update rocket
-      sync->update();
+      getSyncHandler()->update();
       
       // Scene switcher
       int newScene = syncVal("Global:Scene");
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
    WHBLogPrintf("Done. Quitting...");
 
    // Get rid of all of our stuff
-   delete sync;
+   destroySyncHandler();
    delete renderer;
    delete music;
    if (scene != nullptr) {

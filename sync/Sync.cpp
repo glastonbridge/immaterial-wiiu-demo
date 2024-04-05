@@ -5,9 +5,6 @@
 // Global variables definition
 float secondsPerRowForCB = 0.0f;
 
-// Global sync object definition
-Sync* syncObjPtr = nullptr;
-
 // Functions implementation
 void toggleMusicPause(void* musicPlayerP, int pause) {
   MusicPlayer* musicPlayer = static_cast<MusicPlayer*>(musicPlayerP);
@@ -43,7 +40,6 @@ Sync::Sync(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, f
     connect();
   #endif
   update();
-  syncObjPtr = this;	
 }
 
 Sync::~Sync() {
@@ -82,4 +78,29 @@ void Sync::connect() {
       sync_tcp_connect(rocket, syncIP, SYNC_DEFAULT_PORT);
     }
   #endif
+}
+
+
+// Global sync object
+static Sync* syncHandler = nullptr;
+void createSyncHandler(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, float secondsPerRow) {
+    if (syncHandler == nullptr) {
+        syncHandler = new Sync(basePath, syncIP, musicPlayer, secondsPerRow);
+    }
+}
+
+Sync* getSyncHandler() {
+    return syncHandler;
+}
+
+void destroySyncHandler() {
+    if (syncHandler != nullptr) {
+        delete syncHandler;
+        syncHandler = nullptr;
+    }
+}
+
+float syncVal(const char* track) {
+  if(syncHandler == nullptr) return 0.0f;
+  return syncHandler->v(track);
 }

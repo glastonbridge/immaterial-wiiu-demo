@@ -15,7 +15,7 @@
 // Global variables declaration
 extern float secondsPerRowForCB;
 
-// Function declarations
+// Function declarations (we need these with these signatures for the callbacks)
 void toggleMusicPause(void* musicPlayerP, int pause);
 void seekByRow(void* musicPlayerP, int row);
 int isPlaying(void* musicPlayerP);
@@ -41,8 +41,7 @@ private:
   void connect();
 };
 
-// Global sync object declaration
-extern Sync* syncObjPtr;
-
-// Macro definition
-#define syncVal(track) syncObjPtr->v(track)
+void createSyncHandler(const char* basePath, const char* syncIP, MusicPlayer* musicPlayer, float secondsPerRow);
+Sync* getSyncHandler();
+void destroySyncHandler();
+float syncVal(const char* track);
