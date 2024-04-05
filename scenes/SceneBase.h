@@ -58,3 +58,16 @@ struct SceneBase {
 
 // See scenes.cpp
 SceneBase* getScene(int id);
+
+// These don't really warrent their own headers
+struct RealScene: public SceneBase {
+  void setup() final;
+  void update(double time) final;
+  void teardown() final;
+};
+
+struct EepyScene: public SceneBase {
+  void setup() final;
+  void update(double time) final;
+  void teardown() final;
+};

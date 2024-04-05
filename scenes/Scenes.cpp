@@ -1,11 +1,8 @@
 #include "SceneBase.h"
-#include "RealScene.h"
 
 enum sceneID : int { // int because we convert this from a float from the sync system and unsigned is dangerous
     SCENE_RealScene,
     SCENE_EepyScene,
-    SCENE_GizmosScene,
-    SCENE_Devroom,
     _MAX_SCENES
 };
 

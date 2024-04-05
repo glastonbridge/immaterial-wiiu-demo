@@ -41,6 +41,9 @@ add_executable(wiiu_demo
     renderer/ShaderManager.cpp
     scenes/SceneAssets.cpp
     scenes/Scenes.cpp
+    scenes/Spline.cpp
+    scenes/RealScene.cpp
+    scenes/EepyScene.cpp
     util/ourmalloc.cpp
 )
 

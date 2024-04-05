@@ -5,7 +5,9 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "SceneAssets.h"
+#include "Spline.h"
 
+namespace {
 enum Cameras {
   CAM_follow,
   CAM_houses,
@@ -23,57 +25,6 @@ enum Cameras {
   CAM_titles,
   CAM_crossing2,
 };
-
-struct SplineSegment {
-  glm::vec3 pos;
-  glm::vec3 dir;
-};
-
-glm::vec3 spline(SplineSegment const *seg, float t) {
-  if (t <= 0.f) {
-    return seg->pos;
-  }
-
-  auto f = std::floor(t);
-  auto h = size_t(f);
-  auto g = t - f;
-
-  auto const &seg0 = seg[h];
-  auto const &seg1 = seg[h+1];
-  auto const x0 = seg0.pos;
-  auto const x1 = seg0.pos + seg0.dir;
-  auto const x2 = seg1.pos - seg1.dir;
-  auto const x3 = seg1.pos;
-  float ig = 1.0f - g;
-  float ig2 = ig * ig;
-  float ig3 = ig2 * ig;
-
-  return ig3 * x0 + (g * 3.f) * (ig2 * x1 + ig * g * x2) + (g * g * g) * x3;
-}
-
-glm::vec3 splineDir(SplineSegment const *seg, float t) {
-  if (t <= 0.f) {
-    return 3.f * seg->dir;
-  }
-
-  auto f = std::floor(t);
-  auto h = size_t(f);
-  auto g = t - f;
-
-  auto const &seg0 = seg[h];
-  auto const &seg1 = seg[h+1];
-  auto const x0 = seg0.pos;
-  auto const x1 = seg0.pos + seg0.dir;
-  auto const x2 = seg1.pos - seg1.dir;
-  auto const x3 = seg1.pos;
-  float ig = g - 1.f;
-
-  float k0 = -3.f * (ig * ig);
-  float k1 = 3.f * ig * (3.f * g - 1.f);
-  float k2 = (6.f - 9.f * g) * g;
-
-  return k0 * x0 + k1 * x1 + k2 * x2 + (3.f * g * g) * x3;
-}
 
 static const SplineSegment track[] = {
   {{0.f,0.f,60.f}, {10.f,0.f,0.f}},
@@ -120,15 +71,15 @@ static const glm::vec3 RunnyEggs[] = {
   { 0.6f, 0.f, 4.f}
 };
 
-struct RealScene: public SceneBase {
-  static glm::mat4 getCushionMat(glm::vec3 p, float ry = 0.0f, float rx = 0.0f, float rz = 0.0f) {
-    return glm::scale(glm::translate(glm::mat4(1.f), p), glm::vec3(5.0f))
-      * glm::rotate(glm::mat4(1.f), ry, glm::vec3(0.f, 1.f, 0.f))
-      * glm::rotate(glm::mat4(1.f), rx, glm::vec3(1.f, 0.f, 0.f))
-      * glm::rotate(glm::mat4(1.f), rz, glm::vec3(0.f, 0.f, 1.f));
-  }
+glm::mat4 getCushionMat(glm::vec3 p, float ry = 0.0f, float rx = 0.0f, float rz = 0.0f) {
+  return glm::scale(glm::translate(glm::mat4(1.f), p), glm::vec3(5.0f))
+    * glm::rotate(glm::mat4(1.f), ry, glm::vec3(0.f, 1.f, 0.f))
+    * glm::rotate(glm::mat4(1.f), rx, glm::vec3(1.f, 0.f, 0.f))
+    * glm::rotate(glm::mat4(1.f), rz, glm::vec3(0.f, 0.f, 1.f));
+}
+}  // namespace
 
-  void setup() final {
+void RealScene::setup() {
     // Set up the scene
     auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
 
@@ -344,14 +295,9 @@ struct RealScene: public SceneBase {
         glm::translate(glm::mat4(1.f),
             glm::vec3(5.5f, 44.f, -75.f)),
             glm::vec3(0.2f));
+}
 
-    // Temporary: Sleepytime duvet
-    //instances.emplace_back(ID_eepytime);
-  }
-
-  void update(double time) final {
-    // Update transforms and whatever else needs updating
-    //updateCamera();
+void RealScene::update(double time) {
     auto const beattime = float(time) * (100.f/60.f);
     auto const beat = std::floor(beattime);
     auto const frac = beattime - beat;
@@ -454,10 +400,6 @@ struct RealScene: public SceneBase {
       instances[20].transform = glm::scale(
         glm::translate(glm::mat4(1.f), glm::vec3(-106.f, 0.f, -52.f - t)) * glm::transpose(rot90), glm::vec3(0.9f));
     }
-
-    // Temporary: Sleepytimt duvez
-    //instances.back().transform = glm::scale(instances[0].transform, glm::vec3(5.0f));
-    //instances.back().anim = float(time) * 24.0f;
 
     auto const cam = unsigned(syncVal("Scene:CamID"));
     switch (cam) {
@@ -583,83 +525,8 @@ struct RealScene: public SceneBase {
           glm::vec3(0.0f, 1.0f, 0.0f));
       } break;
     }
-  }
+}
 
-  void teardown() final {
+void RealScene::teardown() {
     // nothing to do
-  }
-};
-
-// Sorry for not putting this in its own file but i wanted to re-use the spline
-// functions and i couldn't be bothered with all the faffing about this close to
-// the deadline.
-//    -- Mrs Beanbag
-static const SplineSegment eepyTrack[] = {
-  {{30.f, 0.f, 17.f}, {0.f, 0.f, -10.f}},
-  {{20.f, 0.f, 1.5f}, {-4.f, 0.f, 0.f}},
-  {{12.f, 0.f, 1.5f}, {-4.f, 0.f, 0.f}},
-  {{-10.f, -3.f, -2.5f}, {-6.f, 0.f, -1.f}}
-};
-
-struct EepyScene: public SceneBase {
-  void setup() final {
-    auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f), glm::vec3(0.f, 1.f, 0.f));
-
-    instances.emplace_back(ID_train);
-    instances.emplace_back(ID_train);
-    instances.emplace_back(ID_eepytime);
-    instances.back().transform = glm::scale(glm::mat4(1.f), glm::vec3(8.f));
-
-    instances.emplace_back(ID_mattress);
-    instances.emplace_back(ID_pillow);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(20.f, 0.f, 10.f)), glm::vec3(2.5f)) * rot90;
-
-    instances.emplace_back(ID_pillow);
-    instances.back().transform = glm::scale(glm::translate(glm::mat4(1.f), glm::vec3(20.f, 0.f, -7.f)), glm::vec3(2.5f)) * rot90;
-  }
-
-  void update(double time) final {
-    auto const beattime = float(time) * (100.f/60.f);
-    auto const beat = std::floor(beattime);
-    auto const frac = beattime - beat;
-
-    auto const bamp = syncVal("Train:Bounce");
-    auto const bounce = bamp * (1.f - 4.f * (frac - 0.5f) * (frac - 0.5f));
-    auto const sway = bamp * (frac * frac - 0.5f) * ((unsigned(beat) & 1) ? 0.2f : -0.2f);
-
-    auto const t1 = std::min(syncVal("Train:Car1"), float(std::size(eepyTrack) - 1));
-    auto const pos = spline(eepyTrack, t1);
-    auto const dir = splineDir(eepyTrack, t1);
-
-    instances[0].transform = glm::translate(glm::mat4(1.f), pos + glm::vec3(0.f, bounce, 0.f)) *
-        glm::transpose(glm::lookAt(glm::vec3(0.f), -dir, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), sway, glm::vec3(0.f, 0.f, 1.f));
-
-    auto const couple = std::min(1.f, 0.5f / glm::length(dir));
-    auto t2 = t1 - couple;
-    for (int i = 0; i < 18; ++i) {
-      auto const tdir = splineDir(eepyTrack, t2);
-      auto const couple = std::min(1.f, 0.5f / glm::length(tdir));
-      t2 -= couple;
-    }
-
-    auto const pos2 = spline(eepyTrack, t2);
-    auto const dir2 = splineDir(eepyTrack, t2);
-    instances[1].transform = glm::translate(glm::mat4(1.f), pos2 + glm::vec3(0.f, bounce, 0.f)) *
-        glm::transpose(glm::lookAt(glm::vec3(0.f), dir2, glm::vec3(0.f, 1.f, 0.f))) *
-        glm::rotate(glm::mat4(1.f), -sway, glm::vec3(0.f, 0.f, 1.f));
-
-    instances[2].anim = syncVal("Eepy:Duvet");
-    cameraOptions = glm::vec4(syncVal("Camera:FocalDist"),
-                              syncVal("Camera:FocalLen"),
-                              0.f,
-                              syncVal("Global:FresnelPow"));
-    processOptions = glm::vec4(syncVal("Global:Vignette"), syncVal("Global:Fade"), 0.0f, 0.0f);
-    cameraProjection = glm::perspective(glm::radians(45.f), 1920.0f/1080.0f, 0.1f, 2000.f);
-    cameraView = glm::lookAt(
-        glm::vec3(24.f, 8.f, -6.f), glm::vec3(15.f, 0.f, 3.5f),
-        glm::vec3(0.0f, 1.0f, 0.0f));
-  }
-
-  void teardown() final {}
-};
+}
