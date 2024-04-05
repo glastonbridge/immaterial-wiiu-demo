@@ -1,12 +1,6 @@
 #pragma once
 
-#include "../graphics/SceneMaterial.h"
-#include "../graphics/SceneObject.h"
 #include "../renderer/RenderBuffer.h"
-#include "../renderer/RenderObject.h"
-#include "../sync/Sync.h"
-
-#include <glm/ext.hpp>
 
 #include <glm/mat4x4.hpp>
 
@@ -32,23 +26,6 @@ struct SceneBase {
 
   SceneBase()
     : renderBuffer(std::make_unique<RenderBuffer>(false, 1280, 720)) {};
-
-  void updateCamera() {
-    cameraProjection = glm::perspective(glm::radians(syncVal("Camera:FoV")),
-                                        1920.0f / 1080.0f, 0.1f, 2000.f);
-    cameraView = glm::lookAt(
-        glm::vec3(syncVal("Camera:PosX"), syncVal("Camera:PosY"),
-                  syncVal("Camera:PosZ")),
-        glm::vec3(syncVal("Camera:LookatX"), syncVal("Camera:LookatY"),
-                  syncVal("Camera:LookatZ")),
-        glm::vec3(syncVal("Camera:UpX"), syncVal("Camera:UpY"),
-                  syncVal("Camera:UpZ")));
-    cameraOptions =
-        glm::vec4(syncVal("Camera:FocalDist"), syncVal("Camera:FocalLen"), 0.f,
-                  syncVal("Global:FresnelPow"));
-    processOptions = glm::vec4(syncVal("Global:Vignette"),
-                               1.0f - syncVal("Global:Fade"), 0.0f, 0.0f);
-  }
 
   virtual void setup() = 0;
   virtual void update(double time) = 0;

@@ -122,13 +122,17 @@ int main(int argc, char **argv) {
       int newScene = syncVal("Global:Scene");
       if (currentScene != newScene) {
         scene.reset(getScene(newScene));
-        scene->setup();
+        if (scene) {
+          scene->setup();
+        }
         currentScene = newScene;
       }
 
       // Update scene
-      scene->update(music.currentTime());
-      renderer.renderFrame(*scene);
+      if (scene) {
+        scene->update(music.currentTime());
+        renderer.renderFrame(*scene);
+      }
 
 #ifdef BENCHMARK
       // if you're in synctool mode you can make the FPS go negative lol
