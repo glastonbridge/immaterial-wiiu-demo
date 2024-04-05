@@ -17,7 +17,7 @@ int isPlaying(void *musicPlayerP);
 // Sync class definition
 class Sync {
 public:
-  Sync(const char *basePath, const char *syncIP, MusicPlayer *musicPlayer,
+  Sync(const char *basePath, const char *syncIP, MusicPlayer &musicPlayer,
        float secondsPerRow);
   ~Sync();
   void update();
@@ -26,7 +26,7 @@ public:
 private:
   const char *syncIP;
   sync_device *rocket;
-  MusicPlayer *musicPlayer;
+  MusicPlayer &musicPlayer;
   float secondsPerRow;
   std::unordered_map<const char *, const sync_track *> tracks;
 #ifndef SYNC_PLAYER
@@ -37,7 +37,7 @@ private:
 };
 
 void createSyncHandler(const char *basePath, const char *syncIP,
-                       MusicPlayer *musicPlayer, float secondsPerRow);
+                       MusicPlayer &musicPlayer, float secondsPerRow);
 Sync *getSyncHandler();
 void destroySyncHandler();
 float syncVal(const char *track);

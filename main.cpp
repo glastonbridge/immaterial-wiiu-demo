@@ -94,14 +94,15 @@ int main(int argc, char **argv)
 
    // Current scene
    int currentScene = -1000;
-   SceneBase* scene = nullptr;
    WHBLogPrint("Hello World! Logging initialised.");
-   MusicPlayer* music = new MusicPlayer("assets/immaterial.ogg", 0.0f);
-   Renderer* renderer = new Renderer();
+   {
+   auto music = MusicPlayer("assets/immaterial.ogg", 0.0f);
+   auto renderer = Renderer();
+   std::unique_ptr<SceneBase> scene;
    
    WHBLogPrintf("Begin updating...");
 #ifdef SYNC_PLAYER
-   music->play();
+   music.play();
 #endif
    createSyncHandler(
       "sync_tracks/", 
@@ -118,24 +119,20 @@ int main(int argc, char **argv)
       // Scene switcher
       int newScene = syncVal("Global:Scene");
       if(currentScene != newScene) {
-         if (scene != nullptr) {
-            scene->teardown();
-            delete scene;
-         }
-         scene = getScene(newScene);
+         scene.reset(getScene(newScene));
          scene->setup();
          currentScene = newScene;
       }
 
       // Update scene
-      scene->update(music->currentTime());
-      renderer->renderFrame(*scene);
+      scene->update(music.currentTime());
+      renderer.renderFrame(*scene);
 
 #ifdef BENCHMARK
       // if you're in synctool mode you can make the FPS go negative lol
       frameCounter++;
       if(frameCounter % 60 == 0) {
-         float currentTime = music->currentTime();
+         float currentTime = music.currentTime();
          WHBLogPrintf("FPS: %f", 60.0f / (currentTime - lastTime));
          lastTime = currentTime;
       }
@@ -145,11 +142,6 @@ int main(int argc, char **argv)
 
    // Get rid of all of our stuff
    destroySyncHandler();
-   delete renderer;
-   delete music;
-   if (scene != nullptr) {
-      scene->teardown();
-      delete scene;
    }
    destroySceneAssets();
    destroyShaderManager();

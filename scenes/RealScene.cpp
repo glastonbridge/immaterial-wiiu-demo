@@ -604,7 +604,3 @@ void RealScene::update(double time) {
   } break;
   }
 }
-
-void RealScene::teardown() {
-  // nothing to do
-}

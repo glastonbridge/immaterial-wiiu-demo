@@ -29,7 +29,7 @@ int isPlaying(void *musicPlayerP) {
 }
 
 // Sync class member functions implementation
-Sync::Sync(const char *basePath, const char *syncIP, MusicPlayer *musicPlayer,
+Sync::Sync(const char *basePath, const char *syncIP, MusicPlayer &musicPlayer,
            float secondsPerRow)
     : syncIP(syncIP), musicPlayer(musicPlayer), secondsPerRow(secondsPerRow) {
   WHBLogPrintf("Creating sync device with track path %s", basePath);
@@ -49,11 +49,11 @@ Sync::Sync(const char *basePath, const char *syncIP, MusicPlayer *musicPlayer,
 Sync::~Sync() { sync_destroy_device(rocket); }
 
 void Sync::update() {
-  float row = musicPlayer->currentTime() / secondsPerRow;
+  float row = musicPlayer.currentTime() / secondsPerRow;
   secondsPerRowForCB = secondsPerRow;
 #ifndef SYNC_PLAYER
   // WHBLogPrintf("Upd. start");
-  if (sync_update(rocket, (int)floor(row), &rocketCallbacks, musicPlayer)) {
+  if (sync_update(rocket, (int)floor(row), &rocketCallbacks, &musicPlayer)) {
     WHBLogPrintf("Sync update failed, reconnecting if in tool mode");
     connect();
   };
@@ -63,7 +63,7 @@ void Sync::update() {
 
 float Sync::v(const char *track) {
   return sync_get_val(getTrack(track),
-                      musicPlayer->currentTime() / secondsPerRow);
+                      musicPlayer.currentTime() / secondsPerRow);
 }
 
 const sync_track *Sync::getTrack(const char *trackName) {
@@ -89,7 +89,7 @@ void Sync::connect() {
 // Global sync object
 static Sync *syncHandler = nullptr;
 void createSyncHandler(const char *basePath, const char *syncIP,
-                       MusicPlayer *musicPlayer, float secondsPerRow) {
+                       MusicPlayer &musicPlayer, float secondsPerRow) {
   if (syncHandler == nullptr) {
     syncHandler = new Sync(basePath, syncIP, musicPlayer, secondsPerRow);
   }

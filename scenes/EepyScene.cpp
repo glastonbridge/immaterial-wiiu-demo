@@ -87,5 +87,3 @@ void EepyScene::update(double time) {
       glm::lookAt(glm::vec3(24.f, 8.f, -6.f), glm::vec3(15.f, 0.f, 3.5f),
                   glm::vec3(0.0f, 1.0f, 0.0f));
 }
-
-void EepyScene::teardown() {}

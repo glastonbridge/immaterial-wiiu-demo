@@ -23,16 +23,15 @@ struct SceneInstance {
 };
 
 struct SceneBase {
-  std::vector<std::unique_ptr<SceneObject>> objects;
-  std::vector<std::unique_ptr<SceneMaterial>> materials;
   std::vector<SceneInstance> instances;
   glm::mat4x4 cameraProjection;
   glm::mat4x4 cameraView;
   glm::vec4 cameraOptions;
   glm::vec4 processOptions;
-  RenderBuffer *renderBuffer;
+  std::unique_ptr<RenderBuffer> renderBuffer;
 
-  SceneBase() { renderBuffer = new RenderBuffer(false, 1280, 720); };
+  SceneBase()
+    : renderBuffer(std::make_unique<RenderBuffer>(false, 1280, 720)) {};
 
   void updateCamera() {
     cameraProjection = glm::perspective(glm::radians(syncVal("Camera:FoV")),
@@ -53,9 +52,8 @@ struct SceneBase {
 
   virtual void setup() = 0;
   virtual void update(double time) = 0;
-  virtual void teardown() = 0;
 
-  virtual ~SceneBase() { delete renderBuffer; }
+  virtual ~SceneBase() = default;
 };
 
 // See scenes.cpp
@@ -65,11 +63,9 @@ SceneBase *getScene(int id);
 struct RealScene : public SceneBase {
   void setup() final;
   void update(double time) final;
-  void teardown() final;
 };
 
 struct EepyScene : public SceneBase {
   void setup() final;
   void update(double time) final;
-  void teardown() final;
 };
