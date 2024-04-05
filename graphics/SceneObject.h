@@ -23,7 +23,7 @@ struct SceneObject {
 
 protected:
   std::unique_ptr<RenderObject> renderObject;
-  float *boneMatInterpBuffer = nullptr;
+  std::unique_ptr<float[]> boneMatInterpBuffer;
 };
 
 std::unique_ptr<SceneObject> LoadObject(const char *path, const char *name,

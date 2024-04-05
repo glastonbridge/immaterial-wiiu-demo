@@ -40,11 +40,7 @@ static const float sTexcoordData[] = {
 
 SceneObject::SceneObject() {}
 
-SceneObject::~SceneObject() {
-  if (this->boneMatInterpBuffer != nullptr) {
-    free(this->boneMatInterpBuffer);
-  }
-}
+SceneObject::~SceneObject() {}
 
 RenderObject *SceneObject::getRenderObject() { return renderObject.get(); }
 
@@ -68,8 +64,7 @@ void SceneObject::setAnimationFrame(float frame) {
   size_t numBones = this->animFrames[0].size();
   if (this->boneMatInterpBuffer == nullptr) {
     WHBLogPrintf("Allocating bone interp buffer for %d bones", numBones);
-    this->boneMatInterpBuffer =
-        (float *)malloc(4 * 4 * numBones * sizeof(float));
+    this->boneMatInterpBuffer.reset(new float[4 * 4 * numBones]);
   }
 
   // Figure out where in the animation we are
@@ -87,14 +82,14 @@ void SceneObject::setAnimationFrame(float frame) {
     glm::mat4 boneFrameMat =
         this->animFrames[animPos][i] * (1.0f - animPosRemainder) +
         this->animFrames[animPosNext][i] * animPosRemainder;
-    memcpy(this->boneMatInterpBuffer + (i * 4 * 4),
+    memcpy(this->boneMatInterpBuffer.get() + (i * 4 * 4),
            glm::value_ptr(boneFrameMat), 4 * 4 * sizeof(float));
   }
 
   // Bones to shader buffer
   WHBLogPrintf("Setting bone transform uniform");
   this->getRenderObject()->setUniformFloatMat(
-      UniformType::BONE_TRANSFORM, this->boneMatInterpBuffer, 4 * 4 * numBones);
+      UniformType::BONE_TRANSFORM, this->boneMatInterpBuffer.get(), 4 * 4 * numBones);
 }
 
 /**
