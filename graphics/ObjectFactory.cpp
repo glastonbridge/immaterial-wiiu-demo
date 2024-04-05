@@ -1,11 +1,12 @@
 #include "ObjectFactory.h"
-#include "LoadUFBX.h"
-#include "../renderer/RenderObject.h"
 #include "../renderer/RenderMaterial.h"
+#include "../renderer/RenderObject.h"
+#include "LoadUFBX.h"
 #include <whb/log.h>
 
-std::unique_ptr<RenderObject> ObjectFactory::load(const char *path, const char *name,
-                        RenderMaterial *material) {
+std::unique_ptr<RenderObject> ObjectFactory::load(const char *path,
+                                                  const char *name,
+                                                  RenderMaterial *material) {
   auto obj = RenderObject::create();
   WHBLogPrintf("Loading object %s from %s", name, path);
 
@@ -31,19 +32,18 @@ std::unique_ptr<RenderObject> ObjectFactory::load(const char *path, const char *
 
   WHBLogPrintf("Set attrib buffer...");
   obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX, vertices.data(),
-                                            4 * 3, vertices.size() / 3);
-  obj->setAttribBuffer(
-      BufferType::COLOR, vertexColors.data(), 4 * 4, vertexColors.size() / 4);
-  obj->setAttribBuffer(
-      BufferType::TEXCOORD, texcoords.data(), 4 * 2, texcoords.size() / 2);
-  obj->setAttribBuffer(BufferType::NORMAL, normals.data(),
-                                            4 * 3, normals.size() / 3);
-  obj->setAttribBuffer(
-      BufferType::BONE_IDX, boneIndices.data(), 2 * 4, boneIndices.size() / 2);
-  obj->setAttribBuffer(BufferType::BONE_WEIGHT,
-                                            boneWeights.data(), 2 * 4,
-                                            boneWeights.size() / 2);
+  obj->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4 * 3,
+                       vertices.size() / 3);
+  obj->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4 * 4,
+                       vertexColors.size() / 4);
+  obj->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4 * 2,
+                       texcoords.size() / 2);
+  obj->setAttribBuffer(BufferType::NORMAL, normals.data(), 4 * 3,
+                       normals.size() / 3);
+  obj->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2 * 4,
+                       boneIndices.size() / 2);
+  obj->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 2 * 4,
+                       boneWeights.size() / 2);
 
   return obj;
 }
@@ -76,19 +76,18 @@ static const float sPositionDataQuad[] = {
 static const float sTexcoordData[] = {
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 };
-}  // namespace
+} // namespace
 
 /**
  * Generate a quad object.
  */
-std::unique_ptr<RenderObject> ObjectFactory::createQuad(RenderMaterial *material) {
+std::unique_ptr<RenderObject>
+ObjectFactory::createQuad(RenderMaterial *material) {
   auto obj = RenderObject::create();
 
   obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX,
-                                            sPositionDataQuad, 4 * 3, 6);
-  obj->setAttribBuffer(BufferType::TEXCOORD, sTexcoordData,
-                                            4 * 2, 6);
+  obj->setAttribBuffer(BufferType::VERTEX, sPositionDataQuad, 4 * 3, 6);
+  obj->setAttribBuffer(BufferType::TEXCOORD, sTexcoordData, 4 * 2, 6);
 
   return obj;
 }
@@ -106,14 +105,15 @@ const float x_widths[47] = {
     16.f, 19.f, 19.f, 21.f, 19.f, 19.f, 19.f, 19.f, 19.f, 19.f,
     // the symbols
     13.f, 13.f, 20.f, 13.f, 16.f, 13.f, 15.f, 10.f, 16.f, 18.f, 20.f};
-}  // namespace
+} // namespace
 
 /**
  * Generate a text object.
  */
-std::unique_ptr<RenderObject> ObjectFactory::createText(RenderMaterial *material, std::string text,
-                                      std::vector<std::vector<float>> vertices,
-                                      std::vector<std::vector<float>> normals) {
+std::unique_ptr<RenderObject>
+ObjectFactory::createText(RenderMaterial *material, std::string text,
+                          std::vector<std::vector<float>> vertices,
+                          std::vector<std::vector<float>> normals) {
   auto obj = RenderObject::create();
 
   std::vector<float> stringVertices;
@@ -325,18 +325,14 @@ std::unique_ptr<RenderObject> ObjectFactory::createText(RenderMaterial *material
   }
 
   obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX,
-                                            stringVertices.data(), 4 * 3,
-                                            stringVertices.size() / 3);
-  obj->setAttribBuffer(BufferType::COLOR,
-                                            stringVertexColors.data(), 4 * 4,
-                                            stringVertexColors.size() / 4);
-  obj->setAttribBuffer(BufferType::TEXCOORD,
-                                            stringTexCoords.data(), 4 * 2,
-                                            stringTexCoords.size() / 2);
-  obj->setAttribBuffer(BufferType::NORMAL,
-                                            stringNormals.data(), 4 * 3,
-                                            stringNormals.size() / 3);
+  obj->setAttribBuffer(BufferType::VERTEX, stringVertices.data(), 4 * 3,
+                       stringVertices.size() / 3);
+  obj->setAttribBuffer(BufferType::COLOR, stringVertexColors.data(), 4 * 4,
+                       stringVertexColors.size() / 4);
+  obj->setAttribBuffer(BufferType::TEXCOORD, stringTexCoords.data(), 4 * 2,
+                       stringTexCoords.size() / 2);
+  obj->setAttribBuffer(BufferType::NORMAL, stringNormals.data(), 4 * 3,
+                       stringNormals.size() / 3);
 
   return obj;
 }

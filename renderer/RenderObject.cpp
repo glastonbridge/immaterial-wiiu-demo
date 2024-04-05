@@ -108,7 +108,8 @@ struct RenderObjectImpl : RenderObject {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  void setUniformFloatMat(UniformType bt, const float *mat, size_t numFloats) final {
+  void setUniformFloatMat(UniformType bt, const float *mat,
+                          size_t numFloats) final {
     GX2RBuffer *buffer;
     if (UniformType::CAMERA_PROJECTION == bt) {
       buffer = &projectionBuffer;
@@ -197,11 +198,9 @@ struct RenderObjectImpl : RenderObject {
     }
   }
 
-  void setMaterial(RenderMaterial *p_material) final {
-    material = p_material;
-  }
+  void setMaterial(RenderMaterial *p_material) final { material = p_material; }
   RenderMaterial *getMaterial() final { return material; }
-  
+
   ~RenderObjectImpl() {
     WHBLogPrintf("Destroying RenderObject");
     GX2RDestroyBufferEx(&positionBuffer, GX2R_RESOURCE_BIND_NONE);
@@ -243,7 +242,7 @@ void RenderObject::getAnimFrame(float frame, float *boneBuffer) const {
     glm::mat4 boneFrameMat =
         animFrames[animPos][i] * (1.0f - animPosRemainder) +
         animFrames[animPosNext][i] * animPosRemainder;
-    memcpy(boneBuffer + (i * 4 * 4),
-           glm::value_ptr(boneFrameMat), 4 * 4 * sizeof(float));
+    memcpy(boneBuffer + (i * 4 * 4), glm::value_ptr(boneFrameMat),
+           4 * 4 * sizeof(float));
   }
 }

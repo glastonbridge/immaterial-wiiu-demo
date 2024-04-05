@@ -9,8 +9,8 @@ void SceneObject::applyAnimation(RenderObject &renderObject) const {
   // Bail if we don't have any frames
   if (renderObject.animFrames.empty()) {
     glm::mat4 boneFrameMat = glm::mat4(1.0f);
-    renderObject.setUniformFloatMat(
-        UniformType::BONE_TRANSFORM, glm::value_ptr(boneFrameMat), 4 * 4);
+    renderObject.setUniformFloatMat(UniformType::BONE_TRANSFORM,
+                                    glm::value_ptr(boneFrameMat), 4 * 4);
     return;
   }
 
@@ -24,6 +24,6 @@ void SceneObject::applyAnimation(RenderObject &renderObject) const {
 
   // Bones to shader buffer
   WHBLogPrintf("Setting bone transform uniform");
-  renderObject.setUniformFloatMat(
-      UniformType::BONE_TRANSFORM, boneMatInterpBuffer.get(), 4 * 4 * numBones);
+  renderObject.setUniformFloatMat(UniformType::BONE_TRANSFORM,
+                                  boneMatInterpBuffer.get(), 4 * 4 * numBones);
 }

@@ -32,8 +32,10 @@
 #include "../scenes/SceneAssets.h"
 
 Renderer::Renderer() {
-  composeQuad = ObjectFactory::createQuad((new ComposeMaterial())->getRenderMaterial());
-  blurQuad = ObjectFactory::createQuad((new BlurMaterial())->getRenderMaterial());
+  composeQuad =
+      ObjectFactory::createQuad((new ComposeMaterial())->getRenderMaterial());
+  blurQuad =
+      ObjectFactory::createQuad((new BlurMaterial())->getRenderMaterial());
   bufferA = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
   bufferB = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
 }
@@ -57,19 +59,17 @@ void Renderer::renderFrame(const SceneBase &scene) {
   for (auto const &instance : scene.instances) {
 
     auto &object = *assets->objects[instance.id];
-    object.setUniformFloatMat(
-        UniformType::CAMERA_PROJECTION,
-        (float *)glm::value_ptr(scene.cameraProjection), 16);
-    object.setUniformFloatMat(
-        UniformType::CAMERA_VIEW, (float *)glm::value_ptr(scene.cameraView),
-        16);
+    object.setUniformFloatMat(UniformType::CAMERA_PROJECTION,
+                              (float *)glm::value_ptr(scene.cameraProjection),
+                              16);
+    object.setUniformFloatMat(UniformType::CAMERA_VIEW,
+                              (float *)glm::value_ptr(scene.cameraView), 16);
     object.setExtraUniform(0, scene.cameraOptions);
 
     float *mat = (float *)glm::value_ptr(instance.transform);
     // WHBLogPrintf("Rendering object with transform %s",
     // glm::to_string(instance.transform).c_str());
-    object.setUniformFloatMat(UniformType::TRANSFORM, mat,
-                                                 16);
+    object.setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
     instance.applyAnimation(object);
     object.render(true);
   }
@@ -84,13 +84,11 @@ void Renderer::renderFrame(const SceneBase &scene) {
     GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_FUNC_LESS);
 
     if (i == 0) {
-      scene.renderBuffer->renderUsing(
-          blurQuad->getMaterial()->group);
+      scene.renderBuffer->renderUsing(blurQuad->getMaterial()->group);
     } else {
       bufferB->renderUsing(blurQuad->getMaterial()->group);
     }
-    blurQuad->setExtraUniform(
-        0, glm::vec4(scale, 0.0001f, 0.0f, 0.0f));
+    blurQuad->setExtraUniform(0, glm::vec4(scale, 0.0001f, 0.0f, 0.0f));
     blurQuad->render();
     bufferA->unbindTarget();
 
@@ -99,8 +97,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
     GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_FUNC_LESS);
 
     bufferA->renderUsing(blurQuad->getMaterial()->group);
-    blurQuad->setExtraUniform(
-        0, glm::vec4(scale, 1.0001f, 0.0f, 0.0f));
+    blurQuad->setExtraUniform(0, glm::vec4(scale, 1.0001f, 0.0f, 0.0f));
     blurQuad->render();
     bufferB->unbindTarget();
   }
@@ -110,8 +107,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
   WHBGfxBeginRenderTV();
   WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
   bufferB->renderUsing(composeQuad->getMaterial()->group);
-  scene.renderBuffer->renderUsing(
-      composeQuad->getMaterial()->group, 1);
+  scene.renderBuffer->renderUsing(composeQuad->getMaterial()->group, 1);
   composeQuad->setExtraUniform(0, scene.processOptions);
   composeQuad->render();
   WHBGfxFinishRenderTV();
@@ -119,8 +115,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
   WHBGfxBeginRenderDRC();
   WHBGfxClearColor(1.0f, 0.0f, 1.0f, 1.0f);
   bufferB->renderUsing(composeQuad->getMaterial()->group, 0);
-  scene.renderBuffer->renderUsing(
-      composeQuad->getMaterial()->group, 1);
+  scene.renderBuffer->renderUsing(composeQuad->getMaterial()->group, 1);
   composeQuad->setExtraUniform(0, scene.processOptions);
   composeQuad->render();
   WHBGfxFinishRenderDRC();

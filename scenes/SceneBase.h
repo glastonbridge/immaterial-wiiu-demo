@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../renderer/RenderBuffer.h"
 #include "../graphics/SceneObject.h"
+#include "../renderer/RenderBuffer.h"
 #include <glm/mat4x4.hpp>
 
 #include <memory>
@@ -16,7 +16,7 @@ struct SceneBase {
   std::unique_ptr<RenderBuffer> renderBuffer;
 
   SceneBase()
-    : renderBuffer(std::make_unique<RenderBuffer>(false, 1280, 720)) {};
+      : renderBuffer(std::make_unique<RenderBuffer>(false, 1280, 720)){};
 
   virtual void setup() = 0;
   virtual void update(double time) = 0;

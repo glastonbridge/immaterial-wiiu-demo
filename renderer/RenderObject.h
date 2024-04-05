@@ -1,9 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
 #include <gx2r/buffer.h>
-#include <cstdint>
 #include <memory>
 #include <vector>
 
@@ -32,20 +32,21 @@ struct RenderObject {
   virtual RenderMaterial *getMaterial() = 0;
 
   // Messing with the buffers involves doing GX2-specific memory locking
-  virtual void setAttribBuffer(BufferType bt, const void *data, uint32_t elemSize,
-                       size_t elemCount) = 0;
-  virtual void setUniformFloatMat(UniformType bt, const float *mat, size_t numFloats) = 0;
+  virtual void setAttribBuffer(BufferType bt, const void *data,
+                               uint32_t elemSize, size_t elemCount) = 0;
+  virtual void setUniformFloatMat(UniformType bt, const float *mat,
+                                  size_t numFloats) = 0;
   virtual void setExtraUniform(int index, glm::vec4 data) = 0;
 
   std::vector<std::vector<glm::mat4>> animFrames;
   void getAnimFrame(float frame, float *boneBuffer) const;
 
   static std::unique_ptr<RenderObject> create();
-  void load(const char *path, const char *name,
-                        RenderMaterial *material);
+  void load(const char *path, const char *name, RenderMaterial *material);
 
- protected:
+protected:
   RenderObject() = default;
-  //static std::unique_ptr<RenderObject> LoadObject(const char *path, const char *name,
+  // static std::unique_ptr<RenderObject> LoadObject(const char *path, const
+  // char *name,
   //                                      SceneMaterial *material = nullptr);
 };

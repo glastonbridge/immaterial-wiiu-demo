@@ -354,9 +354,9 @@ WHBGfxShaderGroup *compileOrLoadShader(const char *vsPath, const char *psPath,
     WHBLogPrintf("Cache load successful, using cached vertex shader.");
   }
   // WHBLogPrintf("Compiled vertex shader. Buffers that are set currently are:
-  // uniformBlocks %p, uniformVars %p, initialValues %p, loopVars %p, samplerVars
-  // %p, attribVars %p", vs->uniformBlocks, vs->uniformVars, vs->initialValues,
-  // vs->loopVars, vs->samplerVars, vs->attribVars);
+  // uniformBlocks %p, uniformVars %p, initialValues %p, loopVars %p,
+  // samplerVars %p, attribVars %p", vs->uniformBlocks, vs->uniformVars,
+  // vs->initialValues, vs->loopVars, vs->samplerVars, vs->attribVars);
 
   GX2PixelShader *ps = loadPixelShaderFromCache(psPath, psSrc);
   if (!ps) {
@@ -375,9 +375,9 @@ WHBGfxShaderGroup *compileOrLoadShader(const char *vsPath, const char *psPath,
     WHBLogPrintf("Cache load successful, using cached pixel shader.");
   }
   // WHBLogPrintf("Compiled pixel shader. Buffers that are set currently are:
-  // uniformBlocks %p, uniformVars %p, initialValues %p, loopVars %p, samplerVars
-  // %p", ps->uniformBlocks, ps->uniformVars, ps->initialValues, ps->loopVars,
-  // ps->samplerVars);
+  // uniformBlocks %p, uniformVars %p, initialValues %p, loopVars %p,
+  // samplerVars %p", ps->uniformBlocks, ps->uniformVars, ps->initialValues,
+  // ps->loopVars, ps->samplerVars);
 
   WHBGfxShaderGroup *shaderGroup =
       (WHBGfxShaderGroup *)malloc(sizeof(WHBGfxShaderGroup));
