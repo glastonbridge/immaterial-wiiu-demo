@@ -373,6 +373,13 @@ ShaderManager* getShaderManager() {
     return globalShaderManager;
 }
 
+void destroyShaderManager() {
+    if (globalShaderManager != nullptr) {
+        delete globalShaderManager;
+        globalShaderManager = nullptr;
+    }
+}
+
 ShaderManager::ShaderManager() {
     // Preheat the shader cache
     std::vector<AttribSpec> attribs;
@@ -413,9 +420,47 @@ ShaderManager::~ShaderManager() {
     // Free all the shaders
     for (auto it = shaders.begin(); it != shaders.end(); ++it) {
         WHBGfxShaderGroup* group = it->second;
-        // TODO: free the shaders without crashing
-        //GLSL_FreeVertexShader(group->vertexShader);
-        //GLSL_FreePixelShader(group->pixelShader);
+
+        // Free vertex / pixel shader stuff (see memalign allocations above)
+        if (group->vertexShader) {
+            GX2RDestroyBufferEx(&group->vertexShader->gx2rBuffer, (GX2RResourceFlags)0);
+
+            for(uint32_t i = 0; i < group->vertexShader->uniformBlockCount; ++i) {
+                free((void*)group->vertexShader->uniformBlocks[i].name);
+            }
+            for(uint32_t i = 0; i < group->vertexShader->samplerVarCount; ++i) {
+                free((void*)group->vertexShader->samplerVars[i].name);
+            }
+            for(uint32_t i = 0; i < group->vertexShader->attribVarCount; ++i) {
+                free((void*)group->vertexShader->attribVars[i].name);
+            }
+
+            free(group->vertexShader->program);
+            free(group->vertexShader->uniformBlocks);
+            free(group->vertexShader->loopVars);
+            free(group->vertexShader->samplerVars);
+            free(group->vertexShader->attribVars);
+            free(group->vertexShader);
+        }
+
+        if (group->pixelShader) {
+            GX2RDestroyBufferEx(&group->pixelShader->gx2rBuffer, (GX2RResourceFlags)0);
+
+            for(uint32_t i = 0; i < group->pixelShader->uniformBlockCount; ++i) {
+                free((void*)group->pixelShader->uniformBlocks[i].name);
+            }
+            for(uint32_t i = 0; i < group->pixelShader->samplerVarCount; ++i) {
+                free((void*)group->pixelShader->samplerVars[i].name);
+            }
+
+            free(group->pixelShader->program);
+            free(group->pixelShader->uniformBlocks);
+            free(group->pixelShader->loopVars);
+            free(group->pixelShader->samplerVars);
+            free(group->pixelShader);
+        }
+
+        // Free group
         free(group);
     }
 }

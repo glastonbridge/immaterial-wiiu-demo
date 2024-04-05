@@ -13,13 +13,12 @@
 #include <whb/gfx.h>
 #include <whb/log.h>
 
-#define TRANSFORM_BUFFER_NUM_MATS_MAX 512
+#define TRANSFORM_BUFFER_NUM_MATS_MAX 128
 
 struct RenderObjectImpl {
   RenderMaterial* material;
   int transformMatOffset = 0;
 
-  // TODO: long overdue some refactoring...
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
   GX2RBuffer texcoordBuffer = {};
@@ -27,9 +26,9 @@ struct RenderObjectImpl {
   GX2RBuffer boneIdxBuffer = {};
   GX2RBuffer boneWeightBuffer = {};  
   GX2RBuffer projectionBuffer = {};
-  GX2RBuffer transformBuffer[TRANSFORM_BUFFER_NUM_MATS_MAX] = {};
+  GX2RBuffer transformBuffer[TRANSFORM_BUFFER_NUM_MATS_MAX] = {}; // this is a hacky workaround so we don't have to call GX2DrawDone. A cleaner version of this should be used for every uniform that varies per object instance
   GX2RBuffer viewBuffer = {};
-  GX2RBuffer boneTransformBuffer = {};
+  GX2RBuffer boneTransformBuffer = {}; // This also should probably technically use that workaround, but we only have one animated object so it's fine
   GX2RBuffer extraBuffer = {};
 
   RenderObjectImpl() {

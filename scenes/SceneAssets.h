@@ -140,3 +140,4 @@ struct SceneAssets {
 };
 
 SceneAssets* getSceneAssets();
+void destroySceneAssets();

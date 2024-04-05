@@ -132,7 +132,7 @@ int main(int argc, char **argv)
       renderer->renderFrame(*scene);
 
 #ifdef BENCHMARK
-      // if you're in synctool mode you can mage the FPS go negative lol
+      // if you're in synctool mode you can make the FPS go negative lol
       frameCounter++;
       if(frameCounter % 60 == 0) {
          float currentTime = music->currentTime();
@@ -143,30 +143,40 @@ int main(int argc, char **argv)
    }
    WHBLogPrintf("Done. Quitting...");
 
-   // by not calling glsl shutdown, we apparently dodge a crash on exit, sometimes. but also now we have shader caching 
-   // and in most cases we don't need to recompile shaders so there won't be a need to load the GLSL compiler anyways
-   //GLSL_Shutdown();
+   // Get rid of all of our stuff
+   delete sync;
+   delete renderer;
+   delete music;
+   if (scene != nullptr) {
+      scene->teardown();
+      delete scene;
+   }
+   destroySceneAssets();
+   destroyShaderManager();
 
-   // Other things we're not doing: properly deleting... everything
-   // TODO: figure out why cleanup crashes
-
+   // Clean up GX2 / AX stuff
    WHBGfxShutdown();
    AXQuit();
-#ifndef WUHB_BUILD      
+
+#ifndef WUHB_BUILD
+   // If not in WUHB mode: Deinit logging, unmount SD
    WHBUnmountSdCard();
    WHBLogCafeDeinit();
 #endif
+
+   // Deinit WHBProc
    WHBProcShutdown();
+
 #ifndef WUHB_BUILD
+   // Deinit UDP log
    WHBLogPrintf("Deinitialising UDP logging...");
    WHBLogUdpDeinit();
 #endif
 
 #ifdef USE_OURMALLOC
-   // We should, technically, destroy the heap here, but it seems to cause a crash on exit as well so we'll just pray that 
-   // the OS reclaims all the memory we allocated
-   //MEMDestroyExpHeap(ourHeap);
-   //MEMFreeToDefaultHeap(heapBaseAddr);
+   // Kill custom heap, if we were using that
+   MEMDestroyExpHeap(ourHeap);
+   MEMFreeToDefaultHeap(heapBaseAddr);
 #endif
    return 0;
 }

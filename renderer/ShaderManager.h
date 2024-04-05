@@ -20,3 +20,4 @@ struct ShaderManager {
 };
 
 ShaderManager* getShaderManager();
+void destroyShaderManager();

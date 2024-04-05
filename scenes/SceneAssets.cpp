@@ -8,3 +8,10 @@ SceneAssets* getSceneAssets() {
     }
     return globalAssetStore;
 }
+
+void destroySceneAssets() {
+    if (globalAssetStore != nullptr) {
+        delete globalAssetStore;
+        globalAssetStore = nullptr;
+    }
+}
