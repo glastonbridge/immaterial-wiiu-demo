@@ -65,10 +65,9 @@ void Renderer::renderFrame(const SceneBase &scene) {
   auto rit = instances.begin();
 
   view->setUniformFloatMat(UniformType::CAMERA_PROJECTION,
-                          (float *)glm::value_ptr(scene.cameraProjection),
-                          16);
+                           (float *)glm::value_ptr(scene.cameraProjection), 16);
   view->setUniformFloatMat(UniformType::CAMERA_VIEW,
-                          (float *)glm::value_ptr(scene.cameraView), 16);
+                           (float *)glm::value_ptr(scene.cameraView), 16);
   view->setExtraUniform(0, scene.cameraOptions);
 
   for (auto const &instance : scene.instances) {

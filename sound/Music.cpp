@@ -182,8 +182,8 @@ bool MusicPlayer::isDone() {
   AXVoiceOffsets bufferInfo;
   AXGetVoiceOffsets(voiceLeft, &bufferInfo);
   bool running = AXIsVoiceRunning(voiceLeft);
-  return (bufferInfo.currentOffset == bufferInfo.endOffset) 
-          || (!running && bufferInfo.currentOffset == 0);
+  return (bufferInfo.currentOffset == bufferInfo.endOffset) ||
+         (!running && bufferInfo.currentOffset == 0);
 }
 float MusicPlayer::currentTime() {
   AXVoiceOffsets bufferInfo;

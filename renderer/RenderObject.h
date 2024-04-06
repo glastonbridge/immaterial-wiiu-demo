@@ -31,8 +31,7 @@ struct RenderInstance {
   RenderInstance(RenderInstance &&) = default;
   ~RenderInstance();
 
-  void setUniformFloatMat(UniformType bt, const float *mat,
-                                  size_t numFloats);
+  void setUniformFloatMat(UniformType bt, const float *mat, size_t numFloats);
 
   GX2RBuffer transformBuffer = {};
   GX2RBuffer boneTransformBuffer = {};
@@ -81,6 +80,6 @@ struct RenderObject {
   static std::unique_ptr<RenderObject> create();
   void load(const char *path, const char *name, RenderMaterial *material);
 
- protected:
+protected:
   RenderObject() = default;
 };

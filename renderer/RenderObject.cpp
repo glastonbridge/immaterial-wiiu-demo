@@ -22,8 +22,7 @@ struct RenderObjectImpl : RenderObject {
   GX2RBuffer boneIdxBuffer = {};
   GX2RBuffer boneWeightBuffer = {};
 
-  RenderObjectImpl() {
-  }
+  RenderObjectImpl() {}
 
   void setAttribBuffer(BufferType bt, const void *data, uint32_t elemSize,
                        size_t elemCount) final {
@@ -58,7 +57,8 @@ struct RenderObjectImpl : RenderObject {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  void render(RenderInstance const &instance, RenderView const &view) const final {
+  void render(RenderInstance const &instance,
+              RenderView const &view) const final {
     material->renderUsing();
 
     if (material->getBindingForBuffer(BufferType::VERTEX) != -1) {
@@ -97,11 +97,15 @@ struct RenderObjectImpl : RenderObject {
 
     // The const_casts here are for the benefit of C..
     // We don't expect the buffers to get modified at all.
-    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.projectionBuffer), 0, 0);
-    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.transformBuffer), 1, 0);
-    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.boneTransformBuffer), 2, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.projectionBuffer),
+                              0, 0);
+    GX2RSetVertexUniformBlock(
+        const_cast<GX2RBuffer *>(&instance.transformBuffer), 1, 0);
+    GX2RSetVertexUniformBlock(
+        const_cast<GX2RBuffer *>(&instance.boneTransformBuffer), 2, 0);
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.viewBuffer), 3, 0);
-    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.extraBuffer), 4, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.extraBuffer), 4,
+                              0);
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
   }
 
@@ -126,7 +130,7 @@ void RenderObject::applyAnimation(float frame, RenderInstance &instance) const {
   if (animFrames.empty()) {
     glm::mat4 boneFrameMat = glm::mat4(1.0f);
     instance.setUniformFloatMat(UniformType::BONE_TRANSFORM,
-                       glm::value_ptr(boneFrameMat), 4 * 4);
+                                glm::value_ptr(boneFrameMat), 4 * 4);
     return;
   }
 
@@ -153,14 +157,15 @@ void RenderObject::applyAnimation(float frame, RenderInstance &instance) const {
     glm::mat4 boneFrameMat =
         animFrames[animPos][i] * (1.0f - animPosRemainder) +
         animFrames[animPosNext][i] * animPosRemainder;
-    memcpy(instance.boneMatInterpBuffer.get() + (i * 4 * 4), glm::value_ptr(boneFrameMat),
-           4 * 4 * sizeof(float));
+    memcpy(instance.boneMatInterpBuffer.get() + (i * 4 * 4),
+           glm::value_ptr(boneFrameMat), 4 * 4 * sizeof(float));
   }
 
   // Bones to shader buffer
   WHBLogPrintf("Setting bone transform uniform");
   instance.setUniformFloatMat(UniformType::BONE_TRANSFORM,
-                     instance.boneMatInterpBuffer.get(), 4 * 4 * numBones);
+                              instance.boneMatInterpBuffer.get(),
+                              4 * 4 * numBones);
 }
 
 RenderInstance::RenderInstance() {
@@ -186,7 +191,7 @@ RenderInstance::~RenderInstance() {
 }
 
 void RenderInstance::setUniformFloatMat(UniformType bt, const float *mat,
-                          size_t numFloats) {
+                                        size_t numFloats) {
   GX2RBuffer *buffer;
   if (UniformType::TRANSFORM == bt) {
     buffer = &transformBuffer;
@@ -199,8 +204,7 @@ void RenderInstance::setUniformFloatMat(UniformType bt, const float *mat,
 
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)buffer, numFloats * 4);
-  void *bufferData =
-      GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  void *bufferData = GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)buffer, numFloats * 4);
   swap_memcpy(bufferData, mat, numFloats * 4);
@@ -238,7 +242,7 @@ RenderView::~RenderView() {
 }
 
 void RenderView::setUniformFloatMat(UniformType bt, const float *mat,
-                          size_t numFloats) {
+                                    size_t numFloats) {
   GX2RBuffer *buffer;
   if (UniformType::CAMERA_PROJECTION == bt) {
     buffer = &projectionBuffer;
@@ -251,8 +255,7 @@ void RenderView::setUniformFloatMat(UniformType bt, const float *mat,
 
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)buffer, numFloats * 4);
-  void *bufferData =
-      GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  void *bufferData = GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)buffer, numFloats * 4);
   swap_memcpy(bufferData, mat, numFloats * 4);
@@ -266,11 +269,10 @@ void RenderView::setExtraUniform(int index, glm::vec4 data) {
   }
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)&extraBuffer, 4 * 4);
-  float *bufferData = (float *)GX2RLockBufferEx(
-      &extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  float *bufferData =
+      (float *)GX2RLockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
                 (void *)&extraBuffer, 4 * 4);
   swap_memcpy(bufferData, glm::value_ptr(data), 4 * 4);
   GX2RUnlockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
 }
-

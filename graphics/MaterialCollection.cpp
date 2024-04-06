@@ -8,7 +8,7 @@ RenderMaterial_p createProjectedMaterial() {
   attribs.push_back(AttribSpec{"in_color", BufferType::COLOR,
                                GX2_ATTRIB_FORMAT_FLOAT_32_32_32_32});
   return std::make_unique<RenderMaterial>("shaders/projected.vert",
-                                     "shaders/projected.frag", attribs);
+                                          "shaders/projected.frag", attribs);
 }
 
 RenderMaterial_p createComposeMaterial() {
@@ -18,7 +18,7 @@ RenderMaterial_p createComposeMaterial() {
   attribs.push_back(AttribSpec{"in_texcoord", BufferType::TEXCOORD,
                                GX2_ATTRIB_FORMAT_FLOAT_32_32});
   return std::make_unique<RenderMaterial>("shaders/billboard.vert",
-                                     "shaders/compose.frag", attribs);
+                                          "shaders/compose.frag", attribs);
 }
 
 RenderMaterial_p createBlurMaterial() {
@@ -28,7 +28,7 @@ RenderMaterial_p createBlurMaterial() {
   attribs.push_back(AttribSpec{"in_texcoord", BufferType::TEXCOORD,
                                GX2_ATTRIB_FORMAT_FLOAT_32_32});
   return std::make_unique<RenderMaterial>("shaders/billboard.vert",
-                                     "shaders/blur.frag", attribs);
+                                          "shaders/blur.frag", attribs);
 }
 
 RenderMaterial_p createTextureMaterial(const char *path) {
@@ -42,8 +42,8 @@ RenderMaterial_p createTextureMaterial(const char *path) {
                                GX2_ATTRIB_FORMAT_FLOAT_32_32});
   attribs.push_back(AttribSpec{"in_normal", BufferType::NORMAL,
                                GX2_ATTRIB_FORMAT_FLOAT_32_32_32});
-  auto renderMaterial =
-      std::make_unique<RenderMaterial>("shaders/projected.vert", "shaders/bones.frag", attribs);
+  auto renderMaterial = std::make_unique<RenderMaterial>(
+      "shaders/projected.vert", "shaders/bones.frag", attribs);
   renderMaterial->setTexture(new RenderTexture(path_str));
   return renderMaterial;
 }
@@ -61,8 +61,8 @@ RenderMaterial_p createBoneMaterial(const char *path) {
                                GX2_ATTRIB_FORMAT_FLOAT_32_32});
   attribs.push_back(AttribSpec{"in_bone_weight", BufferType::BONE_WEIGHT,
                                GX2_ATTRIB_FORMAT_FLOAT_32_32});
-  auto renderMaterial = std::make_unique<RenderMaterial>("shaders/bones.vert",
-                                          "shaders/bones.frag", attribs);
+  auto renderMaterial = std::make_unique<RenderMaterial>(
+      "shaders/bones.vert", "shaders/bones.frag", attribs);
   renderMaterial->setTexture(new RenderTexture(path_str));
   return renderMaterial;
 }
