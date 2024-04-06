@@ -8,6 +8,7 @@ struct RenderObject;
 struct RenderMaterial;
 struct RenderBuffer;
 struct RenderInstance;
+struct RenderView;
 
 struct Renderer {
 public:
@@ -26,4 +27,5 @@ private:
 
   std::vector<RenderInstance> instances;
   std::unique_ptr<RenderInstance> quadInstance;
+  std::unique_ptr<RenderView> view;
 };

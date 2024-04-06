@@ -15,9 +15,6 @@
 struct RenderObjectImpl : RenderObject {
   RenderMaterial *material;
 
-  GX2RBuffer projectionBuffer = {};
-  GX2RBuffer viewBuffer = {};
-
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
   GX2RBuffer texcoordBuffer = {};
@@ -25,29 +22,7 @@ struct RenderObjectImpl : RenderObject {
   GX2RBuffer boneIdxBuffer = {};
   GX2RBuffer boneWeightBuffer = {};
 
-  GX2RBuffer extraBuffer = {};
-
   RenderObjectImpl() {
-    projectionBuffer.flags =
-        GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
-        GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
-    projectionBuffer.elemSize = 4 * 4 * 4;
-    projectionBuffer.elemCount = 1;
-    GX2RCreateBuffer(&projectionBuffer);
-
-    viewBuffer.flags =
-        GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
-        GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
-    viewBuffer.elemSize = 4 * 4 * 4;
-    viewBuffer.elemCount = 1;
-    GX2RCreateBuffer(&viewBuffer);
-
-    extraBuffer.flags =
-        GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
-        GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
-    extraBuffer.elemSize = 4 * 4; // extra uniforms are vec4
-    extraBuffer.elemCount = 1;    // up to 4 of them
-    GX2RCreateBuffer(&extraBuffer);
   }
 
   void setAttribBuffer(BufferType bt, const void *data, uint32_t elemSize,
@@ -83,44 +58,7 @@ struct RenderObjectImpl : RenderObject {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  void setUniformFloatMat(UniformType bt, const float *mat,
-                          size_t numFloats) final {
-    GX2RBuffer *buffer;
-    if (UniformType::CAMERA_PROJECTION == bt) {
-      buffer = &projectionBuffer;
-    } else if (UniformType::CAMERA_VIEW == bt) {
-      buffer = &viewBuffer;
-    } else {
-      WHBLogPrintf("Not a valid matrix uniform type for RenderObject");
-      return;
-    }
-
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
-                  (void *)buffer, numFloats * 4);
-    void *bufferData =
-        GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
-                  (void *)buffer, numFloats * 4);
-    swap_memcpy(bufferData, mat, numFloats * 4);
-    GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-  }
-
-  void setExtraUniform(int index, glm::vec4 data) final {
-    if (index >= 4) {
-      WHBLogPrintf("Extra uniform index out of range");
-      return;
-    }
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
-                  (void *)&extraBuffer, 4 * 4);
-    float *bufferData = (float *)GX2RLockBufferEx(
-        &extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
-                  (void *)&extraBuffer, 4 * 4);
-    swap_memcpy(bufferData, glm::value_ptr(data), 4 * 4);
-    GX2RUnlockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
-  }
-
-  void render(RenderInstance const &instance) final {
+  void render(RenderInstance const &instance, RenderView const &view) final {
     material->renderUsing();
 
     if (material->getBindingForBuffer(BufferType::VERTEX) != -1) {
@@ -154,11 +92,11 @@ struct RenderObjectImpl : RenderObject {
           material->getBindingForBuffer(BufferType::BONE_WEIGHT),
           boneWeightBuffer.elemSize, 0);
     }
-    GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.projectionBuffer), 0, 0);
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.transformBuffer), 1, 0);
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.boneTransformBuffer), 2, 0);
-    GX2RSetVertexUniformBlock(&viewBuffer, 3, 0);
-    GX2RSetVertexUniformBlock(&extraBuffer, 4, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.viewBuffer), 3, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.extraBuffer), 4, 0);
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
   }
 
@@ -171,8 +109,6 @@ struct RenderObjectImpl : RenderObject {
     GX2RDestroyBufferEx(&colourBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
-    GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
-    GX2RDestroyBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_NONE);
   }
 };
 
@@ -250,3 +186,71 @@ void RenderInstance::setUniformFloatMat(UniformType bt, const float *mat,
   swap_memcpy(bufferData, mat, numFloats * 4);
   GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
 }
+
+RenderView::RenderView() {
+  projectionBuffer.flags =
+      GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
+      GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
+  projectionBuffer.elemSize = 4 * 4 * 4;
+  projectionBuffer.elemCount = 1;
+  GX2RCreateBuffer(&projectionBuffer);
+
+  viewBuffer.flags =
+      GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
+      GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
+  viewBuffer.elemSize = 4 * 4 * 4;
+  viewBuffer.elemCount = 1;
+  GX2RCreateBuffer(&viewBuffer);
+
+  extraBuffer.flags =
+      GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
+      GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
+  extraBuffer.elemSize = 4 * 4; // extra uniforms are vec4
+  extraBuffer.elemCount = 1;
+  GX2RCreateBuffer(&extraBuffer);
+}
+
+RenderView::~RenderView() {
+  WHBLogPrintf("Destroying RenderView");
+  GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
+  GX2RDestroyBufferEx(&viewBuffer, GX2R_RESOURCE_BIND_NONE);
+  GX2RDestroyBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_NONE);
+}
+
+void RenderView::setUniformFloatMat(UniformType bt, const float *mat,
+                          size_t numFloats) {
+  GX2RBuffer *buffer;
+  if (UniformType::CAMERA_PROJECTION == bt) {
+    buffer = &projectionBuffer;
+  } else if (UniformType::CAMERA_VIEW == bt) {
+    buffer = &viewBuffer;
+  } else {
+    WHBLogPrintf("Not a valid matrix uniform type for RenderInstance");
+    return;
+  }
+
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)buffer, numFloats * 4);
+  void *bufferData =
+      GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)buffer, numFloats * 4);
+  swap_memcpy(bufferData, mat, numFloats * 4);
+  GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+}
+
+void RenderView::setExtraUniform(int index, glm::vec4 data) {
+  if (index >= 4) {
+    WHBLogPrintf("Extra uniform index out of range");
+    return;
+  }
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)&extraBuffer, 4 * 4);
+  float *bufferData = (float *)GX2RLockBufferEx(
+      &extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)&extraBuffer, 4 * 4);
+  swap_memcpy(bufferData, glm::value_ptr(data), 4 * 4);
+  GX2RUnlockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+}
+
