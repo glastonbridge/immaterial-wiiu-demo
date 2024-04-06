@@ -58,40 +58,45 @@ struct RenderObjectImpl : RenderObject {
     GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_NONE);
   }
 
-  void render(RenderInstance const &instance, RenderView const &view) final {
+  void render(RenderInstance const &instance, RenderView const &view) const final {
     material->renderUsing();
 
     if (material->getBindingForBuffer(BufferType::VERTEX) != -1) {
-      GX2RSetAttributeBuffer(&positionBuffer,
+      GX2RSetAttributeBuffer(const_cast<GX2RBuffer *>(&positionBuffer),
                              material->getBindingForBuffer(BufferType::VERTEX),
                              positionBuffer.elemSize, 0);
     }
     if (material->getBindingForBuffer(BufferType::COLOR) != -1) {
-      GX2RSetAttributeBuffer(&colourBuffer,
+      GX2RSetAttributeBuffer(const_cast<GX2RBuffer *>(&colourBuffer),
                              material->getBindingForBuffer(BufferType::COLOR),
                              colourBuffer.elemSize, 0);
     }
     if (material->getBindingForBuffer(BufferType::TEXCOORD) != -1) {
       GX2RSetAttributeBuffer(
-          &texcoordBuffer, material->getBindingForBuffer(BufferType::TEXCOORD),
+          const_cast<GX2RBuffer *>(&texcoordBuffer),
+          material->getBindingForBuffer(BufferType::TEXCOORD),
           texcoordBuffer.elemSize, 0);
     }
     if (material->getBindingForBuffer(BufferType::NORMAL) != -1) {
-      GX2RSetAttributeBuffer(&normalBuffer,
+      GX2RSetAttributeBuffer(const_cast<GX2RBuffer *>(&normalBuffer),
                              material->getBindingForBuffer(BufferType::NORMAL),
                              normalBuffer.elemSize, 0);
     }
     if (material->getBindingForBuffer(BufferType::BONE_IDX) != -1) {
       GX2RSetAttributeBuffer(
-          &boneIdxBuffer, material->getBindingForBuffer(BufferType::BONE_IDX),
+          const_cast<GX2RBuffer *>(&boneIdxBuffer),
+          material->getBindingForBuffer(BufferType::BONE_IDX),
           boneIdxBuffer.elemSize, 0);
     }
     if (material->getBindingForBuffer(BufferType::BONE_WEIGHT) != -1) {
       GX2RSetAttributeBuffer(
-          &boneWeightBuffer,
+          const_cast<GX2RBuffer *>(&boneWeightBuffer),
           material->getBindingForBuffer(BufferType::BONE_WEIGHT),
           boneWeightBuffer.elemSize, 0);
     }
+
+    // The const_casts here are for the benefit of C..
+    // We don't expect the buffers to get modified at all.
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&view.projectionBuffer), 0, 0);
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.transformBuffer), 1, 0);
     GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.boneTransformBuffer), 2, 0);
@@ -101,7 +106,7 @@ struct RenderObjectImpl : RenderObject {
   }
 
   void setMaterial(RenderMaterial *p_material) final { material = p_material; }
-  RenderMaterial *getMaterial() final { return material; }
+  RenderMaterial *getMaterial() const final { return material; }
 
   ~RenderObjectImpl() {
     WHBLogPrintf("Destroying RenderObject");
@@ -116,10 +121,21 @@ std::unique_ptr<RenderObject> RenderObject::create() {
   return std::make_unique<RenderObjectImpl>();
 }
 
-void RenderObject::getAnimFrame(float frame, float *boneBuffer) const {
+void RenderObject::applyAnimation(float frame, RenderInstance &instance) const {
   // Bail if we don't have any frames
   if (animFrames.empty()) {
+    glm::mat4 boneFrameMat = glm::mat4(1.0f);
+    instance.setUniformFloatMat(UniformType::BONE_TRANSFORM,
+                       glm::value_ptr(boneFrameMat), 4 * 4);
     return;
+  }
+
+  // Alloc buffer if we need one
+  size_t numBones = animFrames[0].size();
+  if (instance.numBones != numBones) {
+    WHBLogPrintf("Allocating bone interp buffer for %d bones", numBones);
+    instance.boneMatInterpBuffer.reset(new float[4 * 4 * numBones]);
+    instance.numBones = numBones;
   }
 
   // Figure out where in the animation we are
@@ -133,14 +149,18 @@ void RenderObject::getAnimFrame(float frame, float *boneBuffer) const {
 
   // Copy all the bone mats into the array, interpolating linearly between two
   // adjacent frames
-  size_t numBones = animFrames[0].size();
   for (int i = 0; i < numBones; i++) {
     glm::mat4 boneFrameMat =
         animFrames[animPos][i] * (1.0f - animPosRemainder) +
         animFrames[animPosNext][i] * animPosRemainder;
-    memcpy(boneBuffer + (i * 4 * 4), glm::value_ptr(boneFrameMat),
+    memcpy(instance.boneMatInterpBuffer.get() + (i * 4 * 4), glm::value_ptr(boneFrameMat),
            4 * 4 * sizeof(float));
   }
+
+  // Bones to shader buffer
+  WHBLogPrintf("Setting bone transform uniform");
+  instance.setUniformFloatMat(UniformType::BONE_TRANSFORM,
+                     instance.boneMatInterpBuffer.get(), 4 * 4 * numBones);
 }
 
 RenderInstance::RenderInstance() {

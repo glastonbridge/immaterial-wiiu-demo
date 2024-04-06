@@ -73,13 +73,13 @@ void Renderer::renderFrame(const SceneBase &scene) {
 
   for (auto const &instance : scene.instances) {
     auto &ri = *rit++;
-    auto &object = *assets->objects[instance.id];
+    auto const &object = *assets->objects[instance.id];
 
     float *mat = (float *)glm::value_ptr(instance.transform);
     // WHBLogPrintf("Rendering object with transform %s",
     // glm::to_string(instance.transform).c_str());
     ri.setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
-    instance.applyAnimation(object, ri);
+    object.applyAnimation(instance.anim, ri);
     object.render(ri, *view);
   }
   scene.renderBuffer->unbindTarget();

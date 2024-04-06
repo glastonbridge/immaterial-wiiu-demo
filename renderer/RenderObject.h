@@ -28,6 +28,7 @@ enum UniformType { CAMERA_PROJECTION, TRANSFORM, BONE_TRANSFORM, CAMERA_VIEW };
  */
 struct RenderInstance {
   RenderInstance();
+  RenderInstance(RenderInstance &&) = default;
   ~RenderInstance();
 
   void setUniformFloatMat(UniformType bt, const float *mat,
@@ -35,6 +36,9 @@ struct RenderInstance {
 
   GX2RBuffer transformBuffer = {};
   GX2RBuffer boneTransformBuffer = {};
+
+  size_t numBones = 0;
+  std::unique_ptr<float[]> boneMatInterpBuffer;
 };
 
 /**
@@ -61,9 +65,9 @@ struct RenderView {
  */
 struct RenderObject {
   virtual ~RenderObject() = default;
-  virtual void render(RenderInstance const &ri, RenderView const &rv) = 0;
+  virtual void render(RenderInstance const &ri, RenderView const &rv) const = 0;
   virtual void setMaterial(RenderMaterial *material) = 0;
-  virtual RenderMaterial *getMaterial() = 0;
+  virtual RenderMaterial *getMaterial() const = 0;
 
   // Messing with the buffers involves doing GX2-specific memory locking
   virtual void setAttribBuffer(BufferType bt, const void *data,
@@ -72,7 +76,7 @@ struct RenderObject {
   std::vector<std::vector<glm::mat4>> animFrames;
 
   // Gets the bone matrices for a given animation frame into the buffer.
-  void getAnimFrame(float frame, float *boneBuffer) const;
+  void applyAnimation(float frame, RenderInstance &instance) const;
 
   static std::unique_ptr<RenderObject> create();
   void load(const char *path, const char *name, RenderMaterial *material);

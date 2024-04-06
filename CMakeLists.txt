@@ -28,7 +28,6 @@ add_executable(immaterial_wiiu_demo
     renderer/RenderMaterial.cpp
     renderer/RenderTexture.cpp
     renderer/RenderBuffer.cpp
-    graphics/SceneObject.cpp
     graphics/ObjectFactory.cpp
     graphics/MaterialCollection.cpp
     util/memory.cpp
