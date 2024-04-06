@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(wiiu_demo C CXX)
+project(immaterial_wiiu_demo C CXX)
 
 # WUHB metadata
 set(WUHB_TITLE "Immaterial" CACHE STRING "Title of the WUHB package")
@@ -21,7 +21,7 @@ include_directories(
 )
 
 # Add sources here
-add_executable(wiiu_demo
+add_executable(immaterial_wiiu_demo
     main.cpp
     renderer/Renderer.cpp
     renderer/RenderObject.cpp
@@ -52,16 +52,16 @@ add_executable(wiiu_demo
 # Sync IP
 set(SYNC_IP "127.0.0.1" CACHE STRING "IP of the computer running the synctool")
 set(SYNC_PLAYER "true" CACHE BOOL "Set to false to connect to rocket synctool instead of using tracks")
-target_compile_definitions(wiiu_demo PRIVATE SYNC_IP="${SYNC_IP}")
+target_compile_definitions(immaterial_wiiu_demo PRIVATE SYNC_IP="${SYNC_IP}")
 if(SYNC_PLAYER)
-    target_compile_definitions(wiiu_demo PRIVATE SYNC_PLAYER=1)
+    target_compile_definitions(immaterial_wiiu_demo PRIVATE SYNC_PLAYER=1)
 endif()
 
 # Basic WUT makefile
-wut_create_rpx(wiiu_demo)
+wut_create_rpx(immaterial_wiiu_demo)
 
 # Installation setup - add asset folders here
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/immaterial_wiiu_demo.rpx"
         DESTINATION "${CMAKE_INSTALL_PREFIX}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders"
          DESTINATION "${CMAKE_INSTALL_PREFIX}")
@@ -84,8 +84,8 @@ add_custom_target(test
 # until such time as we add ftp copy support
 set(WIILOAD_IP "192.168.1.254" CACHE STRING "IP of the Wii U for wiiload")
 add_custom_target(wiiload
-    COMMAND ${CMAKE_COMMAND} --build . --target wiiu_demo
-    COMMAND WIILOAD=tcp:${WIILOAD_IP} /opt/devkitpro/tools/bin/wiiload "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx"
+    COMMAND ${CMAKE_COMMAND} --build . --target immaterial_wiiu_demo
+    COMMAND WIILOAD=tcp:${WIILOAD_IP} /opt/devkitpro/tools/bin/wiiload "${CMAKE_CURRENT_BINARY_DIR}/immaterial_wiiu_demo.rpx"
 )
 
 # "Deploy" target for copying assets to the Wii U using FTP, then running wiiload
@@ -102,8 +102,8 @@ add_custom_target(deploy
 # hacky fix for emulator breaking when asset loading for some reason
 set(EMULATOR_FIXES "true" CACHE BOOL "Set to false to disable kludges needed to run on emulator")
 if(EMULATOR_FIXES)
-    target_compile_definitions(wiiu_demo PRIVATE UFBX_TRACE=1)
-    target_compile_definitions(wiiu_demo PRIVATE EMU_KLUDGES=1)
+    target_compile_definitions(immaterial_wiiu_demo PRIVATE UFBX_TRACE=1)
+    target_compile_definitions(immaterial_wiiu_demo PRIVATE EMU_KLUDGES=1)
 endif()
 
 # target that clears the install directory for a fresh install
@@ -114,13 +114,13 @@ add_custom_target(clean_install
 # passthrough for SHADER_BUILD
 set(SHADER_BUILD "false" CACHE BOOL "Set to true to build shaders and quit")
 if(SHADER_BUILD)
-    target_compile_definitions(wiiu_demo PRIVATE SHADER_BUILD=1)
+    target_compile_definitions(immaterial_wiiu_demo PRIVATE SHADER_BUILD=1)
 endif()
 
 # passthrough for WUHB_BUILD
 set(WUHB_BUILD "false" CACHE BOOL "Set to true to build for WUHB package")
 if(WUHB_BUILD)
-    target_compile_definitions(wiiu_demo PRIVATE WUHB_BUILD=1)
+    target_compile_definitions(immaterial_wiiu_demo PRIVATE WUHB_BUILD=1)
 endif()
 
 # target that builds the wuhb package
@@ -149,7 +149,7 @@ add_custom_target(wuhb
     COMMAND cp -r "${CMAKE_INSTALL_PREFIX}/shader_cache" "${CMAKE_CURRENT_BINARY_DIR}/content"
 
     # 5) now we can build the wuhb package
-    COMMAND wuhbtool --content content --short-name '${WUHB_TITLE}' --name '${WUHB_LONGTITLE}' --author '${WUHB_AUTHOR}' --icon '${WUHB_ICON}' "${CMAKE_CURRENT_BINARY_DIR}/wiiu_demo.rpx" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb" 
+    COMMAND wuhbtool --content content --short-name '${WUHB_TITLE}' --name '${WUHB_LONGTITLE}' --author '${WUHB_AUTHOR}' --icon '${WUHB_ICON}' "${CMAKE_CURRENT_BINARY_DIR}/immaterial_wiiu_demo.rpx" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.wuhb" 
 
     # 6) clean up the content directory
     COMMAND rm -rf "${CMAKE_CURRENT_BINARY_DIR}/content"
