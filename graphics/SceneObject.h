@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/ext.hpp>
 #include <glm/glm.hpp>
 
 /**
@@ -12,8 +11,6 @@
 struct SceneObject {
   SceneObject(size_t id) : id(id), transform(glm::mat4(1.0f)), anim(0.0f) {}
   SceneObject(size_t id, glm::mat4 m) : id(id), transform(m), anim(0.0f) {}
-  SceneObject(SceneObject &&) = default;
-  ~SceneObject() = default;
 
   size_t id;
   glm::mat4 transform;
