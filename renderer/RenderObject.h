@@ -23,11 +23,29 @@ enum BufferType {
 enum UniformType { CAMERA_PROJECTION, TRANSFORM, BONE_TRANSFORM, CAMERA_VIEW };
 
 /**
+ * Data related to a specific instance of a render object.
+ * This is used for variable uniforms such as object transform.
+ */
+struct RenderInstance {
+  RenderInstance();
+  ~RenderInstance();
+
+  void setUniformFloatMat(UniformType bt, const float *mat,
+                                  size_t numFloats);
+
+  GX2RBuffer transformBuffer = {};
+  GX2RBuffer boneTransformBuffer = {};
+};
+
+/**
  * The parts of an object that are concerned with the rendering implementation
+ * This contains the mesh data, material etc. If we don't expect it to be
+ * modified after creation, it goes here. A single render object can be rendered
+ * multiple times in different places in a scene.
  */
 struct RenderObject {
   virtual ~RenderObject() = default;
-  virtual void render(bool shift_matrix = false) = 0;
+  virtual void render(RenderInstance const &ri) = 0;
   virtual void setMaterial(RenderMaterial *material) = 0;
   virtual RenderMaterial *getMaterial() = 0;
 
@@ -44,9 +62,6 @@ struct RenderObject {
   static std::unique_ptr<RenderObject> create();
   void load(const char *path, const char *name, RenderMaterial *material);
 
-protected:
+ protected:
   RenderObject() = default;
-  // static std::unique_ptr<RenderObject> LoadObject(const char *path, const
-  // char *name,
-  //                                      SceneMaterial *material = nullptr);
 };

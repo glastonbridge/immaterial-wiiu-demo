@@ -7,17 +7,16 @@
 #include <gx2/draw.h>
 #include <gx2/mem.h>
 #include <gx2/shaders.h>
-#include <gx2r/buffer.h>
 #include <gx2r/draw.h>
 
 #include <whb/gfx.h>
 #include <whb/log.h>
 
-#define TRANSFORM_BUFFER_NUM_MATS_MAX 128
-
 struct RenderObjectImpl : RenderObject {
   RenderMaterial *material;
-  int transformMatOffset = 0;
+
+  GX2RBuffer projectionBuffer = {};
+  GX2RBuffer viewBuffer = {};
 
   GX2RBuffer positionBuffer = {};
   GX2RBuffer colourBuffer = {};
@@ -25,15 +24,7 @@ struct RenderObjectImpl : RenderObject {
   GX2RBuffer normalBuffer = {};
   GX2RBuffer boneIdxBuffer = {};
   GX2RBuffer boneWeightBuffer = {};
-  GX2RBuffer projectionBuffer = {};
-  GX2RBuffer transformBuffer[TRANSFORM_BUFFER_NUM_MATS_MAX] =
-      {}; // this is a hacky workaround so we don't have to call GX2DrawDone. A
-          // cleaner version of this should be used for every uniform that
-          // varies per object instance
-  GX2RBuffer viewBuffer = {};
-  GX2RBuffer boneTransformBuffer =
-      {}; // This also should probably technically use that workaround, but we
-          // only have one animated object so it's fine
+
   GX2RBuffer extraBuffer = {};
 
   RenderObjectImpl() {
@@ -44,28 +35,12 @@ struct RenderObjectImpl : RenderObject {
     projectionBuffer.elemCount = 1;
     GX2RCreateBuffer(&projectionBuffer);
 
-    for (int i = 0; i < TRANSFORM_BUFFER_NUM_MATS_MAX; i++) {
-      transformBuffer[i].flags =
-          GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
-          GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
-      transformBuffer[i].elemSize = 4 * 4 * 4;
-      transformBuffer[i].elemCount = 1;
-      GX2RCreateBuffer(&transformBuffer[i]);
-    }
-
     viewBuffer.flags =
         GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
         GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
     viewBuffer.elemSize = 4 * 4 * 4;
     viewBuffer.elemCount = 1;
     GX2RCreateBuffer(&viewBuffer);
-
-    boneTransformBuffer.flags =
-        GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
-        GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
-    boneTransformBuffer.elemSize = 4 * 4 * 4;
-    boneTransformBuffer.elemCount = 32; // up to 32 bones
-    GX2RCreateBuffer(&boneTransformBuffer);
 
     extraBuffer.flags =
         GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
@@ -113,14 +88,10 @@ struct RenderObjectImpl : RenderObject {
     GX2RBuffer *buffer;
     if (UniformType::CAMERA_PROJECTION == bt) {
       buffer = &projectionBuffer;
-    } else if (UniformType::TRANSFORM == bt) {
-      buffer = &transformBuffer[transformMatOffset];
     } else if (UniformType::CAMERA_VIEW == bt) {
       buffer = &viewBuffer;
-    } else if (UniformType::BONE_TRANSFORM == bt) {
-      buffer = &boneTransformBuffer;
     } else {
-      WHBLogPrintf("Not a matrix uniform type");
+      WHBLogPrintf("Not a valid matrix uniform type for RenderObject");
       return;
     }
 
@@ -149,9 +120,7 @@ struct RenderObjectImpl : RenderObject {
     GX2RUnlockBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
   }
 
-  void render(bool shiftTransformMat) final {
-    void *buffer = NULL;
-
+  void render(RenderInstance const &instance) final {
     material->renderUsing();
 
     if (material->getBindingForBuffer(BufferType::VERTEX) != -1) {
@@ -186,16 +155,11 @@ struct RenderObjectImpl : RenderObject {
           boneWeightBuffer.elemSize, 0);
     }
     GX2RSetVertexUniformBlock(&projectionBuffer, 0, 0);
-    GX2RSetVertexUniformBlock(&transformBuffer[transformMatOffset], 1, 0);
-    GX2RSetVertexUniformBlock(&boneTransformBuffer, 2, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.transformBuffer), 1, 0);
+    GX2RSetVertexUniformBlock(const_cast<GX2RBuffer *>(&instance.boneTransformBuffer), 2, 0);
     GX2RSetVertexUniformBlock(&viewBuffer, 3, 0);
     GX2RSetVertexUniformBlock(&extraBuffer, 4, 0);
     GX2DrawEx(GX2_PRIMITIVE_MODE_TRIANGLES, positionBuffer.elemCount, 0, 1);
-
-    if (shiftTransformMat == true) {
-      transformMatOffset =
-          (transformMatOffset + 1) % TRANSFORM_BUFFER_NUM_MATS_MAX;
-    }
   }
 
   void setMaterial(RenderMaterial *p_material) final { material = p_material; }
@@ -208,10 +172,6 @@ struct RenderObjectImpl : RenderObject {
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&projectionBuffer, GX2R_RESOURCE_BIND_NONE);
-    for (int i = 0; i < TRANSFORM_BUFFER_NUM_MATS_MAX; i++) {
-      GX2RDestroyBufferEx(&transformBuffer[i], GX2R_RESOURCE_BIND_NONE);
-    }
-    GX2RDestroyBufferEx(&boneTransformBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&extraBuffer, GX2R_RESOURCE_BIND_NONE);
   }
 };
@@ -245,4 +205,48 @@ void RenderObject::getAnimFrame(float frame, float *boneBuffer) const {
     memcpy(boneBuffer + (i * 4 * 4), glm::value_ptr(boneFrameMat),
            4 * 4 * sizeof(float));
   }
+}
+
+RenderInstance::RenderInstance() {
+  transformBuffer.flags =
+      GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
+      GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
+  transformBuffer.elemSize = 4 * 4 * 4;
+  transformBuffer.elemCount = 1;
+  GX2RCreateBuffer(&transformBuffer);
+
+  boneTransformBuffer.flags =
+      GX2R_RESOURCE_BIND_UNIFORM_BLOCK | GX2R_RESOURCE_USAGE_CPU_READ |
+      GX2R_RESOURCE_USAGE_CPU_WRITE | GX2R_RESOURCE_USAGE_GPU_READ;
+  boneTransformBuffer.elemSize = 4 * 4 * 4;
+  boneTransformBuffer.elemCount = 32; // up to 32 bones
+  GX2RCreateBuffer(&boneTransformBuffer);
+}
+
+RenderInstance::~RenderInstance() {
+  WHBLogPrintf("Destroying RenderInstance");
+  GX2RDestroyBufferEx(&transformBuffer, GX2R_RESOURCE_BIND_NONE);
+  GX2RDestroyBufferEx(&boneTransformBuffer, GX2R_RESOURCE_BIND_NONE);
+}
+
+void RenderInstance::setUniformFloatMat(UniformType bt, const float *mat,
+                          size_t numFloats) {
+  GX2RBuffer *buffer;
+  if (UniformType::TRANSFORM == bt) {
+    buffer = &transformBuffer;
+  } else if (UniformType::BONE_TRANSFORM == bt) {
+    buffer = &boneTransformBuffer;
+  } else {
+    WHBLogPrintf("Not a valid matrix uniform type for RenderInstance");
+    return;
+  }
+
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)buffer, numFloats * 4);
+  void *bufferData =
+      GX2RLockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
+  GX2Invalidate(GX2_INVALIDATE_MODE_CPU | GX2_INVALIDATE_MODE_UNIFORM_BLOCK,
+                (void *)buffer, numFloats * 4);
+  swap_memcpy(bufferData, mat, numFloats * 4);
+  GX2RUnlockBufferEx(buffer, GX2R_RESOURCE_BIND_UNIFORM_BLOCK);
 }

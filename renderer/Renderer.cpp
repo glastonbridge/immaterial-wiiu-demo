@@ -40,6 +40,8 @@ Renderer::Renderer() {
 
   bufferA = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
   bufferB = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
+
+  quadInstance = std::make_unique<RenderInstance>();
 }
 
 void Renderer::renderFrame(const SceneBase &scene) {
@@ -58,9 +60,13 @@ void Renderer::renderFrame(const SceneBase &scene) {
 
   float *cameraProjection = (float *)glm::value_ptr(scene.cameraProjection);
 
-  for (auto const &instance : scene.instances) {
+  instances.resize(scene.instances.size());
+  auto rit = instances.begin();
 
+  for (auto const &instance : scene.instances) {
+    auto &ri = *rit++;
     auto &object = *assets->objects[instance.id];
+    
     object.setUniformFloatMat(UniformType::CAMERA_PROJECTION,
                               (float *)glm::value_ptr(scene.cameraProjection),
                               16);
@@ -71,9 +77,9 @@ void Renderer::renderFrame(const SceneBase &scene) {
     float *mat = (float *)glm::value_ptr(instance.transform);
     // WHBLogPrintf("Rendering object with transform %s",
     // glm::to_string(instance.transform).c_str());
-    object.setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
-    instance.applyAnimation(object);
-    object.render(true);
+    ri.setUniformFloatMat(UniformType::TRANSFORM, mat, 16);
+    instance.applyAnimation(object, ri);
+    object.render(ri);
   }
   scene.renderBuffer->unbindTarget();
 
@@ -91,7 +97,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
       bufferB->renderUsing(blurQuad->getMaterial()->group);
     }
     blurQuad->setExtraUniform(0, glm::vec4(scale, 0.0001f, 0.0f, 0.0f));
-    blurQuad->render();
+    blurQuad->render(*quadInstance);
     bufferA->unbindTarget();
 
     // Vertical
@@ -100,7 +106,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
 
     bufferA->renderUsing(blurQuad->getMaterial()->group);
     blurQuad->setExtraUniform(0, glm::vec4(scale, 1.0001f, 0.0f, 0.0f));
-    blurQuad->render();
+    blurQuad->render(*quadInstance);
     bufferB->unbindTarget();
   }
 
@@ -111,7 +117,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
   bufferB->renderUsing(composeQuad->getMaterial()->group);
   scene.renderBuffer->renderUsing(composeQuad->getMaterial()->group, 1);
   composeQuad->setExtraUniform(0, scene.processOptions);
-  composeQuad->render();
+  composeQuad->render(*quadInstance);
   WHBGfxFinishRenderTV();
 
   WHBGfxBeginRenderDRC();
@@ -119,7 +125,7 @@ void Renderer::renderFrame(const SceneBase &scene) {
   bufferB->renderUsing(composeQuad->getMaterial()->group, 0);
   scene.renderBuffer->renderUsing(composeQuad->getMaterial()->group, 1);
   composeQuad->setExtraUniform(0, scene.processOptions);
-  composeQuad->render();
+  composeQuad->render(*quadInstance);
   WHBGfxFinishRenderDRC();
 
   WHBGfxFinishRender();

@@ -6,6 +6,7 @@
 #include <vector>
 
 struct RenderObject;
+struct RenderInstance;
 
 /**
  * A 3D object data object. Vertices, materials, etc.
@@ -24,7 +25,7 @@ struct SceneObject {
   float anim;
 
   RenderObject *getRenderObject();
-  void applyAnimation(RenderObject &obj) const;
+  void applyAnimation(RenderObject const &obj, RenderInstance &ri) const;
 
   // Naughty keyword is naughty but whatever lmao
   mutable std::unique_ptr<float[]> boneMatInterpBuffer;

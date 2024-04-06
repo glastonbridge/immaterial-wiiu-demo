@@ -1,10 +1,13 @@
+#pragma once
 
-#include "../graphics/SceneObject.h"
-#include "RenderBuffer.h"
-#include "RenderTexture.h"
+#include <vector>
+#include <memory>
 
 struct SceneBase;
+struct RenderObject;
 struct RenderMaterial;
+struct RenderBuffer;
+struct RenderInstance;
 
 struct Renderer {
 public:
@@ -20,4 +23,7 @@ private:
 
   std::unique_ptr<RenderBuffer> bufferA;
   std::unique_ptr<RenderBuffer> bufferB;
+
+  std::vector<RenderInstance> instances;
+  std::unique_ptr<RenderInstance> quadInstance;
 };
