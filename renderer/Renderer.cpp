@@ -32,10 +32,12 @@
 #include "../scenes/SceneAssets.h"
 
 Renderer::Renderer() {
-  composeQuad =
-      ObjectFactory::createQuad((new ComposeMaterial())->getRenderMaterial());
-  blurQuad =
-      ObjectFactory::createQuad((new BlurMaterial())->getRenderMaterial());
+  composeMaterial = createComposeMaterial();
+  composeQuad = ObjectFactory::createQuad(composeMaterial.get());
+
+  blurMaterial = createBlurMaterial();
+  blurQuad = ObjectFactory::createQuad(blurMaterial.get());
+
   bufferA = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
   bufferB = std::make_unique<RenderBuffer>(false, 1280 / 2, 720 / 2);
 }

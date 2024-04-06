@@ -30,6 +30,7 @@ add_executable(immaterial_wiiu_demo
     renderer/RenderBuffer.cpp
     graphics/SceneObject.cpp
     graphics/ObjectFactory.cpp
+    graphics/MaterialCollection.cpp
     util/memory.cpp
     sound/Music.cpp
     sync/Sync.cpp

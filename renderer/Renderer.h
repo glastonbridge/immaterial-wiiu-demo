@@ -4,6 +4,8 @@
 #include "RenderTexture.h"
 
 struct SceneBase;
+struct RenderMaterial;
+
 struct Renderer {
 public:
   Renderer();
@@ -13,6 +15,9 @@ public:
 private:
   std::unique_ptr<RenderObject> composeQuad;
   std::unique_ptr<RenderObject> blurQuad;
+  std::unique_ptr<RenderMaterial> composeMaterial;
+  std::unique_ptr<RenderMaterial> blurMaterial;
+
   std::unique_ptr<RenderBuffer> bufferA;
   std::unique_ptr<RenderBuffer> bufferB;
 };

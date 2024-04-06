@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../graphics/SceneMaterial.h"
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
 #include <memory>
