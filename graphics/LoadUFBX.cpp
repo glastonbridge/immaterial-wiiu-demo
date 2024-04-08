@@ -400,8 +400,8 @@ int LoadTypeUFBX(const std::string &path,
         vertices[i + 2] -= center_z;
       }
 
-      v_vertices.push_back(vertices);
-      v_normals.push_back(normals);
+      v_vertices.push_back(std::move(vertices));
+      v_normals.push_back(std::move(normals));
     } else {
       WHBLogPrintf("Yikes! Object is meshless! This shouldn't happen!");
     }
