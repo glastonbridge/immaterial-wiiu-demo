@@ -22,31 +22,31 @@ include_directories(
 
 # Add sources here
 add_executable(immaterial_wiiu_demo
-    main.cpp
-    renderer/Renderer.cpp
-    renderer/RenderObject.cpp
-    renderer/RenderMaterial.cpp
-    renderer/RenderTexture.cpp
-    renderer/RenderBuffer.cpp
-    graphics/ObjectFactory.cpp
-    graphics/MaterialCollection.cpp
-    util/memory.cpp
-    sound/Music.cpp
-    sync/Sync.cpp
     third_party/lodepng/lodepng.cpp
     third_party/minivorbis/minivorbis.c
     third_party/rocket/device.c
     third_party/rocket/tcp.c
     third_party/rocket/track.c
     third_party/ufbx/ufbx.c
-    graphics/LoadUFBX.cpp
-    renderer/ShaderManager.cpp
-    scenes/SceneAssets.cpp
-    scenes/Scenes.cpp
-    scenes/Spline.cpp
-    scenes/RealScene.cpp
-    scenes/EepyScene.cpp
     util/ourmalloc.cpp
+    util/memory.cpp
+    sound/Music.cpp
+    sync/Sync.cpp
+    graphics/LoadUFBX.cpp
+    graphics/ObjectFactory.cpp
+    graphics/MaterialCollection.cpp
+    renderer/Renderer.cpp
+    renderer/RenderObject.cpp
+    renderer/RenderMaterial.cpp
+    renderer/RenderTexture.cpp
+    renderer/RenderBuffer.cpp
+    renderer/ShaderManager.cpp
+    immaterial/Spline.cpp
+    immaterial/Assets.cpp
+    immaterial/Scenes.cpp
+    immaterial/RealScene.cpp
+    immaterial/EepyScene.cpp
+    main.cpp
 )
 
 # Sync IP

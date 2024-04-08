@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 
+struct Model;
 struct RenderObjectImpl;
 struct RenderMaterial;
 
@@ -78,6 +79,9 @@ struct RenderObject {
   void applyAnimation(float frame, RenderInstance &instance) const;
 
   static std::unique_ptr<RenderObject> create();
+  static std::unique_ptr<RenderObject> create(Model const &model);
+  static std::unique_ptr<RenderObject> create(Model &&model);
+
   void load(const char *path, const char *name, RenderMaterial *material);
 
 protected:

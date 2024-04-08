@@ -64,16 +64,14 @@ enum objectID : size_t {
   _ID_ASSETS_MAX // keep at end
 };
 
-struct RenderObject;
+struct Renderer;
 struct RenderMaterial;
 
-struct SceneAssets {
-  std::vector<std::unique_ptr<RenderObject>> objects;
+struct Assets {
   std::vector<std::unique_ptr<RenderMaterial>> materials;
 
-  SceneAssets();
-  ~SceneAssets();
-};
+  Assets();
+  ~Assets();
 
-SceneAssets *getSceneAssets();
-void destroySceneAssets();
+  void createModels(Renderer &renderer) const;
+};

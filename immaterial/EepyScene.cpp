@@ -1,10 +1,10 @@
-#include "SceneBase.h"
+#include "Scenes.h"
 
 #include "../sync/Sync.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "SceneAssets.h"
+#include "Assets.h"
 #include "Spline.h"
 
 namespace {

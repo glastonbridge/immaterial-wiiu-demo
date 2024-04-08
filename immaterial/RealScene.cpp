@@ -1,10 +1,10 @@
-#include "SceneBase.h"
+#include "Scenes.h"
 
 #include "../sync/Sync.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "SceneAssets.h"
+#include "Assets.h"
 #include "Spline.h"
 
 namespace {
@@ -78,6 +78,7 @@ void RealScene::setup() {
   auto const rot90 = glm::rotate(glm::mat4(1.f), glm::radians(-90.f),
                                  glm::vec3(0.f, 1.f, 0.f));
 
+  instances.reserve(80);
   instances.emplace_back(ID_train);
   instances.emplace_back(ID_train);
 

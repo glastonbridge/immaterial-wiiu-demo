@@ -1,5 +1,6 @@
 #include "RenderObject.h"
 #include "../util/memory.h"
+#include "../graphics/ObjectFactory.h"
 #include "RenderMaterial.h"
 
 #include <dmae/mem.h>
@@ -119,10 +120,59 @@ struct RenderObjectImpl : RenderObject {
     GX2RDestroyBufferEx(&texcoordBuffer, GX2R_RESOURCE_BIND_NONE);
     GX2RDestroyBufferEx(&normalBuffer, GX2R_RESOURCE_BIND_NONE);
   }
+
+  void initialize(Model const &model);
 };
 
 std::unique_ptr<RenderObject> RenderObject::create() {
   return std::make_unique<RenderObjectImpl>();
+}
+
+// Initializes the object with all the stuff that has to be copied in.
+// We don't initialize the animation frames, because that can be *moved* in,
+// if we get passed a temporary model, which is better.
+void RenderObjectImpl::initialize(Model const &model) {
+  WHBLogPrintf("Set attrib buffer...");
+  setMaterial(model.material);
+
+  if (!model.vertices.empty()) {
+    setAttribBuffer(BufferType::VERTEX, model.vertices.data(), 4 * 3,
+                         model.vertices.size() / 3);
+  }
+  if (!model.vertexColours.empty()) {
+    setAttribBuffer(BufferType::COLOR, model.vertexColours.data(), 4 * 4,
+                         model.vertexColours.size() / 4);
+  }
+  if (!model.texCoords.empty()) {
+    setAttribBuffer(BufferType::TEXCOORD, model.texCoords.data(), 4 * 2,
+                         model.texCoords.size() / 2);
+  }
+  if (!model.normals.empty()) {
+    setAttribBuffer(BufferType::NORMAL, model.normals.data(), 4 * 3,
+                         model.normals.size() / 3);
+  }
+  if (!model.boneIndices.empty()) {
+    setAttribBuffer(BufferType::BONE_IDX, model.boneIndices.data(), 2 * 4,
+                         model.boneIndices.size() / 2);
+  }
+  if (!model.boneWeights.empty()) {
+    setAttribBuffer(BufferType::BONE_WEIGHT, model.boneWeights.data(), 2 * 4,
+                         model.boneWeights.size() / 2);
+  }
+}
+
+std::unique_ptr<RenderObject> RenderObject::create(Model const &model) {
+  auto obj = std::make_unique<RenderObjectImpl>();
+  obj->initialize(model);
+  obj->animFrames = model.animFrames;
+  return std::move(obj);
+}
+
+std::unique_ptr<RenderObject> RenderObject::create(Model &&model) {
+  auto obj = std::make_unique<RenderObjectImpl>();
+  obj->initialize(model);
+  obj->animFrames = std::move(model.animFrames);
+  return std::move(obj);
 }
 
 void RenderObject::applyAnimation(float frame, RenderInstance &instance) const {

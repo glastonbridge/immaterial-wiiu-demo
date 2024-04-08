@@ -1,4 +1,4 @@
-#include "SceneBase.h"
+#include "Scenes.h"
 
 enum sceneID : int { // int because we convert this from a float from the sync
                      // system and unsigned is dangerous

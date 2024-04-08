@@ -6,6 +6,7 @@
 #include <whb/gfx.h>
 #include <whb/log.h>
 #include <whb/log_cafe.h>
+#include <whb/log_udp.h>
 #include <whb/proc.h>
 #include <whb/sdcard.h>
 #include <sysapp/launch.h>
@@ -18,14 +19,12 @@
 #include <sndcore2/core.h>
 
 #include "renderer/Renderer.h"
-#include "scenes/SceneAssets.h"
-#include "scenes/SceneBase.h"
+#include "renderer/ShaderManager.h"
+#include "renderer/RenderBuffer.h"
+#include "immaterial/Assets.h"
+#include "immaterial/Scenes.h"
 #include "sound/Music.h"
 #include "sync/Sync.h"
-#include <whb/log_udp.h>
-
-#include "renderer/ShaderManager.h"
-
 #include "util/ourmalloc.h"
 
 // Non-default heap
@@ -91,15 +90,20 @@ int main(int argc, char **argv) {
   ourHeap = MEMCreateExpHeapEx(heapBaseAddr, heapSize, 0);
 #endif
 
-  // Load all assets
-  getSceneAssets();
-
   // Current scene
   int currentScene = -1000;
   WHBLogPrint("Hello World! Logging initialised.");
   {
     auto music = MusicPlayer("assets/immaterial.ogg", 0.0f);
+
+    // Create the assets repository
+    auto assets = Assets();
     auto renderer = Renderer();
+    auto renderBuffer = RenderBuffer(false, 1280, 720);
+    renderer.reserve(80);
+
+    // Populate the renderer with the models
+    assets.createModels(renderer);
     std::unique_ptr<SceneBase> scene;
 
     WHBLogPrintf("Begin updating...");
@@ -131,7 +135,7 @@ int main(int argc, char **argv) {
       // Update scene
       if (scene) {
         scene->update(music.currentTime());
-        renderer.renderFrame(*scene);
+        renderer.renderFrame(*scene, renderBuffer);
       }
 
 #ifdef SYNC_PLAYER
@@ -156,7 +160,6 @@ int main(int argc, char **argv) {
     // Get rid of all of our stuff
     destroySyncHandler();
   }
-  destroySceneAssets();
   destroyShaderManager();
 
   // Clean up GX2 / AX stuff

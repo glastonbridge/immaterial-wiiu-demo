@@ -1,95 +1,34 @@
 #include "ObjectFactory.h"
-#include "../renderer/RenderMaterial.h"
-#include "../renderer/RenderObject.h"
 #include "LoadUFBX.h"
 #include <whb/log.h>
 
-std::unique_ptr<RenderObject> ObjectFactory::load(const char *path,
-                                                  const char *name,
-                                                  RenderMaterial *material) {
-  auto obj = RenderObject::create();
+Model ModelFactory::load(const char *path,
+                          const char *name,
+                          RenderMaterial *material) {
   WHBLogPrintf("Loading object %s from %s", name, path);
 
-  std::vector<float> vertices;
-  std::vector<float> texcoords;
-  std::vector<float> normals;
-  std::vector<float> boneIndices;
-  std::vector<float> boneWeights;
+  Model result;
+  result.material = material;
+  auto &vertices = result.vertices;
+  auto &texCoords = result.texCoords;
+  auto &normals = result.normals;
+  auto &boneIndices = result.boneIndices;
+  auto &boneWeights = result.boneWeights;
 
   WHBLogPrintf("Call LoadUFBX...");
-  int success = LoadUFBX(path, name, vertices, texcoords, normals, boneIndices,
-                         boneWeights, obj->animFrames);
+  int success = LoadUFBX(path, name, vertices, texCoords, normals, boneIndices,
+                         boneWeights, result.animFrames);
   if (!success) {
     WHBLogPrintf("Failed to load UFBX for the first time, trying again.");
-    LoadUFBX(path, name, vertices, texcoords, normals, boneIndices, boneWeights,
-             obj->animFrames);
+    LoadUFBX(path, name, vertices, texCoords, normals, boneIndices, boneWeights,
+             result.animFrames);
   }
 
-  std::vector<float> vertexColors;
   for (uint32_t i = 0; i < normals.size() * 4 / 3; ++i) {
-    vertexColors.push_back(0);
+    result.vertexColours.push_back(0);
   }
 
-  WHBLogPrintf("Set attrib buffer...");
-  obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX, vertices.data(), 4 * 3,
-                       vertices.size() / 3);
-  obj->setAttribBuffer(BufferType::COLOR, vertexColors.data(), 4 * 4,
-                       vertexColors.size() / 4);
-  obj->setAttribBuffer(BufferType::TEXCOORD, texcoords.data(), 4 * 2,
-                       texcoords.size() / 2);
-  obj->setAttribBuffer(BufferType::NORMAL, normals.data(), 4 * 3,
-                       normals.size() / 3);
-  obj->setAttribBuffer(BufferType::BONE_IDX, boneIndices.data(), 2 * 4,
-                       boneIndices.size() / 2);
-  obj->setAttribBuffer(BufferType::BONE_WEIGHT, boneWeights.data(), 2 * 4,
-                       boneWeights.size() / 2);
-
-  return obj;
-}
-
-namespace {
-static const float sPositionDataQuad[] = {
-    // tri 1
-    -1.0f,
-    1.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    0.0f,
-    -1.0f,
-    -1.0f,
-    0.0f,
-
-    // tri 2
-    1.0f,
-    1.0f,
-    0.0f,
-    -1.0f,
-    -1.0f,
-    0.0f,
-    1.0f,
-    -1.0f,
-    0.0f,
-};
-
-static const float sTexcoordData[] = {
-    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-};
-} // namespace
-
-/**
- * Generate a quad object.
- */
-std::unique_ptr<RenderObject>
-ObjectFactory::createQuad(RenderMaterial *material) {
-  auto obj = RenderObject::create();
-
-  obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX, sPositionDataQuad, 4 * 3, 6);
-  obj->setAttribBuffer(BufferType::TEXCOORD, sTexcoordData, 4 * 2, 6);
-
-  return obj;
+  return std::move(result);
 }
 
 namespace {
@@ -110,16 +49,17 @@ const float x_widths[47] = {
 /**
  * Generate a text object.
  */
-std::unique_ptr<RenderObject>
-ObjectFactory::createText(RenderMaterial *material, std::string text,
-                          std::vector<std::vector<float>> vertices,
-                          std::vector<std::vector<float>> normals) {
-  auto obj = RenderObject::create();
+Model
+ModelFactory::createText(RenderMaterial *material, std::string text,
+                          std::vector<std::vector<float>> const &vertices,
+                          std::vector<std::vector<float>> const &normals) {
+  Model result;
+  result.material = material;
 
-  std::vector<float> stringVertices;
-  std::vector<float> stringVertexColors;
-  std::vector<float> stringTexCoords;
-  std::vector<float> stringNormals;
+  auto &stringVertices = result.vertices;
+  auto &stringVertexColors = result.vertexColours;
+  auto &stringTexCoords = result.texCoords;
+  auto &stringNormals = result.normals;
 
   float x_position = 0;
 
@@ -318,21 +258,11 @@ ObjectFactory::createText(RenderMaterial *material, std::string text,
     for (uint32_t i = 0; i < normals[character_index].size() * 4 / 3; ++i) {
       stringVertexColors.push_back(0);
     }
-    for (float &n : normals[character_index]) {
+    for (float n : normals[character_index]) {
       stringNormals.push_back(n);
     }
     x_position += x_widths[character_index];
   }
 
-  obj->setMaterial(material);
-  obj->setAttribBuffer(BufferType::VERTEX, stringVertices.data(), 4 * 3,
-                       stringVertices.size() / 3);
-  obj->setAttribBuffer(BufferType::COLOR, stringVertexColors.data(), 4 * 4,
-                       stringVertexColors.size() / 4);
-  obj->setAttribBuffer(BufferType::TEXCOORD, stringTexCoords.data(), 4 * 2,
-                       stringTexCoords.size() / 2);
-  obj->setAttribBuffer(BufferType::NORMAL, stringNormals.data(), 4 * 3,
-                       stringNormals.size() / 3);
-
-  return obj;
+  return std::move(result);
 }
