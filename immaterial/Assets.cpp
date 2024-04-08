@@ -2,7 +2,6 @@
 
 #include "../graphics/LoadUFBX.h"
 #include "../graphics/Model.h"
-#include "../renderer/Renderer.h"
 #include "../renderer/RenderMaterial.h"
 #include "../renderer/RenderTexture.h"
 
@@ -73,46 +72,47 @@ Assets::Assets() {
   materials.push_back(createBoneMaterial("assets/mattress.png"));
 }
 
-void Assets::createModels(Renderer &renderer) const {
+std::vector<Model> Assets::createModels() const {
+  std::vector<Model> models;
 
   // Load objects
-  renderer.addModel(ModelFactory::load("assets/train.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/train.fbx", NULL,
                                         materials[ID_mat_train].get()));
-  renderer.addModel(ModelFactory::load("assets/cushion.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/cushion.fbx", NULL,
                                         materials[ID_mat_cushion].get()));
-  renderer.addModel(ModelFactory::load("assets/house1.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/house1.fbx", NULL,
                                         materials[ID_mat_house1].get()));
-  renderer.addModel(ModelFactory::load("assets/lampshade.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/lampshade.fbx", NULL,
                                         materials[ID_mat_lampshade].get()));
-  renderer.addModel(ModelFactory::load("assets/house2.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/house2.fbx", NULL,
                                         materials[ID_mat_house2].get()));
-  renderer.addModel(ModelFactory::load("assets/viaduct.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/viaduct.fbx", NULL,
                                         materials[ID_mat_viaduct].get()));
-  renderer.addModel(ModelFactory::load("assets/duvet_hills.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/duvet_hills.fbx", NULL,
                                         materials[ID_mat_duvet].get()));
-  renderer.addModel(
+  models.push_back(
       ModelFactory::load("assets/cardboard_cloud.fbx", NULL,
                           materials[ID_mat_cardboard_cloud].get()));
-  renderer.addModel(ModelFactory::load("assets/pillow.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/pillow.fbx", NULL,
                                         materials[ID_mat_pillow].get()));
-  renderer.addModel(ModelFactory::load("assets/egg.fbx", "egg",
+  models.push_back(ModelFactory::load("assets/egg.fbx", "egg",
                                         materials[ID_mat_egg].get()));
-  renderer.addModel(
+  models.push_back(
       ModelFactory::load("assets/egg.fbx", NULL, materials[ID_mat_egg].get()));
-  renderer.addModel(ModelFactory::load("assets/building.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/building.fbx", NULL,
                                         materials[ID_mat_building].get()));
-  renderer.addModel(
+  models.push_back(
       ModelFactory::load("assets/station_building.fbx", NULL,
                           materials[ID_mat_station_building].get()));
-  renderer.addModel(ModelFactory::load("assets/cloud.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/cloud.fbx", NULL,
                                         materials[ID_mat_cloud].get()));
-  renderer.addModel(ModelFactory::load("assets/sofa.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/sofa.fbx", NULL,
                                         materials[ID_mat_sofa].get()));
-  renderer.addModel(ModelFactory::load("assets/tablecloth.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/tablecloth.fbx", NULL,
                                         materials[ID_mat_tablecloth].get()));
-  renderer.addModel(ModelFactory::load("assets/egg_carton.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/egg_carton.fbx", NULL,
                                         materials[ID_mat_egg_carton].get()));
-  renderer.addModel(ModelFactory::load("assets/carpet.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/carpet.fbx", NULL,
                                         materials[ID_mat_carpet].get()));
 
   // load the 3d font fbx once to be reused for text objects:
@@ -123,34 +123,36 @@ void Assets::createModels(Renderer &renderer) const {
   // Our "font" has the following characters:
   // ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!:?;-."'*~& all letters will be drawn
   // in uppercase more characters can be added if really necessary
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "slipstream", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "& svatg", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "present", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "immaterial", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(materials[ID_mat_text].get(),
+  models.push_back(ModelFactory::createText(materials[ID_mat_text].get(),
                                               "mrs beanbag", text_vertices,
                                               text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "aldroid", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "vurpo", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(
+  models.push_back(ModelFactory::createText(
       materials[ID_mat_text].get(), "halcy", text_vertices, text_normals));
-  renderer.addModel(ModelFactory::createText(materials[ID_mat_text].get(),
+  models.push_back(ModelFactory::createText(materials[ID_mat_text].get(),
                                               "raccoonviolet", text_vertices,
                                               text_normals));
 
-  renderer.addModel(ModelFactory::load("assets/eepytime.fbx", "Cube",
+  models.push_back(ModelFactory::load("assets/eepytime.fbx", "Cube",
                                         materials[ID_mat_duvet].get()));
-  renderer.addModel(ModelFactory::load("assets/toast_rack_with_toast.fbx",
+  models.push_back(ModelFactory::load("assets/toast_rack_with_toast.fbx",
                                         NULL, materials[ID_mat_toast].get()));
-  renderer.addModel(
+  models.push_back(
       ModelFactory::load("assets/crossing_signs.fbx", NULL,
                           materials[ID_mat_crossing_signs].get()));
-  renderer.addModel(ModelFactory::load("assets/tablecloth.fbx", NULL,
+  models.push_back(ModelFactory::load("assets/tablecloth.fbx", NULL,
                                         materials[ID_mat_mattress].get()));
+
+  return models;
 }

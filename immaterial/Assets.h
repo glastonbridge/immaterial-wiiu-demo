@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "../graphics/Model.h"
 
 enum materialID : size_t {
   ID_mat_train,
@@ -73,5 +74,5 @@ struct Assets {
   Assets();
   ~Assets();
 
-  void createModels(Renderer &renderer) const;
+  std::vector<Model> createModels() const;
 };

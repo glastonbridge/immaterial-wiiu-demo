@@ -186,6 +186,20 @@ void Renderer::addModel(Model &&model) {
   objectList.push_back(RenderObject::create(std::move(model)));
 }
 
+void Renderer::addModels(std::vector<Model> const &models) {
+  objectList.reserve(objectList.size() + models.size());
+  for (auto const &model : models) {
+    objectList.push_back(RenderObject::create(model));
+  }
+}
+
+void Renderer::addModels(std::vector<Model> &&models) {
+  objectList.reserve(objectList.size() + models.size());
+  for (auto &model : models) {
+    objectList.push_back(std::move(RenderObject::create(model)));
+  }
+}
+
 void Renderer::reserve(size_t n) {
   if (instances.size() < n) {
     instances.resize(n);

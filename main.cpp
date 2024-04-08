@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
     renderer.reserve(80);
 
     // Populate the renderer with the models
-    assets.createModels(renderer);
+    renderer.addModels(assets.createModels());
     std::unique_ptr<SceneBase> scene;
 
     WHBLogPrintf("Begin updating...");

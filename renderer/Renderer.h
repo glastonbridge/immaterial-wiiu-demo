@@ -19,6 +19,11 @@ public:
   void addModel(Model const &model);
   void addModel(Model &&model);
 
+  void addModels(std::vector<Model> const &models);
+  void addModels(std::vector<Model> &&models);
+
+  void clearModels();
+
   // Pre-allocate buffers for n objects
   void reserve(size_t n);
 
