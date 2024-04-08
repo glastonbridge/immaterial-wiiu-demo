@@ -1,13 +1,13 @@
 #pragma once
 
 #include "RenderObject.h"
-#include "RenderTexture.h"
 #include <gx2/enum.h>
 #include <memory>
 #include <string>
 #include <vector>
 
 struct WHBGfxShaderGroup;
+struct RenderTexture;
 
 struct AttribSpec {
   std::string name;
@@ -22,7 +22,7 @@ struct RenderMaterial {
 
   virtual ~RenderMaterial();
   virtual void renderUsing() const;
-  void setTexture(RenderTexture *texture);
+  void setTexture(std::unique_ptr<RenderTexture> texture);
   const int getBindingForBuffer(BufferType bt) const {
     return this->bindingForBuffer[bt];
   }

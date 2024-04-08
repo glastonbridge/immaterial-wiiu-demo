@@ -1,5 +1,5 @@
 #include "PostProcessing.h"
-#include "../renderer/RenderMaterial.h"
+#include "RenderMaterial.h"
 
 RenderMaterial_p createComposeMaterial() {
   std::vector<AttribSpec> attribs;

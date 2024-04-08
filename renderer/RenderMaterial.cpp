@@ -1,5 +1,6 @@
 #include "RenderMaterial.h"
-#include "../renderer/CafeGLSLCompiler.h"
+#include "RenderTexture.h"
+#include "CafeGLSLCompiler.h"
 #include "ShaderManager.h"
 #include <coreinit/memdefaultheap.h>
 #include <cstdlib>
@@ -33,8 +34,8 @@ void RenderMaterial::renderUsing() const {
   }
 }
 
-void RenderMaterial::setTexture(RenderTexture *_texture) {
-  texture.reset(_texture);
+void RenderMaterial::setTexture(std::unique_ptr<RenderTexture> _texture) {
+  texture = std::move(_texture);
 }
 
 RenderMaterial::~RenderMaterial() {}
