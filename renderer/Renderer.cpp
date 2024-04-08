@@ -20,10 +20,10 @@
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
 
-#include "../graphics/MaterialCollection.h"
-#include "../graphics/ObjectFactory.h"
+#include "../graphics/Model.h"
 #include "../scenes/SceneBase.h"
 #include "../util/memory.h"
+#include "PostProcessing.h"
 #include "RenderBuffer.h"
 #include "RenderMaterial.h"
 #include "RenderObject.h"

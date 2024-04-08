@@ -33,8 +33,8 @@ add_executable(immaterial_wiiu_demo
     sound/Music.cpp
     sync/Sync.cpp
     graphics/LoadUFBX.cpp
-    graphics/ObjectFactory.cpp
-    graphics/MaterialCollection.cpp
+    graphics/Model.cpp
+    renderer/PostProcessing.cpp
     renderer/Renderer.cpp
     renderer/RenderObject.cpp
     renderer/RenderMaterial.cpp

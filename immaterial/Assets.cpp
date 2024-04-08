@@ -1,7 +1,7 @@
 #include "Assets.h"
 
 #include "../graphics/LoadUFBX.h"
-#include "../graphics/ObjectFactory.h"
+#include "../graphics/Model.h"
 #include "../renderer/Renderer.h"
 #include "../renderer/RenderMaterial.h"
 

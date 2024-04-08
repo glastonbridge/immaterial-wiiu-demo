@@ -1,4 +1,4 @@
-#include "MaterialCollection.h"
+#include "PostProcessing.h"
 #include "../renderer/RenderMaterial.h"
 
 RenderMaterial_p createComposeMaterial() {

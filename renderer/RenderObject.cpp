@@ -1,6 +1,6 @@
 #include "RenderObject.h"
 #include "../util/memory.h"
-#include "../graphics/ObjectFactory.h"
+#include "../graphics/Model.h"
 #include "RenderMaterial.h"
 
 #include <dmae/mem.h>
