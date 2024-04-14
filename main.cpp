@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
   int currentScene = -1000;
   WHBLogPrint("Hello World! Logging initialised.");
   {
-    auto music = MusicPlayer("assets/immaterial.ogg", 0.0f);
+    auto music = MusicPlayer(WIIU_PATH_PREFIX "assets/immaterial.ogg", 0.0f);
 
     // Create the assets repository
     auto assets = Assets();
